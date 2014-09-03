@@ -16,8 +16,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Composer\Script\CommandEvent;
-use BiberLtd\Bundle\GitBundle\Service\Git;
-use BiberLtd\Bundle\GitBundle\Service\GitRepo;
+use BiberLtd\Bundle\GitBundle\Services\Git;
+use BiberLtd\Bundle\GitBundle\Services\GitRepo;
 /**
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
