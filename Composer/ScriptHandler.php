@@ -260,7 +260,9 @@ class ScriptHandler
     {
         $rootDir = getcwd();
         $options = self::getOptions($event);
-
+        $appDir = $options['symfony-app-dir'];
+        $kernelFile = $appDir.'/AppKernel.php';
+        $fs = new Filesystem();
         if (!$event->getIO()->askConfirmation('Would you like to install any BiberLtd bundles? [Y/n] ', true)) {
             return;
         }
@@ -269,13 +271,50 @@ class ScriptHandler
             $event->getIO()->write('You did not type any bundle');
             return;
         }
+        $branch = $event->getIO()->ask('Please type a branch name for git submodules','project');
+        if ($branch == 'project') {
+            $event->getIO()->write('You did not type branch name, \'project\' will be used.');
+            return;
+        }
         $client = new Git();
         $arr = explode(',',$bundles);
         if (count($arr) > 0) {
-            foreach ($arr as $item) {
+            foreach ($arr as $name) {
+                $item = strtolower($name);
+                $folder = $rootDir.'/vendor/biberltd/'.$item.'/BiberLtd/Bundle/'.$name;
+                $fs->mkdir($folder);
                 $event->getIO()->write('Installing biberltd/'. $item.' bundle ...');
-                $client->clone_remote("$rootDir/vendor/biberltd/$item/","https://github.com/biberltd/$item.git");
+                $folder = $rootDir.'/vendor/biberltd/'.$item.'/BiberLtd/Bundle/'.$name;
+                $repo = $client->clone_remote($folder,"https://github.com/biberltd/$item.git");
+                $repo = $client->open($rootDir);
+                $repo->run('submodule add ' . $folder);
+                $repo2 = $client->open($folder);
+                $repo2->run('checkout -b '.$branch);
                 $event->getIO()->write("biberltd/$item bundle installed successfully");
+                /** APP KERNEL*/
+//                $ref = '$bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();';
+                $ref = 'return $bundles;';
+                $bundleDeclaration = "\$bundles[] = new BiberLtd\\Bundle\\$name();";
+                $content = file_get_contents($kernelFile);
+                if (false === strpos($content, $bundleDeclaration)) {
+                    $updatedContent = str_replace($ref, $bundleDeclaration."\n         ".$ref, $content);
+                    if ($content === $updatedContent) {
+                        throw new \RuntimeException('Unable to patch %s.', $kernelFile);
+                    }
+                    $fs->dumpFile($kernelFile, $updatedContent);
+                }
+                /** AUTLOAD NAMESPACES */
+                $ref = '\'Assetic\' => array($vendorDir . \'/kriswallsmith/assetic/src\'),';
+                $bundleDeclaration  = '\'BiberLtd\\\\Bundle\\\\'.$name.'\' => array($vendorDir . \'/biberltd/'.$item.'\'),';
+                $autloadFile = $rootDir.'/vendor/composer/autoload_namespaces.php';
+                $content = file_get_contents($autloadFile);
+                if (false === strpos($content, $bundleDeclaration)) {
+                    $updatedContent = str_replace($ref, $bundleDeclaration."\n    ".$ref, $content);
+                    if ($content === $updatedContent) {
+                        throw new \RuntimeException('Unable to patch %s.', $kernelFile);
+                    }
+                    $fs->dumpFile($autloadFile, $updatedContent);
+                }
             }
         }
     }
