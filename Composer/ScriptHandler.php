@@ -15,6 +15,7 @@ use Symfony\Component\ClassLoader\ClassCollectionLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Yaml;
 use Composer\Script\CommandEvent;
 use BiberLtd\Bundle\GitBundle\Services\Git;
 use BiberLtd\Bundle\GitBundle\Services\GitRepo;
@@ -262,6 +263,10 @@ class ScriptHandler
         $options = self::getOptions($event);
         $appDir = $options['symfony-app-dir'];
         $kernelFile = $appDir.'/AppKernel.php';
+        /** read config.yml */
+        $config = Yaml::parse($rootDir.'/app/config/config.yml');
+        var_dump($config);
+        die;
         $fs = new Filesystem();
         if (!$event->getIO()->askConfirmation('Would you like to install any BiberLtd bundles? [Y/n] ', true)) {
             return;
