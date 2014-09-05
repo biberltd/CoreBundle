@@ -327,8 +327,8 @@ class ScriptHandler
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['dir'] = "\"%kernel.root_dir%/../vendor/biberltd/$item/BiberLtd/Bundle/$name/Entity\"";
             }
             unset($configs['doctrine']['orm']['auto_mapping']);
-            if (!in_array('smarty',$configs['templating']['engine'])) {
-                $configs['templating']['engine'][] = 'smarty';
+            if (!in_array('smarty',$configs['framework']['templating']['engines'])) {
+                $configs['framework']['templating']['engines'][] = 'smarty';
             }
             if (!isset($configs['doctrine']['dbal']['connections']['default'])) {
                 $configs['doctrine']['dbal'] = array();
@@ -337,7 +337,7 @@ class ScriptHandler
                 $configs['doctrine']['dbal']['connections']['default']['driver'] = "'%database_driver%'";
                 $configs['doctrine']['dbal']['connections']['default']['host'] = "'%database_host%'";
                 $configs['doctrine']['dbal']['connections']['default']['port'] = "'%database_port%'";
-                $configs['doctrine']['dbal']['connections']['default']['dbname'] = "'%database_name%'";
+                $configs['doctrine']['dbal']['conenginenections']['default']['dbname'] = "'%database_name%'";
                 $configs['doctrine']['dbal']['connections']['default']['user'] = "'%database_user%'";
                 $configs['doctrine']['dbal']['connections']['default']['password'] = "'%database_password%'";
                 $configs['doctrine']['dbal']['connections']['default']['charset'] = 'UTF8';
@@ -517,9 +517,9 @@ namespace { return \$loader; }
         $fs->mkdir(array($binDir, $varDir));
 
         foreach (array(
-            $appDir.'/console' => $binDir.'/console',
-            $appDir.'/phpunit.xml.dist' => $rootDir.'/phpunit.xml.dist',
-        ) as $source => $target) {
+                     $appDir.'/console' => $binDir.'/console',
+                     $appDir.'/phpunit.xml.dist' => $rootDir.'/phpunit.xml.dist',
+                 ) as $source => $target) {
             $fs->rename($source, $target, true);
         }
 
