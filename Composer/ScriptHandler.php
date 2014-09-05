@@ -15,7 +15,7 @@ use Symfony\Component\ClassLoader\ClassCollectionLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Yaml;
+use Symfony\Component\Yaml\Yaml;
 use Composer\Script\CommandEvent;
 use BiberLtd\Bundle\GitBundle\Services\Git;
 use BiberLtd\Bundle\GitBundle\Services\GitRepo;
