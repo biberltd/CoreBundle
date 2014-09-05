@@ -326,7 +326,30 @@ class ScriptHandler
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['prefix'] = 'BiberLtd\\Core\\Bundle\\' . $name . '\\Entity';
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['dir'] = "\"%kernel.root_dir%/../vendor/biberltd/$item/BiberLtd/Bundle/$name/Entity\"";
             }
-            file_put_contents($configFile, Yaml::dump($configs, 2));
+            unset($configs['doctrine']['orm']['auto_mapping']);
+            if (!in_array('smarty',$configs['templating']['engine'])) {
+                $configs['templating']['engine'][] = 'smarty';
+            }
+            if (!isset($configs['doctrine']['dbal']['connections']['default'])) {
+                $configs['doctrine']['dbal'] = array();
+                $configs['doctrine']['dbal']['default_connection'] = 'default';
+                $configs['doctrine']['dbal']['connections']['default'] = array();
+                $configs['doctrine']['dbal']['connections']['default']['driver'] = "'%database_driver%'";
+                $configs['doctrine']['dbal']['connections']['default']['host'] = "'%database_host%'";
+                $configs['doctrine']['dbal']['connections']['default']['port'] = "'%database_port%'";
+                $configs['doctrine']['dbal']['connections']['default']['dbname'] = "'%database_name%'";
+                $configs['doctrine']['dbal']['connections']['default']['user'] = "'%database_user%'";
+                $configs['doctrine']['dbal']['connections']['default']['password'] = "'%database_password%'";
+                $configs['doctrine']['dbal']['connections']['default']['charset'] = 'UTF8';
+
+            }
+            if (!isset($configs['doctrine']['orm']['default_entity_manager'])) {
+                $configs['doctrine']['orm']['default_entity_manager'] = 'default';
+            }
+            if (!isset($configs['nelmio_api_doc'])) {
+                $configs['nelmio_api_doc'] = '~';
+            }
+            file_put_contents($configFile, Yaml::dump($configs, 10));
         }
     }
 
