@@ -313,6 +313,7 @@ class ScriptHandler
                 $bundleDeclaration = '\'BiberLtd\\\\Bundle\\\\' . $name . '\' => array($vendorDir . \'/biberltd/' . $item . '\'),';
                 $autloadFile = $rootDir . '/vendor/composer/autoload_namespaces.php';
                 $content = file_get_contents($autloadFile);
+                $event->getIO()->write($autloadFile);
                 if (false === strpos($content, $bundleDeclaration)) {
                     $updatedContent = str_replace($ref, $bundleDeclaration . "\n    " . $ref, $content);
                     if ($content === $updatedContent) {
@@ -337,7 +338,7 @@ class ScriptHandler
                 $configs['doctrine']['dbal']['connections']['default']['driver'] = "'%database_driver%'";
                 $configs['doctrine']['dbal']['connections']['default']['host'] = "'%database_host%'";
                 $configs['doctrine']['dbal']['connections']['default']['port'] = "'%database_port%'";
-                $configs['doctrine']['dbal']['conenginenections']['default']['dbname'] = "'%database_name%'";
+                $configs['doctrine']['dbal']['connections']['default']['dbname'] = "'%database_name%'";
                 $configs['doctrine']['dbal']['connections']['default']['user'] = "'%database_user%'";
                 $configs['doctrine']['dbal']['connections']['default']['password'] = "'%database_password%'";
                 $configs['doctrine']['dbal']['connections']['default']['charset'] = 'UTF8';
@@ -563,9 +564,7 @@ EOF;
         $fs->dumpFile($binDir.'/console', str_replace(array(".'/bootstrap.php.cache'", ".'/AppKernel.php'"), array(".'/".$fs->makePathRelative($varDir, $binDir)."bootstrap.php.cache'", ".'/".$fs->makePathRelative($appDir, $binDir)."AppKernel.php'"), file_get_contents($binDir.'/console')));
         $fs->dumpFile($rootDir.'/phpunit.xml.dist', $phpunit);
         $fs->dumpFile($rootDir.'/composer.json', $composer);
-
         $fs->dumpFile($rootDir.'/.gitignore', $gitignore);
-
         $fs->chmod($binDir.'/console', 0755);
     }
 
