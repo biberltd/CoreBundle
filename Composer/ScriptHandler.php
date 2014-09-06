@@ -335,12 +335,12 @@ class ScriptHandler
                 $configs['doctrine']['dbal'] = array();
                 $configs['doctrine']['dbal']['default_connection'] = 'default';
                 $configs['doctrine']['dbal']['connections']['default'] = array();
-                $configs['doctrine']['dbal']['connections']['default']['driver'] = "'%database_driver%'";
-                $configs['doctrine']['dbal']['connections']['default']['host'] = "'%database_host%'";
-                $configs['doctrine']['dbal']['connections']['default']['port'] = "'%database_port%'";
-                $configs['doctrine']['dbal']['connections']['default']['dbname'] = "'%database_name%'";
-                $configs['doctrine']['dbal']['connections']['default']['user'] = "'%database_user%'";
-                $configs['doctrine']['dbal']['connections']['default']['password'] = "'%database_password%'";
+                $configs['doctrine']['dbal']['connections']['default']['driver'] = '%database_driver%';
+                $configs['doctrine']['dbal']['connections']['default']['host'] = '%database_host%';
+                $configs['doctrine']['dbal']['connections']['default']['port'] = '%database_port%';
+                $configs['doctrine']['dbal']['connections']['default']['dbname'] = '%database_name%';
+                $configs['doctrine']['dbal']['connections']['default']['user'] = '%database_user%';
+                $configs['doctrine']['dbal']['connections']['default']['password'] = '%database_password%';
                 $configs['doctrine']['dbal']['connections']['default']['charset'] = 'UTF8';
 
             }
@@ -348,7 +348,7 @@ class ScriptHandler
                 $configs['doctrine']['orm']['default_entity_manager'] = 'default';
             }
             if (!isset($configs['nelmio_api_doc'])) {
-                $configs['nelmio_api_doc'] = '~';
+                #$configs['nelmio_api_doc'] = '~';
             }
             file_put_contents($configFile, Yaml::dump($configs, 10));
         }
