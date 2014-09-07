@@ -329,7 +329,7 @@ class ScriptHandler
             }
             unset($configs['doctrine']['orm']['auto_mapping']);
             if (!in_array('smarty',$configs['framework']['templating']['engines'])) {
-                $configs['framework']['templating']['engines'][] = 'smarty';
+                $configs['framework']['templating']['engines'] = array('twig,smarty');
             }
             if (!isset($configs['doctrine']['dbal']['connections']['default'])) {
                 $configs['doctrine']['dbal'] = array();
