@@ -66,7 +66,7 @@ class ScriptHandler
                 /** APP KERNEL*/
 //                $ref = '$bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();';
                 $ref = 'return $bundles;';
-                $bundleDeclaration = "\$bundles[] = new BiberLtd\\Bundle\\$name\\BiberLtdBundle$name();";
+                $bundleDeclaration = "\$bundles[] = new BiberLtd\\Bundle\\$name\\BiberLtd$name();";
                 $content = file_get_contents($kernelFile);
                 if (false === strpos($content, $bundleDeclaration)) {
                     $updatedContent = str_replace($ref, $bundleDeclaration . "\n         " . $ref, $content);

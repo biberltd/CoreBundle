@@ -29,7 +29,7 @@
       <file leaf-file-name="ScriptHandler.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Composer/ScriptHandler.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="80" column="43" selection-start="3734" selection-end="3734" vertical-scroll-proportion="0.5947826" vertical-offset="972" max-vertical-offset="2286">
+            <state line="69" column="58" selection-start="2987" selection-end="2987" vertical-scroll-proportion="0.28" vertical-offset="955" max-vertical-offset="2286">
               <folding>
                 <element signature="e#286#342#0" expanded="true" />
               </folding>
@@ -147,7 +147,7 @@
     <layout>
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25239617" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25239617" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -201,7 +201,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Composer/ScriptHandler.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="43" selection-start="3734" selection-end="3734" vertical-scroll-proportion="0.5947826" vertical-offset="972" max-vertical-offset="2286">
+        <state line="69" column="58" selection-start="2987" selection-end="2987" vertical-scroll-proportion="0.28" vertical-offset="955" max-vertical-offset="2286">
           <folding>
             <element signature="e#286#342#0" expanded="true" />
           </folding>
