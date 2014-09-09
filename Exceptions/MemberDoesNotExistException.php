@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        MemberDoesNotExistException
- * @package		BiberLtd\Core\Bundles\MemberManagementBundle
+ * @package		BiberLtd\Bundle\MemberManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to inexisting Member entries.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class MemberDoesNotExistException extends Services\ExceptionAdapter {
     public function __construct($kernel, $member = "", $code = 997001, Exception $previous = null) {

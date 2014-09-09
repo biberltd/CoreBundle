@@ -17,7 +17,7 @@
  * @date        29.01.2014
  *
  */
-namespace BiberLtd\CoreBundle;
+namespace BiberLtd\Bundle\CoreBundle;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 

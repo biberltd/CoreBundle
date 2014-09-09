@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidByOptionException
- * @package		BiberLtd\Core\Exceptions
+ * @package		BiberLtd\Bundle\CoreBundle\Exceptions
  *
  * @author		Can Berkol
  * @version     1.0.1
@@ -13,9 +13,9 @@
  * @description Exception to handle issues with the values of $by parameter.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidByOptionException extends Services\ExceptionAdapter {
     public function __construct($kernel, $msg = "", $code = "CRE0005", Exception $previous = null) {

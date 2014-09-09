@@ -18,8 +18,8 @@
  *
  */
 
-namespace BiberLtd\Core\Listeners;
-use BiberLtd\Core\Core as Core;
+namespace BiberLtd\Bundle\CoreBundle\Listeners;
+use BiberLtd\Bundle\CoreBundle\Core as Core;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 /**
  * Requires MultiLanguageSupportBundle
  */
-use BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Services as MLSServices;
+use BiberLtd\Bundle\MultiLanguageSupportBundle\Services as MLSServices;
 
 class ExceptionListener extends Core{
     /** @var $container             Service container */

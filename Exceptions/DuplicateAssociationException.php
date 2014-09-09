@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        DuplicateAssociationException
- * @package		BiberLtd\Core\Exceptions
+ * @package		BiberLtd\Bundle\CoreBundle\Exceptions
  *
  * @author		Can Berkol
  * @version     1.0.1
@@ -13,9 +13,9 @@
  * @description 995001 :: If the association already exists in database.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class DuplicateAssociationException extends Services\ExceptionAdapter {
     public function __construct($kernel, $msg = "", $code = 'CRE0003', Exception $previous = null) {

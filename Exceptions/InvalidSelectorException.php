@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidSelectorException
- * @package		BiberLtd\Core\Bundles\SiteManagementBundle
+ * @package		BiberLtd\Bundle\SiteManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Throws when the provided parameter value is not a unique identifier field.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidSelectorException extends Services\ExceptionAdapter {
     public function __construct($kernel, $message = "", $code = 998008, Exception $previous = null) {

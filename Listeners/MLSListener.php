@@ -18,8 +18,8 @@
  *
  */
 
-namespace BiberLtd\Core\Listeners;
-use BiberLtd\Core\Core as Core;
+namespace BiberLtd\Bundle\CoreBundle\Listeners;
+use BiberLtd\Bundle\CoreBundle\Core as Core;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Event;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 /**
  * Requires MultiLanguageSupportBundle
  */
-use BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Services as MLSServices;
+use BiberLtd\Bundle\MultiLanguageSupportBundle\Services as MLSServices;
 
 class MLSListener extends Core{
     /** @var $container             Service container */

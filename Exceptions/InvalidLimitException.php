@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidLimitException
- * @package		BiberLtd\Core\Bundles\MultiLanguageSupportBundle
+ * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Throws when the provided parameter value is not a valid limit.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidLimitException extends Services\ExceptionAdapter {
     public function __construct($kernel, $message = "", $code = 998005, Exception $previous = null) {

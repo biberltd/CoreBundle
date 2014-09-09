@@ -22,11 +22,11 @@
  * @todo v1.1.0 support for multi site management
  */
 
-namespace BiberLtd\Core\Services;
-use BiberLtd\Core\Core as Core;
+namespace BiberLtd\Bundle\CoreBundle\Services;
+use BiberLtd\Bundle\CoreBundle\Core as Core;
 
-use BiberLtd\Core\Bundles\AccessManagementBundle\Services as AMBService;
-use BiberLtd\Core\Bundles\MemberManagementBundle\Services as MMBService;
+use BiberLtd\Bundle\AccessManagementBundle\Services as AMBService;
+use BiberLtd\Bundle\MemberManagementBundle\Services as MMBService;
 
 class SessionManager extends Core{
     private $session;

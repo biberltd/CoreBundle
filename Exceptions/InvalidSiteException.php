@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidParameterException
- * @package		BiberLtd\Core\Exception
+ * @package		BiberLtd\Bundle\CoreBundleException
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle generic parameter issues.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidSiteException extends Services\ExceptionAdapter {
     public function __construct($kernel, $site = "", $code = 998012, Exception $previous = null) {

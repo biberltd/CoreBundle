@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        AssociationException
- * @package		BiberLtd\Core\Exceptions
+ * @package		BiberLtd\Bundle\CoreBundle\Exceptions
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description 995000 :: If no association is found in database.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class AssociationException extends Services\ExceptionAdapter {
     public function __construct($kernel, $msg = "", $code = 995000, Exception $previous = null) {

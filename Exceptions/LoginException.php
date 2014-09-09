@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        LoginException
- * @package		BiberLtd\Core\Bundles\MemberManagementBundle
+ * @package		BiberLtd\Bundle\MemberManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle cURL connection problems.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class LoginException extends Services\ExceptionAdapter {
     public function __construct($kernel, $message = "", $code = 996000, Exception $previous = null) {

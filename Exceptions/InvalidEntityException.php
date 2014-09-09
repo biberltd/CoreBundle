@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidEntityException
- * @package		BiberLtd\Core\Bundles\MultiLanguageSupportBundle
+ * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle wrong entity types.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidEntityException extends Services\ExceptionAdapter {
     public function __construct($kernel, $entity = "", $code = 998002, Exception $previous = null) {

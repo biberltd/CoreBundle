@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidFilterException
- * @package		BiberLtd\Core\Bundles\MultiLanguageSupportBundle
+ * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Throws when the provided parameter value is not a valid filter.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidFilterException extends Services\ExceptionAdapter {
     public function __construct($kernel, $message = "", $code = 9980003, Exception $previous = null) {

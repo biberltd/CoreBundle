@@ -19,9 +19,9 @@
  *
  */
 
-namespace BiberLtd\Core\Listeners;
+namespace BiberLtd\Bundle\CoreBundle\Listeners;
 
-use BiberLtd\Core\Core as Core;
+use BiberLtd\Bundle\CoreBundle\Core as Core;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;

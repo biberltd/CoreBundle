@@ -19,7 +19,7 @@
  *
  */
 
-namespace BiberLtd\CoreBundle;
+namespace BiberLtd\Bundle\CoreBundle;
 
 use Doctrine\ORM\Mapping AS ORM;
 

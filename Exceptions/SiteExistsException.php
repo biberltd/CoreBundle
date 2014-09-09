@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        SiteExistsException
- * @package		BiberLtd\Core\Bundles\SiteManagementBundle
+ * @package		BiberLtd\Bundle\SiteManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Throws when the requested site is not found in database.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class SiteExistsException extends Services\ExceptionAdapter {
     public function __construct($kernel, $site = "", $code = 999003, Exception $previous = null) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        DuplicateMemberException
- * @package		BiberLtd\Core\Exceptions
+ * @package		BiberLtd\Bundle\CoreBundle\Exceptions
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle duplicate language entries.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class DuplicateMemberException extends Services\ExceptionAdapter {
     public function __construct($kernel, $msg = "", $code = 999001, Exception $previous = null) {

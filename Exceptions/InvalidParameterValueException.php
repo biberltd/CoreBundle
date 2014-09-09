@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidParameterValueException
- * @package		BiberLtd\Core\Bundles\CoreBundle
+ * @package		BiberLtd\Bundle\CoreBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle generic parameter issues.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidParameterValueException extends Services\ExceptionAdapter {
     public function __construct($kernel, $values = "", $code = 998015, Exception $previous = null) {

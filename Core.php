@@ -17,7 +17,7 @@
  * @date        12.01.2014
  *
  */
-namespace BiberLtd\CoreBundle;
+namespace BiberLtd\Bundle\CoreBundle;
 
 class Core{
     protected $error        = array();

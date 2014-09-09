@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        LanguageDoesNotExist
- * @package		BiberLtd\Core\Bundles\MultiLanguageSupportBundle
+ * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to inexisting Language entries.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class LanguageDoesNotExist extends Services\ExceptionAdapter {
     public function __construct($kernel, $lang = "", $code = 997000, Exception $previous = null) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        MissingActivationKeyException
- * @package		BiberLtd\Core\Bundles\MemberManagementBundle
+ * @package		BiberLtd\Bundle\MemberManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception that checks for activation key.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class MissingActivationKeyException extends Services\ExceptionAdapter {
     public function __construct($kernel, $group = "", $code = 996001, Exception $previous = null) {

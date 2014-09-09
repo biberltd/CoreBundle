@@ -20,9 +20,9 @@
  *
  */
 
-namespace BiberLtd\CoreBundle;
+namespace BiberLtd\Bundle\CoreBundle;
 
-use BiberLtd\Core\Bundles\FileManagementBundle\Entity\File;
+use BiberLtd\Bundle\FileManagementBundle\Entity\File;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;

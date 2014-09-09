@@ -91,7 +91,7 @@ class ScriptHandler
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['type'] = 'annotation';
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['alias'] = $name;
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['prefix'] = 'BiberLtd\\Bundle\\' . $name . '\\Entity';
-                $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['dir'] = "\"%kernel.root_dir%/../vendor/biberltd/$item/BiberLtd/Bundle/$name/Entity\"";
+                $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['dir'] = "%kernel.root_dir%/../vendor/biberltd/$item/BiberLtd/Bundle/$name/Entity";
             }
 //            unset($configs['doctrine']['orm']['auto_mapping']);
 //            if (!in_array('smarty',$configs['framework']['templating']['engines'])) {

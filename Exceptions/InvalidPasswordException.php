@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidParameterException
- * @package		BiberLtd\Core\Bundles\CorBundle
+ * @package		BiberLtd\Bundle\CorBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Exception to handle generic parameter issues.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidPasswordException extends Services\ExceptionAdapter {
     public function __construct($kernel, $msg = "", $code = 998014, Exception $previous = null) {

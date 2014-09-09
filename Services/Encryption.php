@@ -20,8 +20,8 @@
  * @todo        Bind with exception class. See comment outed error log mechanisms.
  */
 
-namespace BiberLtd\Core\Services;
-use BiberLtd\Core\Core as Core;
+namespace BiberLtd\Bundle\CoreBundle\Services;
+use BiberLtd\Bundle\CoreBundle\Core as Core;
 
 class Encryption extends Core{
     /** @var $key           Encryption key. This is set from configuration files. */

@@ -1,7 +1,7 @@
 <?php
 /**
  * @name        InvalidSiteCollectionException
- * @package		BiberLtd\Core\Bundles\SiteManagementBundle
+ * @package		BiberLtd\Bundle\SiteManagementBundle
  *
  * @author		Can Berkol
  * @version     1.0.0
@@ -13,9 +13,9 @@
  * @description Throws when the provided parameter value is not a valid Site Entity collection.
  *
  */
-namespace BiberLtd\Core\Exceptions;
+namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
-use BiberLtd\Bundles\ExceptionBundle\Services;
+use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class InvalidSiteCollectionException extends Services\ExceptionAdapter {
     public function __construct($kernel, $message = "", $code = 998009, Exception $previous = null) {

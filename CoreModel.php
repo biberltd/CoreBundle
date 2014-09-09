@@ -19,10 +19,10 @@
  *
  */
 
-namespace BiberLtd\CoreBundle;
+namespace BiberLtd\Bundle\CoreBundle;
 
 /** Required for better & instant error handling for the support team */
-use \BiberLtd\Core\Exceptions as CoreExceptions;
+use BiberLtd\Bundle\CoreBundle\Exceptions as CoreExceptions;
 
 class CoreModel {
 
