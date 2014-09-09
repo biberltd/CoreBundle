@@ -27,8 +27,7 @@ class ScriptHandler
     public static function installBiberLtdBundles(CommandEvent $event)
     {
         $rootDir = getcwd();
-        $options = self::getOptions($event);
-        $appDir = $options['symfony-app-dir'];
+        $appDir = 'app';
         $kernelFile = $appDir . '/AppKernel.php';
 
         $fs = new Filesystem();
