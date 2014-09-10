@@ -27,7 +27,7 @@
         "beberlei/DoctrineExtensions": "dev-master",
         "gedmo/doctrine-extensions": "~2.3",
         "noiselabs/smarty-bundle": "~1.2",
-        "kriswallsmith/assetic": "1.2.*@dev",
+        "kriswallsmith/assetic": "dev-master",
         "swiftmailer/swiftmailer" : "~5.2"
 
     },
