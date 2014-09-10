@@ -20,6 +20,17 @@
         "psr-0": { "BiberLtd\\Bundle\\CoreBundle": "" }
 
     },
+    "require" : {
+        "php": ">=5.3.3",
+        "symfony/symfony": "2.6.x-dev",
+        "sensio/framework-extra-bundle": "~3.0",
+        "beberlei/DoctrineExtensions": "dev-master",
+        "gedmo/doctrine-extensions": "~2.3",
+        "noiselabs/smarty-bundle": "~1.2",
+        "kriswallsmith/assetic": "1.2.@dev",
+        "swiftmailer/swiftmailer" : "~5.2"
+
+    },
     "minimum-stability": "dev",
     "extra" : {
 	"branch-alias" : {
