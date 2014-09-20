@@ -8,10 +8,10 @@ services:
         class:        BiberLtd\Bundle\CoreBundle\Listeners\AMListener
         tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -10}]
         arguments:    [@kernel]
-#    mls_listener:
-#        class:        BiberLtd\Bundle\CoreBundle\Listeners\MLSListener
-#        tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255}]
-#        arguments:    [@service_container, @kernel, ["default", "doctrine"]]
+    mls_listener:
+        class:        BiberLtd\Bundle\CoreBundle\Listeners\MLSListener
+        tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255}]
+        arguments:    [@service_container, @kernel, ["default", "doctrine"]]
     session_manager:
         class:        BiberLtd\Bundle\CoreBundle\Services\SessionManager
         arguments:    [@kernel]
