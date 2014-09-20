@@ -25,3 +25,32 @@ services:
     encryption:
         class:        BiberLtd\Bundle\CoreBundle\Services\Encryption
         arguments:    [@kernel]
+    buttonrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\ButtonRenderController
+            arguments:    [@templating]
+    corerender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\RenderController
+            arguments:    [@templating]
+    emailrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\EmailRenderController
+            arguments:    [@templating, @kernel]
+    formrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\FormRenderController
+            arguments:    [@templating]
+    htmlrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\HTMLRenderController
+            arguments:    [@templating]
+    tablerender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\TableRenderController
+            arguments:    [@templating, @kernel]
+    textarearender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\FormRenderController
+            arguments:    [@templating, @kernel]
+    typographyrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\TypographyRenderController
+            arguments:    [@templating]
+    widgetrender.model:
+            class:        BiberLtd\Bundle\CoreBundle\Controller\WidgetRenderController
+            arguments:    [@templating, @kernel]
+
+

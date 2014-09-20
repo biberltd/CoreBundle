@@ -217,10 +217,10 @@ class CoreModel {
         $this->resetResponse();
         if ($isCore) {
             if (!strpos($exception,'Exception')){
-                $exception = '\\BiberLtd\\Core\\Exceptions\\'.$exception.'Exception';
+                $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\'.$exception.'Exception';
             }
             else{
-                $exception = '\\BiberLtd\\Core\\Exceptions\\'.$exception;
+                $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\'.$exception;
             }
         }
         new $exception($this->kernel, $msg);
