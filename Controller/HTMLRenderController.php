@@ -139,7 +139,7 @@ class HTMLRenderController extends  CoreController{
                 'value'         => $inputDetails['value'],
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.input.upload_ajax_simple.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.input.upload_ajax_simple.html.smarty', $vars);
     }
     /**
      * @name 			renderCheckedMultiSelect()
@@ -213,7 +213,7 @@ class HTMLRenderController extends  CoreController{
         if (isset($inputDetails['grouppedOptions'])) {
             $vars['field']['grouppedOptions'] = $inputDetails['grouppedOptions'];
         }
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.checked_multiselect.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.checked_multiselect.html.smarty', $vars);
     }
     /**
      * @name 			renderCkEditorArea()
@@ -339,7 +339,7 @@ class HTMLRenderController extends  CoreController{
                 'options'       => $inputDetails['options'],
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.dropdown.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.dropdown.html.smarty', $vars);
     }
     /**
      * @name 			renderHiddenInput()
@@ -428,7 +428,7 @@ class HTMLRenderController extends  CoreController{
                 'value'         => $inputDetails['value'],
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.input.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/Form:field.input.html.smarty', $vars);
     }
     /**
      * @name 			renderLocationPicker()
@@ -503,7 +503,7 @@ class HTMLRenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.locationpicker.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.locationpicker.html.smarty', $vars);
     }
     /**
      * @name 			renderPasswordInput()
@@ -595,7 +595,7 @@ class HTMLRenderController extends  CoreController{
                 'value'         => $inputDetails['value'],
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.input.upload_preview.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.input.upload_preview.html.smarty', $vars);
     }
     /**
      * @name 			renderTagInput()
@@ -687,7 +687,7 @@ class HTMLRenderController extends  CoreController{
                 'value'         => $inputDetails['value'],
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.textarea.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:'.$vars['field']['settings']['theme'].'/Form:field.textarea.html.smarty', $vars);
     }
     /**
      * @name 			renderTextInput()

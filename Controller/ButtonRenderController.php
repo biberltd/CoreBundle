@@ -162,7 +162,7 @@ class ButtonRenderController extends  CoreController{
         if(isset($buttonDetails['attributes'])){
             $vars['attributes'] = $buttonDetails['attributes'];
         }
-        $this->response['html'] =  $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:button.html.smarty', $vars);
+        $this->response['html'] =  $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:button.html.smarty', $vars);
         return $this->response;
     }
     /**

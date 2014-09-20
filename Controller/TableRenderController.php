@@ -71,7 +71,7 @@ class TableRenderController extends CoreController{
             'table'       => $tableContent,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:table.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:table.html.smarty', $vars);
 
         return $this->response;
     }
@@ -148,7 +148,7 @@ class TableRenderController extends CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:datatable.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:datatable.html.smarty', $vars);
     }
 }
 

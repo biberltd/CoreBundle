@@ -64,7 +64,7 @@ class WidgetRenderController extends CoreController{
             'crumbs'       => $breadcrumbItems,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:breadcrumb.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:breadcrumb.html.smarty', $vars);
 
         return $this->response;
     }
@@ -125,7 +125,7 @@ class WidgetRenderController extends CoreController{
             'settings'          => $settings,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:centeredLoginForm.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:centeredLoginForm.html.smarty', $vars);
         $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
@@ -194,7 +194,7 @@ class WidgetRenderController extends CoreController{
             'settings'          => $settings,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:centeredRegistrationForm.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:centeredRegistrationForm.html.smarty', $vars);
         $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
@@ -260,7 +260,7 @@ class WidgetRenderController extends CoreController{
             'settings'          => $settings,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:centeredResetPasswordForm.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:centeredResetPasswordForm.html.smarty', $vars);
         $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
@@ -319,7 +319,7 @@ class WidgetRenderController extends CoreController{
             'showLineNumbers'           => $showLineNumbers,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:codePreview.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:codePreview.html.smarty', $vars);
         if($prettify){
             $this->response['head']['css'][] = '/plugins/codeprettifier/prettify.css';
             $this->response['body']['js'][] = '/plugins/codeprettifier/prettify.js';
@@ -347,7 +347,7 @@ class WidgetRenderController extends CoreController{
         $vars = array(
             'footerItems'   => $footerItems
         );
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:footerItems.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:footerItems.html.smarty', $vars);
         return $this->response;
     }
     /**
@@ -368,7 +368,7 @@ class WidgetRenderController extends CoreController{
             $core['theme'] = 'bibercrm';
         }
         $vars = array();
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:leftMenuTrigger.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:leftMenuTrigger.html.smarty', $vars);
         $this->response['body']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/bootstrap.min.js',
@@ -498,7 +498,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['renderCode'] = $code;
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:mlsForm.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:mlsForm.html.smarty', $vars);
         $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
         $this->response['head']['css'][] = '/plugins/bootstrapswitch/bootstrap-switch.css';
         $this->response['head']['js'][] = '/js/jquery-1.10.2.min.js';
@@ -592,7 +592,7 @@ class WidgetRenderController extends CoreController{
         if(count($footerElements) > 0){
             $vars['footerElements'] = $footerElements;
         }
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:panel.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:panel.html.smarty', $vars);
 
         return $this->response;
     }
@@ -629,7 +629,7 @@ class WidgetRenderController extends CoreController{
             'options'                   => $options,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:pageHeader.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:pageHeader.html.smarty', $vars);
 
         return $this->response;
     }
@@ -651,7 +651,7 @@ class WidgetRenderController extends CoreController{
             $core['theme'] = 'bibercrm';
         }
         $vars = array();
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:quickScrollButton.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:quickScrollButton.html.smarty', $vars);
         return $this->response;
     }
     /**
@@ -672,7 +672,7 @@ class WidgetRenderController extends CoreController{
             $core['theme'] = 'bibercrm';
         }
         $vars = array();
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:rightMenuTrigger.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:rightMenuTrigger.html.smarty', $vars);
         $this->response['body']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/bootstrap.min.js',
@@ -707,7 +707,7 @@ class WidgetRenderController extends CoreController{
             'siteUrl'       => $siteUrl,
             'smallLogoUrl'  => $smallLogo,
         );
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:sidebarLogo.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:sidebarLogo.html.smarty', $vars);
         return $this->response;
     }
     /**
@@ -739,7 +739,7 @@ class WidgetRenderController extends CoreController{
             'navigationItems'   => $navigationItems,
             'settings'          => $settings,
         );
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:sidebarNavigation.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:sidebarNavigation.html.smarty', $vars);
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -786,7 +786,7 @@ class WidgetRenderController extends CoreController{
             'toggleItems'               => $toggleItems,
         );
 
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:toggleButton.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:toggleButton.html.smarty', $vars);
 
         $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
         $this->response['body']['js'][] = '/plugins/form-toggle/toggle.min.js';
@@ -828,7 +828,7 @@ class WidgetRenderController extends CoreController{
             'settings'      => $settings,
             'userLinks'     => $userLinks
         );
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Widgets:topNavigation.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Widgets:topNavigation.html.smarty', $vars);
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/bootstrap.min.js',

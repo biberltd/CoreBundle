@@ -39,7 +39,7 @@
         <li data-role="navigation"{if $item.selected} class="active"{/if}>
             <a href="{if $item.hasChildren}javascript:;{else}{$item.link}{/if}"><span>{$item.text}</span></a>
             {if $item.hasChildren}
-                {include "file:BiberLtdCoreBundlesCoreBundle:{$theme}/Helpers:sidebarNavigationHelper.html.smarty" navigationItems=$item.childItems theme=$theme}
+                {include "file:BiberLtdBundleCoreBundle:{$theme}/Helpers:sidebarNavigationHelper.html.smarty" navigationItems=$item.childItems theme=$theme}
             {/if}
         </li>
     {/foreach}

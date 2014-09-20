@@ -148,7 +148,7 @@ class FormRenderController extends CoreController{
             $vars['field']['attributes'] = $inputDetails['attributes'];
         }
         $this->response['head']['js'] = array('/plugins/form-jasnyupload/fileinput.min.js');
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:imageInput.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:imageInput.html.smarty', $vars);
 
         return $this->response;
     }
@@ -223,7 +223,7 @@ class FormRenderController extends CoreController{
         if(isset($inputDetails['helpText'])){
             $vars['field']['helpText'] = $inputDetails['helpText'];
         }
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:input.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:input.html.smarty', $vars);
 
         return $this->response;
     }
@@ -339,7 +339,7 @@ class FormRenderController extends CoreController{
         if(isset($inputDetails['helpText'])){
             $vars['field']['helpText'] = $inputDetails['helpText'];
         }
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:tagInput.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:tagInput.html.smarty', $vars);
         $this->response['head']['css'] = array('/plugins/form-select2/select2.css');
         $this->response['head']['js'] = array('/plugins/form-select2/select2.min.js');
 
@@ -454,7 +454,7 @@ class FormRenderController extends CoreController{
         if($inputDetails['settings']['ckeditor']){
             $vars['field']['ckeditor'] = $inputDetails['ckeditor'];
         }
-        $this->response['html'] = $this->templating->render('BiberLtdCoreBundlesCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:textarea.html.smarty', $vars);
+        $this->response['html'] = $this->templating->render('BiberLtdBundleCoreBundle:'.$inputDetails['settings']['theme'].'/FormElements:textarea.html.smarty', $vars);
 
         if($inputDetails['settings']['ckeditor']){
             $this->response['head']['js'] = array('/plugins/form-ckeditor/ckeditor.js');

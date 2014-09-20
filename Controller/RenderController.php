@@ -80,7 +80,7 @@ class RenderController extends  CoreController{
                 'title' => $title,
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_analytics.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_analytics.html.smarty', $vars);
     }
     /**
      * @name            renderChartWidget()
@@ -122,7 +122,7 @@ class RenderController extends  CoreController{
                 'title' => $title,
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_chart.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_chart.html.smarty', $vars);
     }
     /**
      * @name            renderContentEditor()
@@ -194,7 +194,7 @@ class RenderController extends  CoreController{
                 'title'         => $title,
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.content_editor.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.content_editor.html.smarty', $vars);
     }
     /**
      * @name                  renderDashboardStatistics ()
@@ -227,7 +227,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_buttons.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_buttons.html.smarty', $vars);
     }
 
     /**
@@ -266,7 +266,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_statistics.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.dashboard_statistics.html.smarty', $vars);
     }
 
     /**
@@ -360,7 +360,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.datatable.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.datatable.html.smarty', $vars);
     }
 
     /**
@@ -436,7 +436,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.generic_form.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.generic_form.html.smarty', $vars);
     }
 
     /**
@@ -471,7 +471,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.lang_dropdown.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.lang_dropdown.html.smarty', $vars);
     }
 
     /**
@@ -532,7 +532,7 @@ class RenderController extends  CoreController{
                 'title' => $title,
             ),
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.modal_box.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.modal_box.html.smarty', $vars);
     }
 
     /**
@@ -693,7 +693,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.multilang_view.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.multilang_view.html.smarty', $vars);
     }
     /**
      * @name            renderMultiUpload ()
@@ -803,7 +803,7 @@ class RenderController extends  CoreController{
                 'widgetSettings' => array_merge($defaultWidgetSettings,$widgetSettings),
             )
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.multi_upload.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.multi_upload.html.smarty', $vars);
     }
     /**
      * @name            renderProjectLogo ()
@@ -840,7 +840,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.project_logo.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.project_logo.html.smarty', $vars);
     }
 
     /**
@@ -904,7 +904,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.matrixtable.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.matrixtable.html.smarty', $vars);
     }
 
     /**
@@ -948,7 +948,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.simpletable.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.simpletable.html.smarty', $vars);
     }
 
     /**
@@ -980,7 +980,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.navigation_quick_actions.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.navigation_quick_actions.html.smarty', $vars);
     }
 
     /**
@@ -1012,7 +1012,7 @@ class RenderController extends  CoreController{
             ),
         );
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.navigation_sidebar.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.navigation_sidebar.html.smarty', $vars);
     }
 
     /**
@@ -1035,7 +1035,7 @@ class RenderController extends  CoreController{
          */
         $vars = array();
 
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Modules:widget.sidebar_separator.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Modules:widget.sidebar_separator.html.smarty', $vars);
     }
 
 }

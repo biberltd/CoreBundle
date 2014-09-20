@@ -99,7 +99,7 @@ class EmailRenderController extends CoreController{
             'settings'      => $settings,
             'title'         => $title,
         );
-        $html = $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/Email:systemNotification.html.smarty', $vars);
+        $html = $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/Email:systemNotification.html.smarty', $vars);
         return $html;
     }
 }

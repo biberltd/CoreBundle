@@ -60,7 +60,7 @@ class TypographyRenderController extends  CoreController{
             'contactInformation'        => $contactInformation,
             'name'                      => $name,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:address.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:address.html.smarty', $vars);
     }
     /**
      * @name            renderBlockquote()
@@ -95,7 +95,7 @@ class TypographyRenderController extends  CoreController{
         if(!is_null($citation)){
             $vars['citation'] = $citation;
         }
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:blockquote.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:blockquote.html.smarty', $vars);
     }
     /**
      * @name            renderBlockquoteAlignedToRight()
@@ -145,7 +145,7 @@ class TypographyRenderController extends  CoreController{
         $vars = array(
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:code.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:code.html.smarty', $vars);
     }
     /**
      * @name            renderDangerParagraph()
@@ -198,7 +198,7 @@ class TypographyRenderController extends  CoreController{
             'classes'           => $classes,
             'descriptionList'   => $descriptionList,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:descriptionList.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:descriptionList.html.smarty', $vars);
     }
     /**
      * @name            renderHeading()
@@ -232,7 +232,7 @@ class TypographyRenderController extends  CoreController{
             'content'       => $content,
             'level'         => $level,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:heading.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:heading.html.smarty', $vars);
     }
     /**
      * @name            renderHorizontalDescriptionList()
@@ -407,7 +407,7 @@ class TypographyRenderController extends  CoreController{
         $vars = array(
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:em.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:em.html.smarty', $vars);
     }
     /**
      * @name            renderLeadParagraph()
@@ -488,7 +488,7 @@ class TypographyRenderController extends  CoreController{
             'listItems'     => $items,
             'ordered'       => true,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:list.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:list.html.smarty', $vars);
     }
     /**
      * @name            renderParagraph()
@@ -525,7 +525,7 @@ class TypographyRenderController extends  CoreController{
             'classes'       => $classes,
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:paragraph.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:paragraph.html.smarty', $vars);
     }
     /**
      * @name            renderParagraphAlignedToCenter()
@@ -621,7 +621,7 @@ class TypographyRenderController extends  CoreController{
             'classes'       => $classes,
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:pre.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:pre.html.smarty', $vars);
     }
     /**
      * @name            renderPrimaryParagraph()
@@ -669,7 +669,7 @@ class TypographyRenderController extends  CoreController{
         $vars = array(
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:small.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:small.html.smarty', $vars);
     }
     /**
      * @name            renderStrongText()
@@ -694,7 +694,7 @@ class TypographyRenderController extends  CoreController{
         $vars = array(
             'content'       => $content,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:strong.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:strong.html.smarty', $vars);
     }
     /**
      * @name            renderSuccessParagraph()
@@ -752,7 +752,7 @@ class TypographyRenderController extends  CoreController{
             'listItems'     => $items,
             'ordered'       => false,
         );
-        return $this->templating->render('BiberLtdCoreBundlesCoreBundle:' . $core['theme'] . '/HtmlParts:list.html.smarty', $vars);
+        return $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:list.html.smarty', $vars);
     }
     /**
      * @name            renderWarningParagraph()
