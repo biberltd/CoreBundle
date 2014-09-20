@@ -1,0 +1,184 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Form/field.input.upload_ajax_simple.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           11.04.2014
+
+    Description:    This template is used to create a simple ajax uploader field.
+
+    PARAMETERS:
+    =============================================================================
+    $field                  array       main container
+        .classes            array       that holds a list of classes to be used.
+        .id                 string      id attribute
+        .lbl                string      field label
+        .name               string      name attribute
+        .settings           array       that contain view settings
+            .acceptFileTypesstring      /(\.|\/)(gif|jpe?g|png)$/i
+            .autoUpload     bool        true,false
+            .concurrentUploads integer  1
+            .dataType       string      json, html, text
+            .disableImagePreview bool   true, false
+            .limitMultiFileUploads int  1
+            .maxFileSize    integer     5000000  // 5 MB
+            .maxNumberOfFiles integer   1
+            .removable      bool        true|false
+            .rowSize        integer     Row width
+            .showLabel      bool        true, false |Switches the label on or off
+            .singleFileUploads bool     true, false
+            .wrapInRow      bool        true, false
+        .size               integer     1,2,4,6,12 see bootstrap documentation for more details.
+        .txt                array
+            .cancel         string
+            .delete         string
+            .processing     string
+            .selectFiles    string
+            .uploadFailed   string
+        .uploadUrl          string      Ajax upload url.
+
+*}
+{if $field.settings.wrapInRow}
+<div class="form-row clearfix{if isset($field.settings.rowSize)} span{$field.settings.rowSize}{/if} text-center">
+{/if}
+{if isset($showLabel)}<div style="margin-bottom: 2px;">{$field.lbl}</div>{/if}
+<div class="fileinput fileinput-new" data-provides="fileinput" id="{$field.id}">
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>{$field.txt.selectFiles}</span>
+        <!-- The file input field used as target for the file upload widget -->
+        <input id="fileupload" class="{foreach $field.classes as $class} {$class} {/foreach}" type="file" name="{$field.name}[]"{if $field.settings.removable} data-file-id="{$field.fileId}"{/if}{foreach $field.attributes as $attribute} {$attribute} {/foreach}>
+    </span>
+    {if $field.settings.removable}
+    <span id="delete-file-{$field.id}" class="btn btn-danger">
+        {$field.txt.delete}
+    </span>
+    {/if}
+    <br>
+    <br>
+    <!-- The global progress bar -->
+    <div id="progress" class="progress">
+        <div class="progress-bar progress-bar-success"></div>
+    </div>
+    <!-- The container for the uploaded files -->
+    <div id="files-{$field.id}" class="files"></div>
+    <br>
+</div>
+{if $field.settings.wrapInRow}
+</div>
+{/if}
+<script type="text/javascript">
+    {if $field.settings.removable}
+    $('#delete-file-{$field.id}').click(function(e){
+        $.ajax({
+            type: "POST",
+            url: "{$field.settings.removeController}",
+            data: { fileId: $(this.atrr('data-file-id')) },
+            dataType: "html"
+        }).done(
+                function(msg){
+                    // @todo response message.
+                }).fail(function(){ });
+    });
+    {/if}
+    /*jslint unparam: true, regexp: true */
+    /*global window, $ */
+    $(function () {
+        'use strict';
+        // Change this to the location of your server-side upload handler:
+        var url = "{$field.uploadUrl}",
+                uploadButton = $('<button/>').addClass('btn btn-primary').prop('disabled', true)
+                        .text('{$field.txt.processing}').on('click', function () {
+                            var $this = $(this),
+                                    data = $this.data();
+                                    $this
+                                            .off('click')
+                                            .text('{$field.txt.cancel}')
+                                            .on('click', function () {
+                                                $this.remove();
+                                                data.abort();
+                                            });
+                                    data.submit().always(function () {
+                                        $this.remove();
+                                    });
+                        });
+        $('#fileupload').fileupload({
+            url: url,
+            dataType: '{$field.settings.dataType}', // json, html, text
+            autoUpload: {$field.settings.autoUpload}, // false
+            acceptFileTypes: {$field.settings.acceptFileTypes}, // /(\.|\/)(gif|jpe?g|png)$/i,
+            singleFileUploads: {$field.settings.singleFileUploads}, // true,
+            limitMultiFileUploads: {$field.settings.limitMultiFileUploads}, // 1,
+            limitConcurrentUploads: {$field.settings.concurrentUploads}, // 1,
+            maxNumberOfFiles: {$field.settings.maxNumberOfFiles}, // 1,
+            maxFileSize: {$field.settings.maxFileSize}, // 5000000, // 5 MB
+            // Enable image resizing, except for Android and Opera,
+            // which actually support image resizing, but fail to
+            // send Blob objects via XHR requests:
+            disableImagePreview: {$field.settings.disableImagePreview},
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+        }).on('fileuploadadd', function (e, data) {
+                    data.context = $('<div/>').appendTo('#files');
+                    $.each(data.files, function (index, file) {
+                        var node = $('<p/>')
+                                .append($('<span/>').text(file.name));
+                        if (!index) {
+                            node
+                                    .append('<br>')
+                                    .append(uploadButton.clone(true).data(data));
+                        }
+                        node.appendTo(data.context);
+                    });
+                }).on('fileuploadprocessalways', function (e, data) {
+                    var index = data.index,
+                            file = data.files[index],
+                            node = $(data.context.children()[index]);
+                    if (file.preview) {
+                        node
+                                .prepend('<br>')
+                                .prepend(file.preview);
+                    }
+                    if (file.error) {
+                        node
+                                .append('<br>')
+                                .append($('<span class="text-danger"/>').text(file.error));
+                    }
+                    if (index + 1 === data.files.length) {
+                        data.context.find('button')
+                                .text('Upload')
+                                .prop('disabled', !!data.files.error);
+                    }
+                }).on('fileuploadprogressall', function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .progress-bar').css(
+                            'width',
+                            progress + '%'
+                    );
+                }).on('fileuploaddone', function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        if (file.url) {
+                            var link = $('<a>')
+                                    .attr('target', '_blank')
+                                    .prop('href', file.url);
+                            $(data.context.children()[index])
+                                    .wrap(link);
+                        } else if (file.error) {
+                            var error = $('<span class="text-danger"/>').text(file.error);
+                            $(data.context.children()[index])
+                                    .append('<br>')
+                                    .append(error);
+                        }
+                    });
+                }).on('fileuploadfail', function (e, data) {
+                    $.each(data.files, function (index, file) {
+                        var error = $('<span class="text-danger"/>').text('{$field.txt.uploadFailed}');
+                        $(data.context.children()[index])
+                                .append('<br>')
+                                .append(error);
+                    });
+                }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
+</script>

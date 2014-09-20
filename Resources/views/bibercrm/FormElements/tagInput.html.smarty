@@ -1,0 +1,91 @@
+{*
+    @name:      tagInput.html.smarty
+    @date:      02.05.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $field                              array           that holds field details.
+        .attributes                     array           hold special attributes and corresponding values.
+            array
+                .name                   string          attribute name.
+                .value                  string          attribute value.
+        .id                             string          field id.
+        .classes                        array           Names of classes to be used.
+        .helpText                       string          help / information text.
+        .label                          string          field label.
+        .name                           string          field name.
+        .placeHolder                    string          field placeholder text.
+        .settings                       array           that holds field settings.
+            .disabled                   bool            false,true
+            .readonly                   bool            false,true
+            .showHelpBlock              bool            false,true
+            .showTooltipHelp            bool            false,true
+            .showLabel                  bool            true,false
+            .wrapInGroup                bool            false,true
+        .tabIndex                       integer         Tab index
+        .type                           string          text,password, etc.
+        .value                          string          default value of the field.
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+{if $field.settings.wrapInGroup}
+<div class="form-group">
+{/if}
+{if $field.settings.showLabel}
+<label for="{$field.id}" class="col-sm-3 control-label">{$field.label}</label>
+{/if}
+<div class="col-sm-{if $field.settings.showHelpBlock}6{else}9{/if}">
+    <input tabindex="{$field.tabIndex}" style="width:100%;" type="hidden" class="{foreach $field.classes as $class} {$class}{/foreach}{if $field.settings.showTooltipHelp} tooltips{/if}"{if $field.settings.showTooltipHelp} data-trigger="hover" data-original-title="{$field.helpText}"{/if} id="{$field.id}"{if isset($field.placeHolder)} placeholder="{$field.placeHolder}"{/if} name="{$field.name}" value="{$field.value}"{if isset($field.attributes)}{foreach $field.attributes as $attribute} {$attribute.name}="{$attribute.value}"{/foreach}{/if}{if $field.settings.disabled} disabled=""{/if}{if $field.settings.readonly} readonly="readonly"{/if}>
+</div>
+{if $field.settings.showHelpBlock}
+<div class="col-sm-3">
+    <p class="help-block">{$field.helpText}</p>
+</div>
+{/if}
+{if $field.settings.wrapInGroup}
+</div>
+{/if}
+<script type="text/javascript">
+    $('#{$field.id}').select2({
+        {if isset($field.settings.predefinedTags)}
+        tags: [{foreach $field.settings.predefinedTags as $tag}"{$tag}"{if !$tag@last},{/if}{/foreach}],
+        {/if}
+        {if isset($field.settings.maximumInputLentgth)}
+        maximumInputLentgth: {$field.settings.maximumInputLentgth},
+        {/if}
+        {if isset($field.settings.minimumInputLength)}
+        minimumInputLength: {$field.settings.minimumInputLength},
+        {/if}
+        {if isset($field.settings.width)}
+        width: {$field.settings.width},
+        {/if}
+        {if isset($field.settings.minimumResultsForSearch)}
+        minimumResultsForSearch: {$field.settings.minimumResultsForSearch},
+        {/if}
+        {if isset($field.placeHolder)}
+        placeHolder: "{$field.placeHolder}",
+        {/if}
+        tokenSeparators: [","]
+    });
+</script>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.1       29.05.2014                            Can Berkol
+    ============================================================
+    - Paramter added: $tabIndex
+    ============================================================
+    1.0.0       02.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

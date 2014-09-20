@@ -1,0 +1,222 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.content_Editor.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           05.02.2014
+
+    Description:    Creates content editor view.
+
+    TODO
+    =============================================================================
+    @todo Bircan Tuner aynı sayfada multiple widget kullanma olanağı.
+
+    PARAMETERS:
+    =============================================================================
+    $module                         array       Main container
+        .btn                        array       That holds button texts.
+            .add_image              string
+            .add_text               string      Add text button.
+            .change                 string
+            .delete                 string
+            .no                     string
+            .save                   string      Save button
+            .yes                    string
+        .code                       string      A timestamp based unique code to prevent issues on using this widget multiple times at a single page.
+        .icon                       string      That holds URL to module icon.
+        .lbl                        array       That holds label texts
+            .confirm                array       That holds confirm related translations
+                .delete             string      Confirm delete action text.
+        .settings                   array       Holds a list of settings
+            .imageEnabled           bool        true, false | enables image content.
+            .selfContained          bool        false, true |wraps in <div=class"container-fluid">
+            .textEnabled            bool        true, false | enables text content.
+            .url                    array       that holds url definitions
+                .getContent         string      Controller that sends the content as JSON object.
+                .uploadImage        string      Controller that handles image controller
+            .wrapInRow              bool        false,true
+        .title                      string      Module title / header.
+*}
+{if $module.settings.selfContained}
+<div class="container-fluid">
+{/if}
+{if $module.settings.wrapInRow}
+<div class="row-fluid">
+{/if}
+<!-- <widget:ContentEditor> -->
+<div id="editor{* -{$module.code} *}" class="widget widget-add-content">
+    <div class="widget-title clearfix">
+        <img class="icon-title" src="{$module.icon}" />
+        <h6>{$module.title}</h6>
+    </div>
+    <div class="widget-content">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="editor-content">
+                    <div class="loading"></div>
+                    <!-- Content comes here -->
+                    <div class="content-modules"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-actions">
+        <span id="btn-submit" class="btn btn-primary pull-left">{$module.btn.save}</span>
+    </div>
+</div>
+{if $module.settings.wrapInRow}
+</div>
+{/if}
+{if $module.settings.selfContained}
+</div>
+{/if}
+<!-- </widget:ContentEditor> -->
+<!-- Insert Content Template -->
+<script type="text/html" id="insert-content-template">
+    <div class="module-divider-inner">
+        <div class="insert-content">
+            {if $module.settings.textEnabled}
+            <div class="insert-content-button">
+                <span class="btn insert-text">{$module.btn.add_text}</span>
+            </div>
+            {/if}
+            {if $module.settings.imageEnabled}
+            <div class="insert-content-button">
+                <span class="btn insert-image fileinput-button">
+                    <span>{$module.btn.add_image}</span>
+                    <!-- The file input field used as target for the file upload widget -->
+                    <input class="fileupload" type="file" name="files[]" multiple>
+                </span>
+            </div>
+            {/if}
+        </div>
+        <div class="insert-content-line"></div>
+    </div>
+</script>
+{if $module.settings.textEnabled}
+<!-- Text Content Template -->
+<script type="text/html" id="text-template">
+    <div class="module-container" data-type="<%= type %>" data-order="<% order %>">
+        <div class="module-modal" data-question="delete">
+            <div class="module-modal-inner">
+                <div class="module-modal-content">
+                    <p>{$module.lbl.confirm.delete}</p>
+                </div>
+                <div class="module-modal-footer">
+                    <span class="btn btn-small btn-link" data-answer="decline">{$module.btn.no}</span>
+                    <span class="btn btn-inverse btn-small" data-answer="accept">{$module.btn.yes}</span>
+                </div>
+            </div>
+        </div>
+        <div class="edit-module-container">
+            <ul class="edit-button-list">
+                <li class="edit-module-button ">
+                    <span class="btn edit-module btn-small btn-inverse">{$module.btn.change}</span>
+                </li>
+                <li class="edit-module-button ">
+                    <span class="btn delete-module btn-small btn-inverse">{$module.btn.delete}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="module-content-container">
+            <div class="module-content">
+                <div class="ck-editable">
+                    <%= content %>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+{/if}
+{if $module.settings.imageEnabled}
+<!-- Image Content Template -->
+<script type="text/html" id="image-template">
+    <div class="module-container" data-type="<%= type %>" data-order="<% order %>">
+        <div class="module-modal" data-question="delete">
+            <div class="module-modal-inner">
+                <div class="module-modal-content">
+                    <p>{$module.lbl.confirm.delete}</p>
+                </div>
+                <div class="module-modal-footer">
+                    <span class="btn btn-small btn-link" data-answer="decline">{$module.btn.no}</span>
+                    <span class="btn btn-inverse btn-small" data-answer="accept">{$module.btn.yes}</span>
+                </div>
+            </div>
+        </div>
+        <div class="edit-module-container">
+            <ul class="edit-button-list">
+                <li class="edit-module-button ">
+                    <span class="btn delete-module btn-small btn-inverse">{$module.btn.delete}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="module-content-container">
+            <div class="module-content">
+                <img src="<%= content %>">
+            </div>
+        </div>
+    </div>
+</script>
+{/if}
+<!-- Insert Content Widget -->
+
+<script type="text/javascript">
+
+    // Insert Content Widget global variables
+    var app = app || { };
+
+    app.contentsUrl = '{$module.settings.url.getContent}';
+    {if $module.settings.imageEnabled}
+    app.imgUploadUrl = '{$module.settings.url.uploadImage}';
+    {/if}
+
+</script>
+{* javascripts assets='@BiberLtdCoreBundlesCoreBundle/Resources/js/models/content.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/views/insert-content-view.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/views/content-view.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/views/image-view.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/views/text-view.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/views/editor-app-view.js,
+            @BiberLtdCoreBundlesCoreBundle/Resources/js/editor-app.js
+            ' output='js/compiled/all.js'
+            }
+<script src="{$asset_url}"></script>
+{/javascripts *}
+
+<script src="{$module.settings.jsFolder}/models/content.js"></script>
+<script src="{$module.settings.jsFolder}/collections/contents.js"></script>
+<script src="{$module.settings.jsFolder}/views/insert-content-view.js"></script>
+<script src="{$module.settings.jsFolder}/views/content-view.js"></script>
+<script src="{$module.settings.jsFolder}/views/image-view.js"></script>
+<script src="{$module.settings.jsFolder}/views/text-view.js"></script>
+<script src="{$module.settings.jsFolder}/views/editor-app-view.js"></script>
+<script src="{$module.settings.jsFolder}/editor-app.js"></script>
+
+<script type="text/javascript">
+    (function($){
+        $('#btn-submit').click(function(){
+
+            $submitBtn = $(this);
+            $submitBtn.data('text', $submitBtn.text()).text('{$module.lbl.saving}').addClass('disabled').attr('disabled','');
+
+            $.ajax({
+                type: "POST",
+                url: "{$module.settings.url.saveContent}",
+                data: { data: JSON.stringify(app.contents.toJSON()) },
+                dataType: "html"
+            }).done(
+                function(msg){
+                    $('.alert').remove();
+                    if(msg == 'success'){
+                        $submitBtn.text('{$module.btn.save}').removeData('text').removeClass('disabled').removeAttr('disabled');
+                        $submitBtn.after('<div class="alert alert-success">{$module.lbl.save.success}</div>');
+                    }
+                    else if(msg == 'error'){
+                        $submitBtn.text('{$module.btn.save}').removeData('text').removeClass('disabled').removeAttr('disabled');
+                        $submitBtn.after('<div class="alert alert-error">{$module.lbl.save.error}</div>');
+                    }
+            }).fail(function(){ });
+        });
+    }(jQuery));
+</script>

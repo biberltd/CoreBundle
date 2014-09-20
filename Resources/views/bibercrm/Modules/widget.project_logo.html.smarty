@@ -1,0 +1,35 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.project_logo.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.1
+    Date:           08.01.2014
+
+    Description:    Outputs project/client logo.
+
+    BLOCKS:
+    =============================================================================
+    N/A
+
+    EXTENDS:
+    =============================================================================
+    N/A
+
+    PARAMETERS:
+    =============================================================================
+    $module
+        .dashboard
+            .link
+            .title
+        .project
+            .logo
+            .name
+*}
+<div class="logo-project">
+    <div class="logo-project-img">
+        <a href="{$module.dashboard.link}" title="{$module.dashboard.title}">
+            <img src="{$module.project.logo}" alt="{$module.project.name}" />
+        </a>
+    </div>
+</div>

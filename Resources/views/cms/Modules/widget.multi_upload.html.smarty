@@ -1,0 +1,542 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.multi_upload.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           25.01.2014
+
+    Description:    This template is used to create data lists/tables.
+
+    PARAMETERS:
+    =============================================================================
+    $module                     array       Main container
+        .btn                    array       That holds button translations
+            .add_files          string      Add Files button
+            .cancel             string      Cancel button
+            .delete             string      Delete button
+            .start              string      Start button
+        .code                   string      A timestamp based unique code to prevent issues on using this widget multiple times at a single page.
+        .crop                   array       that holds crop area details
+            .action             string      Controller URI that handles cropping features.
+            .btn                array       That holds crop area button definitions.
+                .add_crop       string      Add crop button.
+            .crops              array       That holds available crop information. Each iteration holds the following keys:
+                .height         integer     Height in pixels
+                .name           string      Name to be shown.
+                .width          integer     Width in pixels
+            .icon               string      Url to crop icon.
+            .lbl                array       That holds crop area translations
+                .info           string      Crop area information.
+                .title          string      Crop area title
+            .method             string      post, get
+        .dragDrop               array       that holds drag and drop area details
+            .icon               string      Url of the icon to be used.
+        .form                   array       that holds form details
+            .action             string      Url that handles uploads.
+            .method             string      post,get
+        .icon                   string      url of module icon
+        .lbl                    array       that holds label translations
+            .crop               string      Crop
+            .dragdrop_info      string      Drag & Drop info text.
+            .empty              string      Empty field indicator.
+            .error              string      Error message
+            .file_name          string      File name
+            .file_size          string      File size
+            .options            string      options
+            .preview            string      Preview image identifier
+            .sort_order         string      Sort Order
+        .title                  string      Module title
+        .settings               array       That holds module settings. These settings do modify the view and behavior of the module.
+            .acceptFileTypes    string      /(\.|\/)(gif|jpe?g|png)$/i | Regular expression of allowed file types.
+            .crop               bool        false, true | Enable / disable cropping
+            .dragDrop           bool        true, false ( Enables / disables drag and drop panel)
+            .maxFileSize        integer     50000 = 50MB |numeric value in bytes
+            .postAjax           bool        true, false
+            .sorting            bool        false, true |Enables / disables sorting column (a text input column)
+            .uploadController   string      URL of jax upload controller.
+            .uploadType         string      post, get
+            .dataType           string      json | data type sent to / from ajax request.
+            .wrapInRow          bool        true, false | Wraps the widget into <div class="row-fluid">
+
+*}
+{if $module.uploadSettings.wrapInRow}
+<div class="row-fluid">
+{/if}
+<div id="widget-{$module.widgetSettings.code}" class="widget">
+    <div class="widget-title clearfix">
+        <img class="icon-title" src="{$module.widgetSettings.icon}" />
+        <h6>{$module.widgetSettings.title}</h6>
+    </div>
+    <!-- The file upload form used as target for the file upload widget -->
+    {if $module.uploadSettings.postAjax}
+    <form id="fileupload-{$module.widgetSettings.code}" class="fileupload" action="{$module.formSettings.action}" method="{$module.formSettings.method}" enctype="{$module.formSettings.enctype}">
+    {/if}
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="table-static">
+            <thead>
+            <tr>
+                <td width="24"></td>
+                <td width="200">{$module.txt.lbl.preview}</td>
+                <td>{$module.txt.lbl.file_name}</td>
+                {if $module.uploadSettings.crop}
+                <td width="120">{$module.txt.lbl.crop}</td>
+                {/if}
+                <td width="100">{$module.txt.lbl.file_size}</td>
+                {if $module.uploadSettings.sorting}
+                <td width="50">{$module.txt.lbl.sort_order}</td>
+                {/if}
+                <td width="120">{$module.txt.lbl.options}</td>
+            </tr>
+            </thead>
+            <tbody class="files" data-toggle="modal-gallery-{$module.widgetSettings.code}" data-target="#modal-gallery-{$module.widgetSettings.code}"></tbody>
+        </table>
+        <div class="form-actions fileupload-buttonbar">
+            <div class="pull-left">
+                <input type="checkbox" class="toggle">
+                <button type="button" class="btn delete" disabled="">
+                    <i class="icon-trash icon-white"></i>
+                    <span>{$module.txt.btn.delete}</span>
+                </button>
+            </div>
+            <button type="submit" class="btn btn-primary start pull-right" disabled="">
+                <i class="icon-upload icon-white"></i>
+                <span>{$module.txt.btn.start}</span>
+            </button>
+            <div class="clear"></div>
+        </div>
+        {if $module.uploadSettings.dragDrop}
+        <div class="divider"></div>
+        <div class="widget-content highlight clearfix">
+            <div class="row-fluid">
+                <div class="span12">
+                    <!-- Drap n Drop Area -->
+                    <div class="fileupload-area">
+                        <p>{$module.txt.lbl.dragdrop_info}</p>
+                        <span class="btn fileinput-button mt-10">
+                            <img class="icon-inline" src="{$module.uploadSettings.dragDropIcon}" />
+                            <span>{$module.txt.btn.add_files}</span>
+                            <input type="file" name="files" multiple>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+    {if $module.uploadSettings.postAjax}
+        <input type="hidden" name="csfr" value="{$module.formSettings.csfr}" />
+    </form>
+    {/if}
+</div>
+{if $module.uploadSettings.wrapInRow}
+</div>
+{/if}
+<script id="template-upload" type="text/x-tmpl">
+    <% for (var i=0, file; file=o.files[i]; i++) { %>
+        <tr class="template-upload fade">
+            <td></td>
+            <td class="preview text-center"><span class="fade"></span></td>
+            <td class="name"><span><%=file.name%></span></td>
+    <% if (file.error) { %>
+                <td class="error" colspan="2"><span class="label label-important">{$module.txt.lbl.error}</span> <%=file.error%></td>
+    <% } else if (o.files.valid && !i) { %>
+                <td>
+                    <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                </td>
+                <td class="size"><span><%=o.formatFileSize(file.size)%></span></td>
+                <td></td>
+    <td>
+    <% if (!o.options.autoUpload) { %>
+                    <button class="btn btn-primary start btn-small">
+                        <i class="icon-upload icon-white"></i>
+                        <span>{$module.txt.btn.start}</span>
+                    </button>
+                <% } %>
+    <% if (!i) { %>
+                    <button class="btn btn-warning cancel btn-small">
+                        <i class="icon-ban-circle icon-white"></i>
+                        <span>{$module.txt.btn.cancel}</span>
+                    </button>
+                <% } %></td>
+    <% } else { %>
+                <td></td>
+            <% } %>
+
+    </tr>
+    <% } %>
+</script>
+
+<script id="template-download" type="text/x-tmpl">
+    <%  %>
+    <% for (var i=0, file; file=o.files[i]; i++) { %>
+        <tr class="template-download fade">
+            <% if (file.error) { %>
+                <td></td>
+                <td class="name"><span><%=file.name %></span></td>
+    <td class="size"><span><%=o.formatFileSize(file.size) %></span></td>
+    <td class="error" colspan="2"><span class="label label-important">{$module.txt.lbl.error}</span> <%=file.error %></td>
+    <% } else { %>
+                <td class="check text-center">
+                    <input type="checkbox" name="delete" value="<%=file.file_id%>" class="toggle">
+                </td>
+                <td class="preview text-center"><% if (file.thumbnail_url) { %>
+                    <a href="<%=file.url %>" title="<%=file.name %>" data-gallery="gallery" download="<%=file.name %>"><img src="<%=file.thumbnail_url %>"></a>
+                <% } %></td>
+                <td class="name">
+                    <a href="<%=file.url %>" title="<%=file.name %>" data-gallery="<%=file.thumbnail_url&&'gallery' %>" download="<%=file.name %>"><%=file.name %></a>
+                </td>
+                {if $module.uploadSettings.crop}
+                <td class="crop text-center">
+                    <form class="crop-coords" method="{$module.cropSettings.method}" action="{$module.cropSettings.action}">
+                        <a class="btn btn-small crop-btn disabled" href="#crop-<%=a%>"><img class="icon-inline" src="{$module.txt.crop.icon}" />{$module.txt.crop.btn.add_crop}</a>
+                        <div style="display:none">
+                            <div id="crop-<%=a %>" class="modal-crop">
+                                <div class="modal-header">
+                                    <h3 id="myModalLabel">{$module.txt.crop.lbl.title}</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-content">
+                                        <img class="crop-img" src="<%=file.url %>" />
+                                        <p class="crop-info mt-10">{$module.txt.crop.lbl.info}</p>
+                                    </div>
+                                    <div class="modal-sidebar">
+                                        <h5>{$module.txt.crop.lbl.select_crop}</h5>
+                                        <div class="crop-size-container btn-group btn-group-vertical" data-toggle="buttons-radio">
+                                            {foreach $module.cropSettings.crops as $crop}
+                                            <button type="button" class="btn crop-size{if $crop@iteration == 1} active{/if}" data-width="{$crop.width}" data-height="{$crop.height}">{$crop.width}x{$crop.height}<br/>{$crop.name}</button>
+                                            {/foreach}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="btn-container">
+                                        <div class="loading"></div>
+                                        <button class="btn btn-dismiss">{$module.txt.crop.btn.close}</button>
+                                        <button class="btn btn-primary btn-save">{$module.txt.crop.btn.save}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="crop-<%=a%>-x1" name="x1" />
+                        <input type="hidden" id="crop-<%=a%>-y1" name="y1" />
+                        <input type="hidden" id="crop-<%=a%>-x2" name="x2" />
+                        <input type="hidden" id="crop-<%=a%>-y2" name="y2" />
+                        <input type="hidden" id="crop-<%=a%>-w" name="w" />
+                        <input type="hidden" id="crop-<%=a%>-h" name="h" />
+                    </form>
+                    <% a++; %>
+                </td>
+                {/if}
+                <td class="size text-center"><span><%=o.formatFileSize(file.size) %></span></td>
+            <% } %>
+            {if $module.uploadSettings.sorting}
+            <td class="sort-order text-center"><input id="sortorder-<%=file.file_id%>" type="text" value="<%=file.sort%>" data-extra="<%=file.extra%>"/></td>
+            {/if}
+            <td>
+                <button class="btn btn-danger delete btn-small" data-type="<%=file.delete_type %>" data-url="<%=file.delete_url %>"<% if (file.delete_with_credentials) { %> data-xhr-fields='{ "withCredentials":true }'<% } %>>
+                    <i class="icon-trash icon-white"></i>
+                    <span>{$module.txt.btn.delete}</span>
+                </button>
+            </td>
+        </tr>
+    <% } %>
+</script>
+    <script type="text/javascript">
+
+        $(function () {
+            'use strict';
+
+            /* =============================================================================
+               File Uploader
+               ========================================================================== */
+
+            // Initialize the jQuery File Upload widget:
+            $('#fileupload-{$module.widgetSettings.code}').fileupload({
+                url: '{$module.uploadSettings.uploadController}',
+                type: '{$module.uploadSettings.uploadType}',
+                dataType: '{$module.uploadSettings.dataType}',
+                autoUpload: {$module.uploadSettings.autoUpload},
+                dropZone : $('#fileupload-{$module.widgetSettings.code} .fileupload-area'),
+                maxFileSize: {$module.uploadSettings.maxFileSize},
+                acceptFileTypes: {$module.uploadSettings.acceptFileTypes},// /(\.|\/)(gif|jpe?g|png)$/i,
+                process: [
+                    {
+                        action: 'load',
+                        fileTypes: {$module.uploadSettings.acceptFileTypes}, // /^image\/(gif|jpeg|png)$/,
+                        maxFileSize: {$module.uploadSettings.maxFileSize} // 20MB
+                    },
+                    {
+                        action: 'resize',
+                        maxWidth: 1440,
+                        maxHeight: 900
+                    },
+                    {
+                        action: 'save'
+                    }
+                ]
+            });
+
+
+            // Disable
+            $(document).bind('drop dragover', function (e) {
+                e.preventDefault();
+            });
+
+            // Load existing files:
+            $.ajax({
+                url: '{$module.uploadSettings.getImagesController}',
+                dataType: 'json',
+                context: $('#fileupload-{$module.widgetSettings.code}')[0]
+            }).done(function (result) {
+                        $(this).fileupload('option', 'done')
+                                .call(this, null, { result: result });
+                        $('#fileupload-{$module.widgetSettings.code} .template-download').each(function(){
+                            {if $module.uploadSettings.crop}
+                            _setupCropper(this);
+                            {/if}
+                            {* if $module.uploadSettings.sorting}
+                            _setupSortOrder(this);
+                            {/if *}
+                        });
+
+                    });
+
+            $('.crop-btn.disabled').click(function(e){
+                e.preventDefault();
+                return false;
+            })
+
+            function _setupDeleteButton(e) {
+                var fileupload = $(e.target).parents('.fileupload');
+                var fileupload_buttonbar = $(fileupload).find('.fileupload-buttonbar');
+
+                if($(e.target).parents('.fileupload-buttonbar').length){
+
+                    if($(e.target).is(':checked')){
+                        $(fileupload_buttonbar).find('.delete').prop('disabled', false);
+                    }
+                    else {
+                        $(fileupload_buttonbar).find('.delete').prop('disabled', true);
+                    }
+                }
+                else {
+                    if($(fileupload).find('.toggle:checked').length) {
+                        $(fileupload_buttonbar).find('.delete').prop('disabled', false);
+                    }
+                    else {
+                        $(fileupload_buttonbar).find('.delete').prop('disabled', true);
+                    }
+                }
+                $('.toggle').click(function(e){
+                    if($(e.target).is(':checked')){
+                        $(fileupload_buttonbar).find('.delete').prop('disabled', false);
+                    }
+                    else{
+                        if($(fileupload).find('.toggle:checked').length < 1){
+                            $(fileupload_buttonbar).find('.delete').prop('disabled', true);
+                        }
+                    }
+                });
+            }
+
+            function _setupUploadButton(e, data) {
+                var fileupload = $(e.target);
+                var fileupload_buttonbar = $(fileupload).find('.fileupload-buttonbar');
+
+                if($(fileupload_buttonbar).find('.start').is(':disabled')) {
+                    $(fileupload_buttonbar).find('.start').prop('disabled', false);
+                }
+
+            }
+
+            function _disableUploadButton(e, data) {
+                var fileupload = $(e.target);
+                var fileupload_buttonbar = $(fileupload).find('.fileupload-buttonbar');
+
+                if(!$(fileupload_buttonbar).find('.start').is(':disabled')) {
+                    $(fileupload_buttonbar).find('.start').prop('disabled', true);
+                }
+            }
+
+            // setup Delete Buttons after window load
+            $(window).load(function(){
+
+                $('.template-download .toggle').on("click", _setupDeleteButton);
+                $('.fileupload-buttonbar .toggle').on("click", _setupDeleteButton);
+
+                $('#fileupload-{$module.widgetSettings.code}').bind('fileuploadadded', _setupUploadButton);
+                $('#fileupload-{$module.widgetSettings.code}').bind('fileuploadalways', _disableUploadButton);
+                $('#fileupload-{$module.widgetSettings.code}').bind('fileuploadfail', _disableUploadButton);
+
+            });
+
+            $('#fileupload-{$module.widgetSettings.code}').bind('fileuploadcompleted', function(e, data){
+                $(data.context).each(function(){
+                    {if $module.uploadSettings.crop}
+                    _setupCropper($(this));
+                    {/if}
+                    {if $module.uploadSettings.sorting}
+                    _setupSortorder($(this));
+                    {/if}
+                });
+            });
+{if $module.uploadSettings.sorting}
+            /* =============================================================================
+             Sort Order Setup
+             ========================================================================== */
+
+            function _setupSortorder(uFile) {
+
+                console.log('Initializing Sort Order');
+
+                $(uFile).find('.sort-order input').on('keyup', function(e){
+
+                    $(this).attr('value', $(this).val());
+
+                    // Load existing files:
+                    $.ajax({
+                        // Uncomment the following to send cross-domain cookies:
+                        //xhrFields: { withCredentials: true },
+                        url: "{$module.sortSettings.action}",
+                        type: '{$module.sortSettings.method}',
+                        data:{
+                            'id':  $(this).attr('id'),
+                            'order':  $(this).val(),
+                            'extra': $(this).attr('data-extra')
+                        },
+                        dataType: 'json',
+                        context: $('#fileupload-{$module.widgetSettings.code}')[0]
+                    }).done(function (result) {
+                                $(this).fileupload('option', 'done')
+                                        .call(this, null, {ldelim}result: result{rdelim});
+
+                            });
+
+                });
+
+            }
+{/if}
+{if $module.uploadSettings.crop}
+            /* =============================================================================
+               Cropper Setup
+               ========================================================================== */
+
+            // Jcrop reference array
+            var cropRefs = {};
+
+            function _setupCropper(uFile) {
+
+                // setup fancbybox on crop buttons
+                $(uFile).find(".crop-btn").fancybox({
+                	fitToView	: false,
+                	width		: 940,
+                	minHeight	: 430,
+                    padding     : 0,
+                	closeClick	: false
+                });
+
+                // setup Jcrop for crop image
+                var modal_box = '#' + $(uFile).find('.modal-crop').attr('id');
+
+                // aspectratio of the active crop size
+                var ratio = $(modal_box).find('.crop-size.active').attr('data-width')/$(modal_box).find('.crop-size.active').attr('data-height');
+
+                $(modal_box).find('.crop-img').Jcrop({
+                    boxWidth: 690,
+                    boxHeight: 690,
+                    aspectRatio: ratio,
+                    onChange:   updateCoords,
+                    onSelect:   updateCoords
+                },function(){
+                    cropRefs[modal_box] = this;
+                    console.log('Jcrop initilialized.');
+                });
+
+                var modal_id = '#' + $(modal_box).attr('id');
+
+                function updateCoords(c) {
+                    $( modal_id + '-x1').val(c.x);
+                    $( modal_id + '-y1').val(c.y);
+                    $( modal_id + '-x2').val(c.x2);
+                    $( modal_id + '-y2').val(c.y2);
+                    $( modal_id + '-w').val(c.w);
+                    $( modal_id + '-h').val(c.h);
+                }
+
+                // crop size click event
+                $(modal_box).find('.crop-size').click(function(e){
+
+                    var jcrop_api = '#' + $(this).parents('.modal-crop').attr('id');
+                    cropRefs[jcrop_api].setOptions({
+                        aspectRatio: $(this).attr('data-width')/$(this).attr('data-height')
+                    });
+                    cropRefs[jcrop_api].focus();
+                });
+
+                /* Modal Crop dismiss button closes opened fancybox */
+                $(modal_box).find('.btn-dismiss').click(function(){
+
+                    $.fancybox.close();
+
+                });
+
+                // Loading Spinner Options
+                var spin_opts = {
+                    lines: 9, // The number of lines to draw
+                    length: 3, // The length of each line
+                    width: 2, // The line thickness
+                    radius: 4, // The radius of the inner circle
+                    corners: 1, // Corner roundness (0..1)
+                    rotate: 0, // The rotation offset
+                    direction: 1, // 1: clockwise, -1: counterclockwise
+                    color: '#000', // #rgb or #rrggbb
+                    speed: 1, // Rounds per second
+                    trail: 45, // Afterglow percentage
+                    shadow: false, // Whether to render a shadow
+                    hwaccel: false, // Whether to use hardware acceleration
+                    className: 'spinner', // The CSS class to assign to the spinner
+                    zIndex: 2e9, // The z-index (defaults to 2000000000)
+                    top: 'auto', // Top position relative to parent in px
+                    left: 'auto' // Left position relative to parent in px
+                };
+
+                /* Modal Crop save button */
+                $(modal_box).find('.btn-save').click(function(){
+
+                    // AJAX to save cropped image
+                    $.ajax({
+                        url: "{$module.cropSettings.action}" + prefix,
+                        context: $(this).parents('.modal-crop'),
+                        beforeSend : function() {
+                            $(this).find('.modal-footer .btn-container .loading').spin(spin_opts);
+                        }
+                    }).done(function() {
+
+                        var modal_footer = $(this).find('.modal-footer');
+
+                        // !!! REMOVE TIMEOUT FUNCTION FOR PRODUCTION !!!
+                        setTimeout(function(){
+                            $(modal_footer).find('.loading').spin(false);
+                        },2000);
+
+                        // remove existing alert boxes
+                        if($(modal_footer).find('.alert').length) {
+                            $(modal_footer).find('.alert').removeClass('in').remove();
+                        }
+
+                        //success message
+                        var s_message = "<div class='fade alert alert-success'><button type='button' class='close' data-dismiss='alert'>&times;</button><strong>Well done!</strong> You successfully saved cropped image. </div>";
+                        $(modal_footer).prepend(s_message).find('.alert-success').addClass('in');
+
+                        // remove success after a few seconds
+                        setTimeout(function(){
+                            $(modal_footer).find('.alert').alert('close');
+                        },2000);
+
+                    }).error(function(){
+                        console.log('ajax error.');
+                    });
+                });
+            }
+{/if}
+        });
+</script>

@@ -1,0 +1,32 @@
+{*
+    @name:      paragraph.html.smarty
+                <p>some text</p>
+    @date:      23.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $attributes         array               List of attributes and their values
+    $classes            array               List of classes.
+    $content            string              Any string
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<p{if isset($classes)}{foreach $classes as $class}{$class}{if !$class@last} {/if}{/foreach}{/if}{if isset($attributes)}{foreach $attributes as $attribute => $value} {$attribtue}="{$value}"{/foreach}{/if}>{$content}</p>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       23.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

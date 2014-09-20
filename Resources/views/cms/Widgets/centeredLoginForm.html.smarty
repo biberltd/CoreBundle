@@ -1,0 +1,111 @@
+{*
+    @name:      centeredLoginForm.html.smarty
+                Builds generic login form that is centered both horizontally and vertically.
+    @date:      23.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $action             string              URL where the form will be submitted.
+    $app                array               Application details
+        .link           string              URL
+        .logo           string              URL of application / site logo
+        .name           string              Application / site name
+    $link               array               Holds various links
+        .register       string              URL of registration page
+        .reset          string              URL of password reset page
+    $method             string              post, get
+    $settings           array
+        .register       bool                true, false
+        .remember       bool                true, false
+        .reset          bool                true, false
+
+    ============================================================
+    Translations:
+    ============================================================
+    core > btn.login
+    core > btn.reset
+    core > lbl.loginOrRegister
+    core > lbl.password
+    core > lbl.password.reset
+    core > lbl.register
+    core > lbl.remember
+    core > lbl.username
+    core > msg.error.required.field
+*}
+<a href="{$app.link}"><img class="brand" alt="{$app.name}" src="{$app.logo}"></a>
+<div class="panel panel-primary">
+    <div class="panel-body">
+        {if $settings.register}
+        <h4 style="margin-bottom: 25px;" class="text-center">{trans domain="core" locale="{$locale}"}lbl.loginOrRegister{/trans} <a href="{$link.register}">{trans domain="core" locale="{$locale}"}lbl.register{/trans}</a></h4>
+        {/if}
+        <form id="centeredLoginForm" style="margin-bottom: 0px !important;" class="form-horizontal" action="{$action}" method="{$method}">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                        <input type="text" placeholder="{trans domain="core" locale="{$locale}"}lbl.username{/trans}" id="username" class="form-control" name="member[username]">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                        <input type="password" placeholder="{trans domain="core" locale="{$locale}"}lbl.password{/trans}" id="password" class="form-control" name="member[password]">
+                    </div>
+                </div>
+            </div>
+            {if $settings.remember}
+            <div class="clearfix">
+                <div class="pull-right"><label><input type="checkbox" checked="" style="margin-bottom: 20px" name="remember"> {trans domain="core" locale="{$locale}"}lbl.remember{/trans}</label></div>
+            </div>
+            {/if}
+            {if isset($msg) && count($msg) > 0}
+                <div class="alert alert-dismissable alert-{$msg.type}">
+                    {$msg.content}
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                </div>
+            {/if}
+        </form>
+    </div>
+    <div class="panel-footer">
+        {if $settings.reset}
+        <a style="padding-left:0" class="pull-left btn btn-link" href="{$link.reset}">{trans domain="core" locale="{$locale}"}lbl.password.reset{/trans}</a>
+        {/if}
+        <div class="pull-right">
+            <button class="btn btn-primary" type="reset">{trans domain="core" locale="{$locale}"}btn.reset{/trans}</button>
+            <button class="btn btn-primary" type="submit">{trans domain="core" locale="{$locale}"}btn.login{/trans}</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#centeredLoginForm').validate({
+        rules:{
+            "username": "required",
+            "password": "required"
+        },
+        messages: {
+            "username": {
+                "required": "{trans domain="core" locale="{$locale}"}msg.error.required.field{/trans}"
+            },
+            "required": {
+                "required": "{trans domain="core" locale="{$locale}"}msg.error.required.field{/trans}"
+            }
+        }
+    });
+</script>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       23.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

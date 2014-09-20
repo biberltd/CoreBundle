@@ -1,0 +1,21 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/error.404.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           27.02.2014
+
+    Description:    Creates 404 error message.
+
+    PARAMETERS:
+    =============================================================================
+    $locale                string      Module title / header.
+*}
+<div class="article">
+    <div class="error-wrap">
+        <span class="error-num">404</span>
+        <h3>{trans domain="admin" locale="{$locale}"}msg.error.http.404{/trans}</h3>
+        <div class="clear"></div>
+    </div>
+</div>

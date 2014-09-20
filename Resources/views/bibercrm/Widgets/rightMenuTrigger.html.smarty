@@ -1,0 +1,30 @@
+{*
+    @name:      rightMenuTrigger.html.smarty
+                Creates the reight menu trigger button for navbar.
+    @date:      29.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    N/A
+
+    ============================================================
+    Translations:
+    ============================================================
+    core > lbl.show.sidebar
+*}
+<a id="rightmenu-trigger" class="tooltips" data-toggle="tooltip" data-placement="left" title="{trans domain="core" locale="{$locale}"}lbl.show.sidebar{/trans}"></a>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       29.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

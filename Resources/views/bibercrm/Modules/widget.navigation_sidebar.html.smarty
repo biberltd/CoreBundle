@@ -1,0 +1,63 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.navigation_sidebar.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           05.01.2014
+
+    Description:    Creates the sidebar navigation
+
+    BLOCKS:
+    =============================================================================
+    N/A
+
+    EXTENDS:
+    =============================================================================
+    N/A
+
+    PARAMETERS:
+    =============================================================================
+    $module
+        .link                       array               of $key => $value pairs with possible url base setups.
+            .base_l                 string              http://{DOMAIN}/tr
+        .locale                     string              Locale code.
+        .navigationItems            array               of mixed elements.
+            .children               array               of mixed elements.
+                .entity             object              BiberLtd\Core\Bundles\ContentManagementBundle\Entity\NavigationItem
+                .selected           bool                true or false.
+            .code                   string              A time stamp based unique code.
+            .entity                 object              BiberLtd\Core\Bundles\ContentManagementBundle\Entity\NavigationItem
+            .hasChildren            bool                true or false.
+            .selected               bool                true or false.
+
+
+*}
+<ul class="nav">
+    {foreach $module.navigationItems as $item}
+    <li id="nav-{$item.code}">
+        <a {if $item.selected}id="s-current" {/if}class="clearfix{if $item.selected} s-active{/if}{if $item.hasChildren} s-collapsible{/if}" href="{if $item.hasChildren}#{else}{$module.link.base_l}{$item.entity->getUrl()}{/if}"{if $item.entity->getTarget() == 'b'} target="_blank"{/if}><img src="{$module.link.base}/themes/{$module.core.theme}/img/icons/light/{$item.entity->getIcon()}" alt="{$item.entity->getLocalization($module.locale)->getTitle()}" /><span>{$item.entity->getLocalization($module.locale)->getTitle()}</span>{if $item.hasChildren}<div class="icon-collapse"></div>{/if}</a>
+            <ul id="nav-{$item.code}-sub" class="nav-sub">
+                {foreach $item.children as $childItem}
+                <li{if $childItem@last} class="s-last"{/if}>
+                    <a href="{$module.link.base_l}{$childItem.entity->getUrl()}"{if $childItem.selected} class="s-active"{/if}{if $childItem.entity->getTarget() == 'b'} target="_blank"{/if}><span>{$childItem.entity->getLocalization($module.locale)->getTitle()}</span></a>
+                </li>
+                {/foreach}
+            </ul>
+    </li>
+    {/foreach}
+</ul>
+<script type="text/javascript">
+    $(function() {
+        /* =============================================================================
+         Collapsible Management
+         ========================================================================== */
+        $('.s-collapsible').collapsible({
+            defaultOpen: 's-current',
+            cookieName: 'nav-state',
+            cssOpen: 's-active',
+            cssClose: 's-inactive',
+            speed: 200
+        });
+    });
+</script>

@@ -1,3 +1,16 @@
-biber_ltd_core_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: BiberLtdCoreBundle:Default:index }
+biber_ltd_core_bundles_core_account_recover:
+    pattern:  /account/recover
+    defaults: { _controller: BiberLtdCoreBundlesCoreBundle:Default:recover }
+
+biber_ltd_core_bundles_core_account_validate:
+    pattern:  /account/validate
+    defaults: { _controller: BiberLtdCoreBundlesCoreBundle:Form:login }
+    methods: [post]
+
+biber_ltd_core_bundles_core_login:
+    pattern:  /login
+    defaults: { _controller: BiberLtdCoreBundlesCoreBundle:Default:login }
+
+biber_ltd_core_404:
+    pattern:  /error/404
+    defaults: { _controller: BiberLtdCoreBundlesCoreBundle:Error:error404 }

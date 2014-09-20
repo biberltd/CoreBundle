@@ -1,0 +1,90 @@
+{*
+    @name:      imageInput.html.smarty
+    @date:      30.05.2014
+    @version:   1.0.2
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $field                              array           that holds field details.
+        .classes                        array           Classes.
+        .id                             string          field id
+        .label                          string          field label
+        .name                           string          field name
+        .settings                       array           that holds field settings.
+            .showLabel                  bool            true,false
+            .wrapInGroup                bool            false,true
+        .tabIndex                       integer         tab index
+        .text                           array           that holds localization values
+            .change                     string
+            .remove                     string
+            .select                     string
+        .value                          string          default value of the field.
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+{if $field.settings.wrapInGroup}
+<div class="form-group">
+{/if}
+{if $field.settings.showLabel}
+<label for="{$field.id}" class="control-label">{$field.label}</label><br>
+{/if}
+<div class="fileinput fileinput-new" data-provides="fileinput">
+    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: {$field.settings.width}px; height: {$field.settings.height}px;">
+        {if isset($field.value)}
+        <img data-src="" alt="{$field.label}" src="{if isset($field.value)}{$field.value}{/if}">
+        {/if}
+    </div>
+    <div>
+        <span class="btn btn-default btn-file">
+            <span class="fileinput-new btn-file-edit-new">{$field.text.select}</span>
+            <span class="fileinput-exists btn-file-edit-change">{$field.text.change}</span>
+            <input tabindex="{$field.tabIndex}" id="{$field.id}" type="file" name="{$field.name}" class="{foreach $field.classes as $class} {$class} {/foreach}" {if isset($field.attributes)}{foreach $field.attributes as $attribute} {$attribute}{/foreach}{/if}>
+        </span>
+        <a href="#" class="btn btn-default fileinput-exists{if $field.settings.removable} btn-file-remove{/if}" data-dismiss="fileinput"{if $field.settings.removable && isset($field.fileId)} data-file-id="{$field.fileId}"{/if}>{$field.text.remove}</a>
+        {if $field.settings.showSaveButton}
+            <span class="btn btn-primary btn-file btn-file-edit-save">{$field.text.save}</span>
+        {/if}
+    </div>
+</div>
+{if $field.settings.wrapInGroup}
+</div>
+{/if}
+{if $field.settings.removable}
+    <script type="text/javascript">
+        $('.btn-file-remove').click(function(e){
+            $.ajax({
+                type: "POST",
+                url: "{$field.settings.removeController}",
+                data: { fileId: $(this).attr('data-file-id') },
+                dataType: "html"
+            }).done(
+            function(msg){
+                // @todo response message.
+            }).fail(function(){ });
+        });
+    </script>
+{/if}
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.2       30.05.2014                            Can Berkol
+    ============================================================
+    - Feature Added: Save button
+    ============================================================
+    1.0.1       29.05.2014                            Can Berkol
+    ============================================================
+    - Parameter added: $tabIndex
+    ============================================================
+    1.0.0       05.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

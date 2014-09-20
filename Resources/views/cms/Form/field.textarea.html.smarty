@@ -1,0 +1,56 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Form/field.textarea.html
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           16.01.2014
+
+    Description:    This template is used to create <input> element
+
+    PARAMETERS:
+    =============================================================================
+    $field                  array       main container
+        .classes            array       that holds a list of classes to be used.
+        .height             integer     rows attribute
+        .id                 string      id attribute
+        .lbl                string      field label
+        .name               string      name attribute
+        .settings           array       that contain view settings
+            .showLabel      bool        true, false |Switches the label on or off
+            .wrapInRow      bool        true, false
+        .size               integer     1,2,4,6,12 see bootstrap documentation for more details.
+        .value              string      input value.
+*}
+{if $field.settings.wrapInRow}
+<div class="form-row clearfix{if isset($field.settings.rowSize)} span{$field.settings.rowSize}{/if}">
+{/if}
+{if $field.settings.showLabel}
+<label for="{$field.id}">{$field.lbl}</label>
+{/if}
+<textarea id="{$field.id}" class="span{$field.size} {foreach $field.classes as $class}{$class} {/foreach}"  name="{$field.name}" rows="{$field.height}"{if isset($field.attributes)}{foreach $field.attributes as $attribute} {$attribute}{/foreach}{/if}>{$field.value}</textarea>
+{if $field.settings.wrapInRow}
+</div>
+{/if}
+{if $field.type == 'CkEditorArea' || $field.type == 'ckeditor'}
+<script type="text/javascript">
+    $(document).ready(function(){
+        {if isset($field.settings.ckeditor.customStyles)}
+        CKEDITOR.stylesSet.add('customStyle{$field.id}', [
+            {foreach $field.settings.ckeditor.customStyles as $style}
+            { name: "{$style.name}", element: "{$style.element}", attributes: { "class": "{$style.classes}" } }
+            {/foreach}
+        ]);
+        CKEDITOR.replace('{$field.id}', {
+            {if isset($field.settings.ckeditor.height)}
+            height: '{$field.settings.ckeditor.height}',
+            {/if}
+            stylesSet: "customStyle{$field.id}",
+            enterMode : CKEDITOR.ENTER_BR
+        });
+        {else}
+        CKEDITOR.replace('{$field.id}');
+        {/if}
+    });
+</script>
+{/if}

@@ -1,0 +1,45 @@
+{*
+    @name:          dropdown.html.smarty
+                    <select></select>
+    @date:          07.05.2014
+    @version:       1.0.0
+    @author:        Selimcan Sakar
+
+    @description:   This template is used to create basic dropdown select boxes.
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $dropdown               array               Dropdown select box.
+        .options            array               Contains options.
+            .option         array
+                .value      string              Option value.
+                .label      string              Option label as seen in the select box.
+        .settings           array               Contains select box settings.
+        .classes            array               Contains classes.
+
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+
+<select class="form-control"{foreach $dropdown.classes as $class} {$class}{/foreach}>
+
+    {foreach $dropdown.options as $option}<option value="{$option['value']}">{$option['label']}</option>{/foreach}
+
+</select>
+
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       07.05.2014                      Selimcan Sakar
+    ============================================================
+    - File is created.
+*}

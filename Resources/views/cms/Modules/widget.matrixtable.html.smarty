@@ -1,0 +1,265 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.matrixtable.html
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           17.02.2014
+
+    Description:    This template is used to create a simple matrix table.
+
+    PARAMETERS:
+    =============================================================================
+    $module                 array       Main container
+        .actions            array       Row actions.
+            .icon           string
+            .name           string
+        .code               string      Module id.
+        .core               array       Core controller values.
+        .data               array       Holds data & data definitions.
+            .headers        array       Holds data header definitions. Each definition is an stdClass object
+                .code       string      Header code.
+                .title      string      Header string.
+                .width      string      Column width.
+            .items          array       Holds data items. Each item is an stdClass object.
+        .icon               string      Module icon.
+        .settings           array       that contains module settings.
+            .actionColWidth string      8%. In % or px. The width of action columns.
+            .ajax           array       Holds ajax related settings
+                .dataType   string      json, html, text. Data type of ajax request.
+                .method     string      post, get. Ajax request method.
+                .url        string      Url to send the ajax request.
+            .selfContained  bool        false, true
+            .uniqueIdentifier bool      false, true
+            .uniqueIdentifierCheckIcon string
+            .wrapInRow      bool        true, false
+        .title              string      Module title.
+        .txt                array       Holds translation values.
+            .btn            array       Holds button translations.
+                .add        string      Add New button translation.
+                .save       string      Save button.
+*}
+{if $module.settings.wrapInRow}
+<div class="row-fluid">
+    {/if}
+    <div class="widget span12 widgetMatrix" id="widget-matrix-{$module.code}">
+        <div class="widget-title clearfix">
+            <img class="icon-title" src="{$module.icon}" />
+            <h6>{$module.title}</h6>
+        </div>
+        {if $module.settings.selfContained}
+        <form id="form-rows" method="post" style="margin: 0">
+            {/if}
+            <table cellpadding="0" cellspacing="0" width="100%" class="table-static table-rows">
+                <colgroup>
+                    {if $module.settings.uniqueIdentifier}
+                        <col width="{$module.settings.actionColWidth}">
+                    {/if}
+                    {foreach $module.data.headers as $header}
+                        <col width="{$header.width}%">
+                    {/foreach}
+                    <col width="{$module.settings.actionColWidth}">
+                </colgroup>
+                <thead>
+                <tr>
+                    {if $module.settings.uniqueIdentifier}
+                        <td></td>
+                    {/if}
+                    {foreach $module.data.headers as $header}
+                        <td>
+                            {$header.title}
+                        </td>
+                    {/foreach}
+                    <td>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $module.data.items as $item}
+                    <tr>
+                        {if $module.settings.uniqueIdentifier}
+                            <td>
+                                <span class="check-response"><img src="{$module.settings.uniqueIdentifierCheckIcon}" alt=""></span>
+                            </td>
+                        {/if}
+                        {foreach $module.data.headers as $header}
+                            <td>
+                                <input class="span12 text check-code" type="text" name="{$header.code}" placeholder="{$header.title}"{if $item->{$header.code} != ''} value="{$item->{$header.code}}" {/if}/>
+                            </td>
+                        {/foreach}
+                        <td>
+                            <span class="btn btn-mini btn-add-row"><img src="{$module.actions.add.icon}" alt="{$module.actions.add.name}" ></span>
+                            <span class="btn btn-mini btn-remove-row"><img src="{$module.actions.remove.icon}" alt="{$module.actions.remove.name}" ></span>
+                        </td>
+                    </tr>
+                    {foreachelse}
+                    <tr class="empty-row">
+                        <td colspan="4" style="text-align: center">
+                            <button class="btn btn-add-row">{$module.txt.btn.add}</button>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {if $module.settings.selfContained}
+            <input type="hidden" name="rowdata-{$module.code}">
+        </form>
+        {/if}
+        <div class="form-actions">
+            <button class="btn btn-primary btn-submit-rows pull-right">{$module.txt.btn.save}</button>
+        </div>
+    </div>
+    {if $module.settings.wrapInRow}
+</div>
+{/if}
+<script type="text/html" id="widget-matrix-row-template-{$module.code}">
+    <tr>
+        {if $module.settings.uniqueIdentifier}
+        <td>
+        <span class="check-response"><img src="{$module.settings.uniqueIdentifierCheckIcon}" alt=""></span>
+    </td>
+        {/if}
+        {foreach $module.data.headers as $header}
+        <td>
+        <input class="span12 text check-code" type="text" name="{$header.code}" placeholder="{$header.title}" name="{$header.code}" />
+    </td>
+        {/foreach}
+        <td>
+        <span class="btn btn-mini btn-add-row"><img src="{$module.actions.add.icon}" alt="{$module.actions.add.name}" ></span>
+        <span class="btn btn-mini btn-remove-row"><img src="{$module.actions.remove.icon}" alt="{$module.actions.remove.name}" ></span>
+    </td>
+    </tr>
+</script>
+<script type="text/html" id="widget-matrix-row-empty-template-{$module.code}">
+    <tr class="empty-row">
+        <td colspan="4" style="text-align: center">
+            <button class="btn btn-add-row">{$module.txt.btn.add}</button>
+        </td>
+    </tr>
+</script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        var row_html = _.template($('#widget-matrix-row-template-{$module.code}').html());
+        var empty_row_html = _.template($('#widget-matrix-row-empty-template-{$module.code}').html());
+
+        var table_row = '.table-rows';
+        var empty_row = '.empty-row';
+        var btn_add = '.btn-add-row';
+        var btn_remove = '.btn-remove-row';
+        var check_code = '.check-code';
+
+        // Add Listeners to the existing Matrix rows
+        $(btn_add).on('click',function(e){
+            e.preventDefault();
+            addRow($(this).parents('tr'));
+        });
+
+        $(btn_remove).on('click',function(){
+            removeRow($(this).parents('tr'));
+        });
+        {if $module.settings.uniqueIdentifier}
+        $(check_code).on('change',function(){
+            checkCode($(this));
+        });
+        // Blur Matrix Code Textbox when enter key pressed
+        $(check_code).keypress(function(e){
+            if(e.keyCode == 13) {
+                $(this).trigger('blur');
+            }
+        });
+        function checkCode(self) {
+            var value = $(self).val();
+            var parent_row = $(self).parents('tr');
+
+            if(value) {
+                $.ajax({
+                    url: '{$module.settings.ajax.url}',
+                    dataType: '{$module.settings.ajax.dataType}',
+                    method: '{$module.settings.ajax.method}',
+                    data: { "code": value },
+                    success : function(data){
+                        if(value == data.sku) {
+                            {foreach $module.data.headers as $header}
+                            $(parent_row).find('input[name="{$header.code}"]');//.attr('readonly','readonly');//.addClass('disabled').val(data.{$header.code});
+                            {/foreach}
+                            $(parent_row).find('td:first-child').addClass('s-active');
+
+                        }
+                    }
+                });
+            }
+            else {
+                {foreach $module.data.headers as $header}
+                $(parent_row).find('input[name="{$header.code}"]');//.attr('readonly','readonly');//.addClass('disabled');
+                {/foreach}
+                $(parent_row).find('td:first-child').removeClass('s-active');
+            }
+        }
+        {/if}
+        function addRow(after_row){
+            $(after_row).after(row_html);
+
+            // New Row
+            var new_row = $(after_row).next('tr');
+
+            // Add Listeners to the new row
+            $(new_row).find(btn_add).on('click',function(){
+                addRow($(this).parents('tr'));
+            });
+
+            $(new_row).find(btn_remove).on('click',function(){
+                removeRow($(this).parents('tr'));
+            });
+            {if $module.settings.uniqueIdentifier}
+            $(new_row).find(check_code).on('change',function(){
+                checkCode($(this));
+            });
+            {/if}
+            // Blur Row Code Textbox when enter key pressed
+            $(new_row).find(check_code).keypress(function(e){
+                if(e.keyCode == 13) {
+                    $(this).trigger('blur');
+                }
+            });
+        }
+
+        function removeRow(row){
+            $(row).find('.btn').off('click');
+            $(row).remove();
+
+            // if the table's empty add empty row with Add Row button
+            if($(table_row).find('tbody tr').length <= 0) {
+                $(table_row).find('tbody').append(empty_row_html);
+                $(empty_row).find(btn_add).on('click',function(){
+                    addRow($(empty_row));
+                    $(empty_row).find(btn_add).off('click');
+                    $(empty_row).remove();
+                });
+            }
+        }
+
+        $('.btn-submit-rows').on('click',function(e){
+            e.preventDefault();
+            {if $module.settings.selfContained}
+            var i = 0;
+            $(table_row).find('tr').each(function(){
+                $(this).find('input').each(function(){
+                    var name = $(this).attr('name');
+                    $(this).data('name', name);
+                    $(this).attr('name', 'items[' + i + '].' + name );
+                });
+                i++;
+            });
+            var data = JSON.stringify($('#widget-matrix-{$module.code}').toObject({ mode: 'all' }));
+            $(table_row).find('input').each(function(){
+                $(this).attr('name', $(this).data('name'));
+            });
+            $('#rowdata-{$module.code}').val(data);
+            {else}
+            $('#main-form-action-save').trigger('click');
+            {/if}
+        });
+    });
+</script>

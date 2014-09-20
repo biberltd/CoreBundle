@@ -1,0 +1,50 @@
+{*
+    @name:      pageHeader.html.smarty
+                Builds page header
+    @date:      02.05.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $options        array               Array of options.
+        .html       string              Rendered HTML. NOTE THAT each option needs to be generated using render metods.
+        .modal      string              Rendered modal box, if exists.
+    $page           array               Contains page details.
+        .title      string              Page title.
+    $settings       array               Contains widget settings
+        .hasOptions bool                false, true
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<h1>{$page.title}</h1>
+{if $settings.hasOptions}
+<div class="options">
+    <div class="btn-toolbar">
+        {foreach $options as $option}
+            {$option.html}
+        {/foreach}
+    </div>
+</div>
+{/if}
+{foreach $options as $option}
+    {if isset($option.modal)}
+        {$option.modal}
+    {/if}
+{/foreach}
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       02.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

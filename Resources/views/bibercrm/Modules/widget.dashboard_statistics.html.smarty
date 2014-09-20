@@ -1,0 +1,50 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.dashboard_statistics.html
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           08.01.2014
+
+    Description:    This template is used to create data lists/tables.
+
+    PARAMETERS:
+    =============================================================================
+    $module                 array       Main container
+        .core               array       Contains core controller data.
+        .link               array       Holds core links.
+        .settings           array       Holds widget settings
+            .showChange     bool        Shows change indicator icon. false, true
+        .statistics         array       that holds statistics data
+            .change         array       that holds change related data.
+                .direction  string      positive, negative
+                .percentage string      preferably with a percentage sign.
+            .title          string      Name of statistic
+            .value          double      Numeric data
+*}
+<div class="stats-widget highlight">
+    <div class="divider"></div>
+    <div class="l-wrap">
+        <div class="row-fluid">
+            <div class="span12">
+                {foreach $module.statistics as $statistic}
+                <div class="stats-item clearfix">
+                    <h2>
+                        {$statistic.value}
+                        {if isset($statistic.title) && $statistic.value != ''}
+                        <span>{$statistic.title}</span>
+                        {/if}
+                    </h2>
+                    {if $module.settings.showChange}
+                    <div class="stats-change {$statistic.change.direction}">
+                        <img src="{$module.link.base}/themes/{$module.core.theme}/img/icons/default/icon-{$statistic.change.direction}-arrow.png" />}
+                        <span>{$statistic.change.percentage}</span>
+                    </div>
+                    {/if}
+                </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    <div class="divider"></div>
+</div>

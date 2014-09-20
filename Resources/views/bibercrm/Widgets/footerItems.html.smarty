@@ -1,0 +1,43 @@
+{*
+    @name:      footerItems.html.smarty
+                Renders footer items.
+    @date:      01.05.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $footerItems                array           Holds footer items
+        array
+            .link               array           holds link details
+                .target         string          link target i.e. _self, _blank
+                .url            string          link url.
+            .text               string          visible text
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<ul class="list-unstyled list-inline pull-left">
+    {foreach $footerItems as $item}
+        <li>
+            {if isset($item.link)}<a href="{$item.link.url}"{if isset($item.link.target)}target="{$item.link.target}"{/if}>{/if}
+            {$item.text}
+            {if isset($item.link)}</a>{/if}
+        </li>
+    {/foreach}
+</ul>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       01.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

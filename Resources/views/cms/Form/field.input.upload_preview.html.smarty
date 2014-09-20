@@ -1,0 +1,65 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Form/field.input.upload_preview.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           21.02.2014
+
+    Description:    This template is used to an advanced file input with image preview
+
+    PARAMETERS:
+    =============================================================================
+    $field                  array       main container
+        .classes            array       that holds a list of classes to be used.
+        .id                 string      id attribute
+        .lbl                string      field label
+        .name               string      name attribute
+        .settings           array       that contain view settings
+            .rowSize        integer     Row width
+            .showLabel      bool        true, false |Switches the label on or off
+            .wrapInRow      bool        true, false
+        .size               integer     1,2,4,6,12 see bootstrap documentation for more details.
+        .type               string      input type: text, hidden, button, checkbox, file, image, password, radio, reset, submit
+        .options            array       that holds option details
+            .name           string      name attribute
+            .selected       bool        false, true
+            .value          string      value attribute
+
+*}
+{if $field.settings.wrapInRow}
+<div class="form-row clearfix{if isset($field.settings.rowSize)} span{$field.settings.rowSize}{/if} text-center">
+{/if}
+{if isset($field.lbl) && !empty($field.lbl)}<div style="margin-bottom: 2px;">{$field.lbl}</div>{/if}
+<div class="fileinput fileinput-new" data-provides="fileinput" id="{$field.id}">
+    <div class="fileinput-new thumbnail" style="{if isset($field.settings.maxHeight)}max-height:{$field.settings.maxHeight};{/if}{if isset($field.settings.maxWidth)}max-width:{$field.settings.maxWidth};{/if}">
+        <img data-src="" alt="{$field.lbl}" src="{if isset($field.value)}{$field.value}{/if}">
+    </div>
+    <div class="fileinput-preview fileinput-exists thumbnail" style="{if isset($field.settings.maxHeight)}max-height:{$field.settings.maxHeight};{/if}{if isset($field.settings.maxWidth)}max-width:{$field.settings.maxWidth};{/if}"></div>
+    <div>
+        <span class="btn btn-default btn-file">
+            <span class="fileinput-new">{$field.btn.select}</span>
+            <span class="fileinput-exists">{$field.btn.change}</span>
+            <input type="file" name="{$field.name}" class="{foreach $field.classes as $class} {$class} {/foreach}" {if isset($field.attributes)}{foreach $field.attributes as $attribute} {$attribute}{/foreach}{/if}>
+        </span>
+        <a href="#" class="btn btn-default fileinput-exists{if $field.settings.removable} file-remove{/if}" data-dismiss="fileinput"{if $field.settings.removable && isset($field.fileId)} data-file-id="{$field.fileId}"{/if}>{$field.btn.remove}</a>
+    </div>
+</div>
+{if $field.settings.wrapInRow}
+</div>
+{/if}
+{if $field.settings.removable}
+<script type="text/javascript">
+    $('.file-remove').click(function(e){
+        $.ajax({
+            type: "POST",
+            url: "{$field.settings.removeController}",
+            data: { fileId: $(this).attr('data-file-id') },
+            dataType: "html"
+        }).done(
+                function(msg){
+                // @todo response message.
+        }).fail(function(){ });
+    });
+</script>
+{/if}

@@ -1,0 +1,54 @@
+{*
+    @name:      address.html.smarty
+                <address></address>
+    @date:      23.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $address                array               Holds address details
+        .city               string              optional. Name of city.
+        .country            string              optional. Name of country.
+        .state              string              optional. Name of state.
+        .street             string              Street address
+        .zip                string              Optional. Zip / postal code.
+    $contactInformation     array               Holds contact information including email and phone numbers.
+        .info               array               Each element holds another array.
+            .full           string              Full title of contact information i.e. Phone
+            .initial        string              Initial of contact information. i.e. P.
+            .value          string              Value of contact information. i.e. +90 - 532 - 555 2211
+    $name                   string              Any string
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<address>
+    {if isset($name)}
+        <strong>{$name}</strong><br>
+    {/if}
+    {if isset($address.street)}
+        {$address.street}<br>
+    {/if}
+    {if isset($address.city)}{$address.city}, {/if}{if isset($address.state)}{$address.state}, {/if}{if isset($address.country)}{$address.country}{/if}{if isset($address.zip)} - {$address.zip}{/if}<br>
+    {if isset($contactInformation)}
+        {foreach $contactInformation as $info}
+            <abbr title="{$info.full}">{$info.initial}:</abbr> {$info.value}
+        {/foreach}
+    {/if}
+</address>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       23.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

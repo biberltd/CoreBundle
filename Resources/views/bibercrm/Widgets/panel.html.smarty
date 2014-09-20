@@ -1,0 +1,136 @@
+{*
+    @name:      panel.html.smarty
+                Builds generic panels.
+    @date:      02.05.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $footerElements             array               Holds footer elements
+        array
+            .classes            array               Holds class names to position group.
+            .elements           array               Holds individual element HTMLs that are rendered on their own.
+            .type               string              button,mixed, etc.
+    $panelBody                  array               Holds panel's main content details.
+        .content                string              Holds panel's main content.
+        .contentBottom          string              If panel is used with tabs, this is the content below tab content.
+        .contentTop             string              If panel is used with tabs, this is the content above tab content.
+    $panelOptions               array               Panel options/header buttons.
+        array
+            .icon               string              Icon name such as cog, user, etc.
+            .link               string              Option link.
+            .text               string              Option text.
+    $panelTabs                  array               Panel tabs.
+        array
+            .active             bool                false,true. If panel is the current one set to true.
+            .content            string              Panel content.
+            .id                 string              panel id.
+            .text               string              Visible name.
+    $panelType                  string              i.e. primary.
+    $settings                   array               holds panel settings.
+        .hasTabs                bool                false, true
+        .isCollapsible          bool                false, true if set to true, makes the panel body collapsible.
+        .showFooter             bool                false, true shows/hides panel footer.
+        .showHeader             bool                false,true  shows/hides panel header.
+        .showOptions            bool                false, true shows/hides panel options.
+        .tabPlacement           string              options,heading.
+    $title                      string              panel title.
+    $titleIcon                  string              Icon name such as cloud, group etc.
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<div class="panel{if isset($panelType)} panel-{$panelType}{/if}">
+    {if $settings.showHeader}
+        <div class="panel-heading">
+        {if isset($title)}
+            <h4>
+                {if $settings.hasTabs && $settings.tabPlacement == 'heading'}
+                    <ul class="nav nav-tabs">
+                        {foreach $panelTabs as $tab}
+                            <li{if $tab.active} class="active"{/if}>
+                                <a href="#{$tab.id}" data-toggle="tab">{$tab.text}</a>
+                            </li>
+                        {/foreach}
+                    </ul>
+                {else}
+                    {if isset($titleIcon)}<i class="fa fa-{$titleIcon}"></i>{/if}{$title}
+                {/if}
+            </h4>
+        {/if}
+        {if $settings.showOptions}
+            {if $settings.hasTabs && $settings.tabPlacement == 'options'}
+            <ul class="nav nav-tabs">
+                {foreach $panelTabs as $tab}
+                    <li{if $tab.active} class="active"{/if}>
+                        <a href="#{$tab.id}" data-toggle="tab">{$tab.text}</a>
+                    </li>
+                {/foreach}
+            </ul>
+            {/if}
+            {foreach $panelOptions as $option}
+                <a href="{$option.link}">{if isset($option.icon)}<i class="fa fa-{$option.icon}"></i>{/if}{if isset($option.text)}{$option.text}{/if}</a>
+            {/foreach}
+            {if $settings.isCollapsible}
+                <a class="panel-collapse" href="#">
+                    <i class="fa fa-chevron-down"></i>
+                </a>
+            {/if}
+        {/if}
+        </div>
+    {/if}
+    <div class="panel-body">
+    {if $settings.hasTabs}
+        {if isset($panelBody.contentTop)}
+            {$panelBody.contentTop}
+        {/if}
+        <div class=""tab-content>
+            {foreach $panelTabs as $tab}
+            <div class="tab-pane{if $tab.active}  active{/if}" id="{$tab.id}">{$tab.content}</div>
+            {/foreach}
+        </div>
+        {if isset($panelBody.contentBottom)}
+            {$panelBody.contentBottom}
+        {/if}
+    {else}
+        {$panelBody.content}
+    {/if}
+    </div>
+    {if $settings.showFooter}
+    <div class="panel-footer">
+        <div class="row">
+            {foreach $footerElements as $group}
+                <div class="{foreach $group.classes as $class}{$class}{if !$class@last} {/if}{/foreach}">
+                    {if $group.type == 'button'}
+                    <div class="toolbar">
+                    {/if}
+                    {foreach $group.elements as $element}
+                        {$element}
+                    {/foreach}
+                    {if $group.type == 'button'}
+                    </div>
+                    {/if}
+                </div>
+            {/foreach}
+        </div>
+    </div>
+    {/if}
+</div>
+
+
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       02.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

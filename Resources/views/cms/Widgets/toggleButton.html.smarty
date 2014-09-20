@@ -1,0 +1,46 @@
+{*
+    @name:      toggleButton.html.smarty
+                Creates a toggleButton view
+    @date:      23.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $name               string              Button name
+    $toggleItems        array               List of items
+        .type           string              divider, item
+        .link           string              URL
+        .name           string              Name of item
+
+    ============================================================
+    Translations:
+    ============================================================
+    N/A
+*}
+<div class="btn-group">
+    <a class="btn btn-default" href="#">{$name}</a>
+    <a data-toggle="dropdown" class="btn btn-{$style}{if $alternative}-alt{/if} dropdown-toggle" href="#"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        {foreach $toggleItems as $item}
+            {if $item.type == 'divider'}
+                <li class="divider"></li>
+            {else}
+                <li><a href="{$item.link}">{$item.name}</a></li>
+            {/if}
+        {/foreach}
+    </ul>
+</div>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       23.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

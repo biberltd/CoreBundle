@@ -1,0 +1,39 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Modules/widget.lang_dropdown.html.smarty
+    Author:         Can Berkol
+    Version:        1.0.0
+    Date:           10.04.2014
+
+    Description:    Creates a language drop down.
+
+    BLOCKS:
+    =============================================================================
+    N/A
+
+    EXTENDS:
+    =============================================================================
+    N/A
+
+    PARAMETERS:
+    =============================================================================
+    $module
+        .core                       array               Holds CoreController obtained information.
+        .currentLanguage            BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Entity\Language
+        .otherLanguages             array
+            .language               BiberLtd\Core\Bundles\MultiLanguageSupportBundle\Entity\Language
+        .link                       array               of $key => $value pairs with possible url base setups.
+            .url_base               string              http://{DOMAIN}
+        .locale                     string              locale string
+*}
+<div class="language dropdown">
+    <a class="dropdown-toggle english" data-toggle="dropdown" href="#{$module.currentLanguage->getIsoCode()}">
+        <span>{$module.currentLanguage->getName()}</span>
+    </a>
+    <ul class="dropdown-menu">
+        {foreach $module.otherLanguages as $language}
+        <li><a href="{$module.link.base}/{$language->getIsoCode()}{if isset($module.path) && !empty($module.path)}{$module.path}{/if}" title="{$language->getName()}" data-iso_code="{$language->getIsoCode()}"><span>{$language->getName()}</span></a></li>
+        {/foreach}
+    </ul>
+</div>

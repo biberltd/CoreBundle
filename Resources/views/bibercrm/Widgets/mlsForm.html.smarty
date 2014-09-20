@@ -1,0 +1,245 @@
+{*
+    @name:      breadcrumb.html.smarty
+                Builds a generic breadcrumb view.
+    @date:      07.05.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $module                     array               That holds module details
+        .actions                array               Holds details of action buttons.
+            .elementType        string              button,link,submit
+            .link               string              link of the action.
+            .style              string
+            .type               string
+        .code                   string              Module code.
+        .form                   array               That holds module form details.
+            .action             string              Action url of form
+            .entryId            integer             DB id of the edited entry.
+            .inputs             array               That holds form input data. Each input will be rendered by its own render function.
+            .method             string              w,get
+            .title              array               that holds title information for parts form.
+            .style              string              Style.
+            .type               array               submit button
+            .xss                string              Cross Site Forgery code. Required if standalone or postAjax is set to true.
+        .lbl                    string              Module label.
+        .languages              array               That holds details of languages to be handled by MLS view.
+            .code               string              Language code
+            .name               string              Visible name of language.
+        .response               array               Holds response messages.
+            .error              string              Error message.
+            .success            string              Success message.
+        .settings               array               That holds module settings
+            .defaultLanguage    string              Name of the system default language.
+            .defaultLanguageCode string             Language code of the system default language.
+            .defaultState       string              closed,open
+            .hasFile            bool                false,true. Must be set to true if MLS view has a fileinput field.
+            .postAjax           bool                true,false Will be used as a standalone ajax form.
+            .showSwitch         bool                true,false Turns on/off mls switch
+            .standalone         bool                false,true If MLS view needs to be wrapped by a form on its own this should be set to true.
+        .switch                 array               that holds switch details.
+            .actions            array               Switch actions are stored in this array.
+                array
+                    .attributes string              Key => Value pair. HTML attributes to be attached to the element.
+                    .elementType string             button,link.
+                    .id         string              HTML element id.
+                    .lbl        string              Action label
+                    .link       string              Link to be included in href="..." attribute.
+                    .style      string              style="..." String to be included in style attribute.
+    ============================================================
+    Translations:
+    ============================================================
+    core > msg.info.translation.show
+*}
+<div id="{$module.code}" class="module-multi-language">
+    {if $module.settings.showSwitch}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="language-switch pull-right clearfix">
+                <label>{trans domain="core" locale="{$locale}"}msg.info.translation.show{/trans} :</label>
+                <div class="toggle"></div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {/if}
+    {if $module.settings.postAjax || $module.settings.standalone}
+    <form id="{$module.code}-form" method="{$module.form.method}" action="{$module.form.action}"{if $module.settings.hasFile} enctype="multipart/form-data"{/if}>
+        <input type="hidden" name="xss" value="{$module.form.xss}" />
+    {/if}
+    <div class="row">
+    {if isset($module.form.entryId)}
+        <input type="hidden" name="entry_id" value="{$module.form.entryId}" />
+    {/if}
+        <div class="lang-default col-sm-{if !$module.settings.showSwitch}12{else}4{/if}">
+            {if $module.settings.showSwitch}<h3>{$module.settings.defaultLanguage}</h3>{/if}
+            {if isset($module.form.inputs[$module.settings.defaultLanguageCode])}
+                {foreach $module.form.inputs[$module.settings.defaultLanguageCode] as $input}
+                    {$input}
+                {/foreach}
+            {/if}
+
+        </div>
+        <div class="lang-others col-sm-8{if $module.settings.defaultState == 'closed'} s-inactive{/if}">
+            <div class="lang-others-inner">
+                {foreach $module.languages as $language}
+                {if isset($module.form.inputs[$language.code]) && $language.code != $module.settings.defaultLanguageCode}
+                <div class="lang-item">
+                    <h3>{$language.name}</h3>
+                    {foreach $module.form.inputs[$language.code] as $input}
+                        {$input}
+                    {/foreach}
+                </div>
+                {/if}
+                {/foreach}
+            </div>
+        </div>
+        <div id="{$module.code}-alert" class="row-fluid" style="display:none"></div>
+    </div>
+    {if $module.settings.postAjax || $module.settings.standalone}
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="btn-toolbar">
+                {foreach $module.switch.actions as $action}
+                <{$action.elementType} id="{if $module.settings.postAjax || $module.settings.standalone}{$module.code}-action-{$action.id}{else}{$action.id}{/if}" type="{$action.type}" class="btn btn-{$action.style}"{if $action.elementType == 'a'} href="{$action.link}" {/if}{if isset($action.attributes)}{foreach $action.attributes as $attribute}{$attribute} {/foreach}{/if}>{$action.lbl}</{$action.elementType}>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+    {/if}
+    {if $module.settings.postAjax || $module.settings.standalone}
+        </form>
+    {/if}
+</div>
+{if $module.settings.standalone}
+    <form id="{$module.code}-form-temp" method="{$module.form.method}" action="{$module.form.action}">
+        <input type="hidden" id="{$module.code}-form-temp-data" name="mainForm[data][json]" />
+    </form>
+{/if}
+<script type="text/javascript">
+    $(document).ready(function(){
+        if($('.module-multi-language').length){
+            $('.module-multi-language').each(function(){
+                var $default = $(this).find('.lang-default');
+                var $others =  $(this).find('.lang-others');
+                {if $module.settings.showSwitch}
+                var state = $(this).find('.language-switch').hasClass('s-active');
+                var $languageSwitch = $(this).find('.language-switch .toggle');
+                {/if}
+                var $self = $(this);
+                {if $module.settings.showSwitch}
+                if(state) {
+                    $languageSwitch.toggles({
+                                drag: true,
+                                on: true,
+                                text: {
+                                    on: '{trans domain="core" locale="{$locale}"}lbl.open{/trans}',
+                                    off: '{trans domain="core" locale="{$locale}"}lbl.closed{/trans}'
+                                },
+                                width: 70,
+                                height: 30
+                            });
+                } else {
+                    $languageSwitch.toggles({
+                        drag: true,
+                        text: {
+                            on: '{trans domain="core" locale="{$locale}"}lbl.open{/trans}',
+                            off: '{trans domain="core" locale="{$locale}"}lbl.closed{/trans}'
+                        },
+                        width: 70,
+                        height: 30
+                    });
+                }
+
+                switchLanguage(state);
+
+                $('.toggle').on('toggle',function(e, active){
+                    switchLanguage(active);
+                });
+
+                function switchLanguage(state){
+                    if(state) {
+                        $others.removeClass('s-inactive');
+                        $default.removeClass('col-sm-12');
+                        $default.addClass('col-sm-4');
+                        $self.find('.lang-item').width($default.width());
+                        $self.find('.lang-item').not($('.lang-item:last-child')).css('margin-right', $others.css('margin-left'));
+                    }
+                    else {
+                        $others.addClass('s-inactive');
+                        $default.removeClass('col-sm-4');
+                        $default.addClass('col-sm-12');
+                    }
+                }
+                {/if}
+                $self.find('.lang-item').width($('.lang-default').width());
+
+                $(window).resize(function(){
+                    $self.find('.lang-item').width($('.lang-default').width());
+                });
+            });
+        }
+
+        $('#{$module.code}-form').submit(function(e){
+            e.preventDefault();
+
+            {if $module.settings.hasCkEditor}
+            for(var i in CKEDITOR.instances) {
+                (function(i) {
+                    CKEDITOR.instances[i].updateElement();
+                })(i);
+            }
+            {/if}
+            {if $module.settings.standalone}
+            $('#{$module.code}-form-temp-data').val(JSON.stringify($('#{$module.code}-form').toObject({ mode: 'all' })));
+            {if $module.settings.hasFile}
+            var clone = $('#{$module.code}-form-temp-data').clone();
+            $(clone).attr('id',  '{$module.code}-form-temp-data-clone');
+            $('#{$module.code}-form').append(clone);
+            $('#{$module.code}-form').submit();
+            {else}
+            $('#{$module.code}-form-temp').submit();
+            {/if}
+            {/if}
+            {if $module.settings.postAjax}
+            $.ajax({
+                url: "{$module.form.action}",
+                type: "{$module.form.method}",
+                data: JSON.stringify($('#{$module.code}-form').toObject({ mode: 'all' })),
+                success: function(response){
+                    var alertType = "success";
+                    var msg = "{$module.response.success}";
+                    if(response != "success"){
+                        alertType = 'danger';
+                        msg = "{$module.response.error}";
+                    }
+                    var html = '<div  class="alert alert-'+alertType+'"><button type="button" class="close" data-dismiss="alert">&times;</button>'+msg+'</div>';
+                    $('#{$module.code}-alert').html(html);
+                },
+                error: function ()
+                {
+                    var msg = "{$module.response.error}";
+                    var html = '<div  class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button>'+msg+'</div>';
+                    $('#{$module.code}-alert').html(html);
+                }
+            }).done(function() {
+
+            });
+            {/if}
+        });
+    });
+</script>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       02.05.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}

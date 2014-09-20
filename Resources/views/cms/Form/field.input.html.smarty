@@ -1,0 +1,64 @@
+{*
+    INFO:
+    =============================================================================
+    Name:           cms/Form/field.input.html
+    Author:         Can Berkol
+    Version:        1.0.2
+    Date:           05.02.2014
+
+    Description:    This template is used to create <input> element
+
+    PARAMETERS:
+    =============================================================================
+    $field                  array       main container
+        .classes            array       that holds a list of classes to be used.
+        .id                 string      id attribute
+        .lbl                string      field label
+        .name               string      name attribute
+        .settings           array       that contain view settings
+            .showLabel      bool        true, false |Switches the label on or off
+            .wrapInRow      bool        true, false
+        .size               integer     1,2,4,6,12 see bootstrap documentation for more details.
+        .type               string      input type: text, hidden, button, checkbox, file, image, password, radio, reset, submit
+        .value              string      input value.
+*}
+{if $field.settings.wrapInRow}
+<div class="form-row clearfix{if isset($field.settings.rowSize)} span{$field.settings.rowSize}{/if}">
+{/if}
+{if $field.settings.showLabel}
+<label for="{$field.id}">{$field.lbl}</label>
+{/if}
+<input id="{$field.id}" class="span{$field.size} text{foreach $field.classes as $class} {$class} {/foreach}" type="{$field.type}" name="{$field.name}" value="{$field.value}"{if isset($field.attributes)}{foreach $field.attributes as $attribute} {$attribute}{/foreach}{/if} />
+{if $field.settings.wrapInRow}
+</div>
+{/if}
+{if isset($field.specialType) && $field.specialType == 'tagsInput'}
+<script type="text/javascript">
+    $('#{$field.id}').tagsInput({
+        defaultText : '{$field.placeHolder}',
+        height: "auto",
+        width: '100%'
+    });
+</script>
+{elseif isset($field.specialType) && $field.specialType == 'datePicker'}
+<script type="text/javascript">
+    $('#{$field.id}').datepicker({if isset($field.settings.datepicker)}
+            {
+                {foreach $field.settings.datepicker as $key => $value}
+                    {if is_bool($value) || is_numeric($value)}
+                    {$key}: {$value};
+                    {else}
+                    {$key}: "{$value}"{if !$value@last},{/if}
+                    {/if}
+                {/foreach}
+            }
+    {/if});
+</script>
+{/if}
+{*
+==============================
+d: 05.02.2014    v: 1.0.2
+Can Berkol
+==============================
+- DatePicker capability added.
+*}

@@ -1,0 +1,53 @@
+{*
+    @name:      sidebarNavigation.html.smarty
+                Renders sidebar navigation
+    @date:      30.04.2014
+    @version:   1.0.0
+    @author:    Can Berkol
+
+    ============================================================
+    BLOCKS:
+    ============================================================
+    N/A
+
+    ============================================================
+    PARAMETERS:
+    ============================================================
+    $navigationItems            array           Holds navigation items
+        array
+            .childItems         array           Child items
+                array
+                    .childItems array           (recursive)
+                   .hasChildren bool            true,false
+                   .link        string          Url of nav link
+                   .text        string          Visible text
+            .hasChildren        bool            true, false
+            .link               string          Url of navigation
+            .text               string          Visible text.
+    $settings                   array           Holds settings of widget
+        .search                 bool            true, false. Shows / hides menu searchbox.
+        .theme                  string          current theme in use i.e. bibercrm
+    $theme                      string          Name of current theme.
+
+    ============================================================
+    Translations:
+    ============================================================
+    core > lbl.search
+*}
+<ul class="acc-menu">
+    {foreach $navigationItems as $item}
+        <li data-role="navigation"{if $item.selected} class="active"{/if}>
+            <a href="{if $item.hasChildren}javascript:;{else}{$item.link}{/if}"><span>{$item.text}</span></a>
+            {if $item.hasChildren}
+                {include "file:BiberLtdCoreBundlesCoreBundle:{$theme}/Helpers:sidebarNavigationHelper.html.smarty" navigationItems=$item.childItems theme=$theme}
+            {/if}
+        </li>
+    {/foreach}
+</ul>
+{*
+    CHANGE LOG:
+    ============================================================
+    1.0.0       30.04.2014                            Can Berkol
+    ============================================================
+    - File is created.
+*}
