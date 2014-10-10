@@ -13,8 +13,8 @@
  *
  * @copyright      Biber Ltd. (www.biberltd.com)
  *
- * @version        1.0.7
- * @date           10.10.2014
+ * @version        1.0.6
+ * @date           02.05.2014
  *
  */
 
@@ -126,7 +126,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredLoginForm.html.smarty', $vars);
-        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -195,7 +195,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredRegistrationForm.html.smarty', $vars);
-        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -261,7 +261,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredResetPasswordForm.html.smarty', $vars);
-        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -841,13 +841,7 @@ class WidgetRenderController extends CoreController{
 /**
  * Change Log:
  * **************************************
- * v1.0.7                      Can Berkol
- * 10.10.2014
- * **************************************
- * Modified to match new namespace conventions.
- *
- * **************************************
- * v1.0.6                      Can Berkol
+ * v1.0.5                      Can Berkol
  * 27.05.2014
  * **************************************
  * A renderMlsForm()
