@@ -57,7 +57,7 @@
     <li data-role="navigation"{if $item.selected} class="active"{/if}>
         <a href="{if $item.hasChildren}javascript:;{else}{$item.link}{/if}"><i class="fa fa-{$item.icon}"></i> <span>{$item.text}</span>{if $item.hasBadge}<span class="badge badge-{$item.badge.color}">{$item.badge.text}</span>{/if}</a>
         {if $item.hasChildren}
-            {include "file:BiberLtdBundleCoreBundle:{$settings.theme}/Helpers:sidebarNavigationHelper.html.smarty" navigationItems=$item.childItems theme=$settings.theme}
+            {include "file:BiberLtdCoreBundle:{$settings.theme}/Helpers:sidebarNavigationHelper.html.smarty" navigationItems=$item.childItems theme=$settings.theme}
         {/if}
     </li>
     {/foreach}
