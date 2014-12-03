@@ -13,8 +13,8 @@
  *
  * @copyright      Biber Ltd. (www.biberltd.com)
  *
- * @version        1.0.2
- * @date           30.05.2014
+ * @version        1.0.3
+ * @date           14.11.2014
  *
  */
 
@@ -162,7 +162,7 @@ class ButtonRenderController extends  CoreController{
         if(isset($buttonDetails['attributes'])){
             $vars['attributes'] = $buttonDetails['attributes'];
         }
-        $this->response['html'] =  $this->templating->render('BiberLtdBundleCoreBundle:' . $core['theme'] . '/HtmlParts:button.html.smarty', $vars);
+        $this->response['html'] =  $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/HtmlParts:button.html.smarty', $vars);
         return $this->response;
     }
     /**
@@ -386,6 +386,12 @@ class ButtonRenderController extends  CoreController{
 
 /**
  * Change Log:
+ * **************************************
+ * v1.0.0                      Can Berkol
+ * 14.10.2014
+ * **************************************
+ * Namespaces fixed.
+ *
  * **************************************
  * v1.0.2                      Can Berkol
  * 30.05.2014

@@ -722,6 +722,59 @@ class CoreController extends Controller {
         }
         return false;
     }
+
+    /**
+     * @name    jsonDecode()
+     *          Returns json decoded data after stripping slashes.
+     *
+     * @author  Said İmamoğlu
+     * @since   1.3.1
+     * @version 1.3.1
+     *
+     * @param   string      $data    json data
+     * @param   bool        $assoc   true|false
+     *
+     * @return  mixed   object|array
+     */
+    public function jsonDecode($data,$assoc=false){
+        return json_decode(stripslashes($data),$assoc);
+    }
+    /**
+     * @name    json_encode()
+     *          Returns json encoded data after encoding utf-8 .
+     *
+     * @author  Said İmamoğlu
+     * @since   1.3.2
+     * @version 1.3.2
+     *
+     * @param   array|object      $data    json data
+     *
+     * @return  mixed   string
+     */
+    public function json_encode($data){
+        return preg_replace_callback(
+            '/\\\\u([0-9a-zA-Z]{4})/',
+            function ($matches) {
+                return mb_convert_encoding(pack('H*',$matches[1]),'UTF-8','UTF-16');
+            },
+            json_encode($data)
+        );
+    }
+    /**
+     * @name    jsonEncode()
+     *          Alias of json_encode()
+     *
+     * @author  Said İmamoğlu
+     * @since   1.3.2
+     * @version 1.3.2
+     *
+     * @param   array|object      $data    json data
+     *
+     * @return  mixed   string
+     */
+    public function jsonEncode($data){
+        return $this->json_encode($data);
+    }
     /**
      * @name                mergeResponseBodyAndHead()
      *                      Merges response body and head of the render function into $this->body & $this->head
@@ -776,19 +829,19 @@ class CoreController extends Controller {
      *
      * @author          Can Berkol
      * @since           1.1.1
-     * @version         1.1.1
+     * @version         1.3.2
      *
      * @param           bool            $append_locale      If set to true appends current locale.
      * @param           bool            $prepend_boot
      * @param           mixed           $parameters         Either a string or an array of strings.
+     * @param           mixed           $force_https         Generate secure url (https://..)
      *
      * @return          string          $url
      */
-    public function prepareUrl($append_locale = true, $prepend_boot = false, $parameters = null) {
-        $url = '';
+    public function prepareUrl($append_locale = true, $prepend_boot = false, $parameters = null,$force_https = false) {
         $host = $this->get('request')->getHttpHost();
         $protocol = 'http://';
-        if ($this->get('request')->isSecure()) {
+        if ($this->get('request')->isSecure() || $force_https) {
             $protocol = 'https://';
         }
         $url = $protocol . $host;
@@ -1366,8 +1419,9 @@ class CoreController extends Controller {
      *                  Sets all URLs.
      *
      * @author          Can Berkol
+     * @author          Said İmamoğlu
      * @since           1.0.5
-     * @version         1.2.1
+     * @version         1.3.2
      *
      * @param           string          $theme
      * @param           string          $backend
@@ -1377,13 +1431,17 @@ class CoreController extends Controller {
     public function setURLs($theme = 'cms', $backend = 'manage') {
         if ($this->get('kernel')->getEnvironment() == 'dev') {
             $url['base_l'] = $this->prepareUrl(true, true);
+            $url['https_l'] = $this->prepareUrl(true, true,null,true);
         } else {
             $url['base_l'] = $this->prepareUrl(true, false);
+            $url['https_l'] = $this->prepareUrl(true, false,null,true);
         }
         if ($this->get('kernel')->getEnvironment() == 'dev') {
             $url['base'] = $this->prepareUrl(false, true);
+            $url['https'] = $this->prepareUrl(false, true,null,true);
         } else {
             $url['base'] = $this->prepareUrl(false, false);
+            $url['https'] = $this->prepareUrl(false, false,null,true);
         }
         $url['domain'] = str_replace('/app_dev.php', '', $url['base']);
         $url['themes'] = $url['domain'].'/themes';
@@ -1594,58 +1652,6 @@ class CoreController extends Controller {
         }
         return true;
     }
-    /**
-     * @name    jsonDecode()
-     *          Returns json decoded data after stripping slashes.
-     *
-     * @author  Said İmamoğlu
-     * @since   1.3.1
-     * @version 1.3.1
-     *
-     * @param   string      $data    json data
-     * @param   bool        $assoc   true|false
-     *
-     * @return  mixed   object|array
-     */
-    public function jsonDecode($data,$assoc=false){
-        return json_decode(stripslashes($data),$assoc);
-    }
-    /**
-     * @name    json_encode()
-     *          Returns json encoded data after encoding utf-8 .
-     *
-     * @author  Said İmamoğlu
-     * @since   1.3.2
-     * @version 1.3.2
-     *
-     * @param   string      $data    json data
-     *
-     * @return  mixed   object|array
-     */
-    public function json_encode($data){
-        return preg_replace_callback(
-            '/\\\\u([0-9a-zA-Z]{4})/',
-            function ($matches) {
-                return mb_convert_encoding(pack('H*',$matches[1]),'UTF-8','UTF-16');
-            },
-            json_encode($data)
-        );
-    }
-    /**
-     * @name    jsonEncode()
-     *          Alias of json_encode()
-     *
-     * @author  Said İmamoğlu
-     * @since   1.3.2
-     * @version 1.3.2
-     *
-     * @param   string      $data    json data
-     *
-     * @return  mixed   object|array
-     */
-    public function jsonEncode($data){
-        return $this->json_encode($data);
-    }
 }
 /**
  * Change Log
@@ -1655,6 +1661,8 @@ class CoreController extends Controller {
  * **************************************
  * A json_encode()
  * A jsonEncode()
+ * U prepareUrl()
+ * U setURLs()
  * **************************************
  * v1.3.1                      Said İmamoğlu
  * 12.08.2014
