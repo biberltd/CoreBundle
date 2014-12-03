@@ -15,8 +15,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.1
- * @date        11.07.2014
+ * @version     1.3.2
+ * @date        03.12.2014
  *
  */
 
@@ -319,8 +319,8 @@ class CoreController extends Controller {
      */
     public function generateUid($prefix = 'uid-'){
         /** UID's are timestamp based codes. Since id's cannot start with a number in HTML, it requires a prefix. The
-            id then glued with the current timestamps last 5 digits. This is done so that the generated id won't be too
-            long.
+        id then glued with the current timestamps last 5 digits. This is done so that the generated id won't be too
+        long.
          */
         return $prefix.substr(time(), -5);
     }
@@ -1497,7 +1497,7 @@ class CoreController extends Controller {
         /** If $folder is string then set $folderPath to $folder (Ex: /cdn/product_images ) */
 
         if (is_string($folder)) {
-             $folderPath = $folder;
+            $folderPath = $folder;
         }
         /**
          * If folder is array then get folder from database
@@ -1610,9 +1610,51 @@ class CoreController extends Controller {
     public function jsonDecode($data,$assoc=false){
         return json_decode(stripslashes($data),$assoc);
     }
+    /**
+     * @name    json_encode()
+     *          Returns json encoded data after encoding utf-8 .
+     *
+     * @author  Said İmamoğlu
+     * @since   1.3.2
+     * @version 1.3.2
+     *
+     * @param   string      $data    json data
+     *
+     * @return  mixed   object|array
+     */
+    public function json_encode($data){
+        return preg_replace_callback(
+            '/\\\\u([0-9a-zA-Z]{4})/',
+            function ($matches) {
+                return mb_convert_encoding(pack('H*',$matches[1]),'UTF-8','UTF-16');
+            },
+            json_encode($data)
+        );
+    }
+    /**
+     * @name    jsonEncode()
+     *          Alias of json_encode()
+     *
+     * @author  Said İmamoğlu
+     * @since   1.3.2
+     * @version 1.3.2
+     *
+     * @param   string      $data    json data
+     *
+     * @return  mixed   object|array
+     */
+    public function jsonEncode($data){
+        return $this->json_encode($data);
+    }
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.2                      Said İmamoğlu
+ * 03.12.2014
+ * **************************************
+ * A json_encode()
+ * A jsonEncode()
  * **************************************
  * v1.3.1                      Said İmamoğlu
  * 12.08.2014
@@ -1767,7 +1809,7 @@ class CoreController extends Controller {
  * 19.02.2014
  * **************************************
  * U debug()
- * 
+ *
  * **************************************
  * v 1.0.9                     Can Berkol
  * 12.02.2014
