@@ -1429,27 +1429,32 @@ class CoreController extends Controller {
      * @return          mixed
      */
     public function setURLs($theme = 'cms', $backend = 'manage') {
+        $force_https = false;
+        if ($this->get('request')->isSecure()) {
+            $force_https = true;
+        }
         if ($this->get('kernel')->getEnvironment() == 'dev') {
-            $url['base_l'] = $this->prepareUrl(true, true);
+            $url['base_l'] = $this->prepareUrl(true, true,null,$force_https);
             $url['https_l'] = $this->prepareUrl(true, true,null,true);
         } else {
-            $url['base_l'] = $this->prepareUrl(true, false);
+            $url['base_l'] = $this->prepareUrl(true, false,null,$force_https);
             $url['https_l'] = $this->prepareUrl(true, false,null,true);
         }
         if ($this->get('kernel')->getEnvironment() == 'dev') {
-            $url['base'] = $this->prepareUrl(false, true);
+            $url['base'] = $this->prepareUrl(false, true,null,$force_https);
             $url['https'] = $this->prepareUrl(false, true,null,true);
         } else {
-            $url['base'] = $this->prepareUrl(false, false);
+            $url['base'] = $this->prepareUrl(false, false,$force_https);
             $url['https'] = $this->prepareUrl(false, false,null,true);
         }
+        unset($force_https);
+
         $url['domain'] = str_replace('/app_dev.php', '', $url['base']);
         $url['themes'] = $url['domain'].'/themes';
         $url['current_theme'] = $url['themes'].'/'.$theme;
         $url['cdn'] = $url['domain'].'/cdn';
         $url['icons'] = $url['current_theme'].'/img/icons';
         $url['manage'] = $url['base_l'].'/'.$backend;
-
         $this->url = $url;
         return $this;
     }
