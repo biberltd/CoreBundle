@@ -126,7 +126,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredLoginForm.html.smarty', $vars);
-        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -195,7 +195,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredRegistrationForm.html.smarty', $vars);
-        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
@@ -261,7 +261,7 @@ class WidgetRenderController extends CoreController{
         );
 
         $this->response['html'] = $this->templating->render('BiberLtdCoreBundle:' . $core['theme'] . '/Widgets:centeredResetPasswordForm.html.smarty', $vars);
-        $this->response['head']['css'][] = '/plugins/form-toggle/toggles.css';
+        $this->response['head']['css'][] = 'plugins/form-toggle/toggles.css';
         $this->response['head']['js'] = array(
             '/js/jquery-1.10.2.min.js',
             '/js/jqueryui-1.10.3.min.js',
