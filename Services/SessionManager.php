@@ -13,8 +13,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.5
- * @date        04.06.2014
+ * @version     1.0.7
+ * @date        09.02.2015
  *
  * ===================================================================
  *
@@ -27,7 +27,6 @@ use BiberLtd\Bundle\CoreBundle\Core as Core;
 
 use BiberLtd\Bundle\AccessManagementBundle\Services as AMBService;
 use BiberLtd\Bundle\MemberManagementBundle\Services as MMBService;
-
 class SessionManager extends Core{
     private $session;
 
@@ -67,7 +66,7 @@ class SessionManager extends Core{
      *
      * @author          Can Berkol
      * @since           1.0.0
-     * @version         1.0.5
+     * @version         1.0.7
      *
      * @param           string      $username
      * @param           string      $password
@@ -148,7 +147,9 @@ class SessionManager extends Core{
             'name_last'     => $member->getNameLast(),
             'status'        => $member->getStatus(),
             'date_birth'    => $member->getDateBirth(),
+            'date_last_login'    => $member->getDateLastLogin(),
             'site'          => $member->getSite()->getId(),
+            'file_avatar'   => $member->getFileAvatar(),
             // @todo 'sites'         => $member->dump_sites(),
             'sites'         => array(1),
             'groups'        => $group_codes,
@@ -541,6 +542,18 @@ class SessionManager extends Core{
 }
 /**
  * Change Log
+ * **************************************
+ * v1.0.7                      Can Berkol
+ * 09.02.2015
+ * **************************************
+ * A authenticate()
+ *
+ * **************************************
+ * v1.0.6                      Can Berkol
+ * 15.09.2014
+ * **************************************
+ * A authenticate()
+ *
  * **************************************
  * v1.0.5                      Can Berkol
  * 06.04.2014
