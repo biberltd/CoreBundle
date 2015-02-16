@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.2.3
- * @date        17.06.2014
+ * @version     1.2.4
+ * @date        16.02.2015
  *
  */
 
@@ -425,7 +425,7 @@ class CoreModel {
      * @author          Can Berkol
      *
      * @since           1.2.0
-     * @version         1.2.0
+     * @version         1.2.4
      *
      * @param           string              $key            starts, ends, contains, in, include, not_in, exclude
      * @param           mixed               $value          array, string or integer
@@ -546,6 +546,7 @@ class CoreModel {
                 $condition .= ' < ' . $value;
                 break;
             case '=<':
+            case '<=':
             case 'lte':
             case 'less_than_equal':
                 switch ($value) {
@@ -853,6 +854,12 @@ class CoreModel {
 
 /**
  * Change Log
+ * **************************************
+ * v1.2.4                      Can Berkol
+ * 16.02.2015
+ * **************************************
+ * U prepareCondition()
+ *
  * **************************************
  * v1.2.3                      Can Berkol
  * 17.06.2014
