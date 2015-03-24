@@ -15,8 +15,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.2
- * @date        03.12.2014
+ * @version     1.3.4
+ * @date        24gi.04.2015
  *
  */
 
@@ -1149,7 +1149,7 @@ class CoreController extends Controller {
      *                  Mehmet Aydın Bahadır
      *                  Said İmamoğlu
      * @since           1.1.1
-     * @version         1.2.4
+     * @version         1.3.4
      *
      * @param           integer         $page       Current page number
      * @param           integer         $total      Total number of items found in database / collection
@@ -1164,9 +1164,9 @@ class CoreController extends Controller {
          */
         $number_of_pages = 0;
         if ($total % $limit > 0) {
-            $number_of_pages = round($total / $limit);
+            $number_of_pages = ceil($total / $limit);
         } else {
-            $number_of_pages = round($total / $limit);
+            $number_of_pages = ceil($total / $limit);
         }
         $number_of_pages = $number_of_pages <1 ? 1 : $number_of_pages;
         /**
@@ -1660,6 +1660,11 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.4                      Said İmamoğlu
+ * 24.03.2015
+ * **************************************
+ * U preparePagination()
  * **************************************
  * v1.3.2                      Said İmamoğlu
  * 03.12.2014
