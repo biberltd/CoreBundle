@@ -1,24 +1,6 @@
 parameters:
 #    biber_ltd_core.example.class: BiberLtd\Bundle\CoreBundle\Example
 services:
-    access_validator:
-        class:        BiberLtd\Bundle\CoreBundle\Services\AccessValidator
-        arguments:    [@kernel]
-    am_listener:
-        class:        BiberLtd\Bundle\CoreBundle\Listeners\AMListener
-        tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -10}]
-        arguments:    [@kernel]
-    mls_listener:
-        class:        BiberLtd\Bundle\CoreBundle\Listeners\MLSListener
-        tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -255}]
-        arguments:    [@service_container, @kernel, ["default", "doctrine"]]
-    session_manager:
-        class:        BiberLtd\Bundle\CoreBundle\Services\SessionManager
-        arguments:    [@kernel]
-    sm_listener:
-        class:        BiberLtd\Bundle\CoreBundle\Listeners\SessionLogger
-        tags:         [{name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: -155}]
-        arguments:    [@service_container, @kernel, ["default", "doctrine"]]
     input_validator:
         class:        BiberLtd\Bundle\CoreBundle\Services\InputValidator
         arguments:    [@kernel]
