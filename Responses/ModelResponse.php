@@ -58,7 +58,7 @@ class ModelResponse extends Core{
 
 		$this->stats->execution = new \stdClass();
 		$this->stats->execution->start = $executionStart == 0 ? time() : $executionStart;
-		$this->stats->execution->end = $executionEnd == 0 ? time : $executionEnd;
+		$this->stats->execution->end = $executionEnd == 0 ? time() : $executionEnd;
 
 		$this->process->continue = false;
 		$this->process->collection = new \stdClass();

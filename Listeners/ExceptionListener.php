@@ -45,8 +45,7 @@ class ExceptionListener extends Core{
      * @since           1.0.1
      * @version         1.3.0
      *
-     * @param           string      $timezone
-     * @param           array       $params         'key', 'input', 'output'
+     * @param           object		$kernel
      */
     public function __construct($kernel){
         parent::__construct($kernel);
@@ -67,7 +66,7 @@ class ExceptionListener extends Core{
         }
     }
     /**
-     * @name 			onKernelController()
+     * @name 			onKernelException()
      *  				Called onKernelController event and handles browser language detection.
      *
      * @author          Can Berkol
@@ -76,8 +75,6 @@ class ExceptionListener extends Core{
      * @version         1.0.0
      *
      * @param 			GetResponseForExceptionEvent 	        $e
-     *
-     * @return
      *
      */
     public function onKernelException(GetResponseForExceptionEvent  $e){

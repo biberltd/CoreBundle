@@ -19,14 +19,13 @@ use BiberLtd\Bundle\ExceptionBundle\Services;
 
 class EntityDoesNotExistException extends Services\ExceptionAdapter {
 
-    public function __construct($kernel, $msg = "", $code = 'CRE002', Exception $previous = null) {
-        $numericCode = ord($code[0]).ord($code[1]).ord($code[2]).substr($code, 2, 3);
-        parent::__construct(
-            $kernel,
-            $code.' :: Entity Does Not Exist'.PHP_EOL.'The requested entity cannot be found in database. '.$msg,
-            $numericCode,
-            $previous);
-    }
+    public function __construct($kernel, $msg = "", $code = '998025', Exception $previous = null) {
+		parent::__construct(
+			$kernel,
+			'The entry does not exist in database: '.$msg,
+			$code,
+			$previous);
+	}
 }
 /**
  * Change Log:
