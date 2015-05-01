@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Core Entity Class
  *
@@ -14,8 +13,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.1
- * @date        17.12.2013
+ * @version     1.0.2
+ * @date        01.05.2015
  *
  */
 
@@ -32,6 +31,7 @@ class CoreEntity {
     protected $modified = false;/** @var bool Marks the object as modified or not modified */
     protected $localized = false;/** @var bool Marks the object as localizable. */
     protected $timezone = 'Europe/Istanbul';/** @var string  application timezone */
+	protected $now;
 
     /**
      * @name            __construct()
@@ -42,7 +42,6 @@ class CoreEntity {
      * @version         1.0.0
      */
     public function __construct($timezone = 'Europe/Istanbul') {
-        
         $new = true;
         foreach ($this as $key => $value) {
             if ($this->date_added !== NULL ) {
@@ -54,6 +53,7 @@ class CoreEntity {
         $this->timezone = $timezone;
         $this->new = $new;
         $this->modified = false;
+		$this->now = new \DateTime('now', new \DateTimeZone($this->timezone));
         if ($this->new) {
             $this->setDateAdded();
         }
@@ -149,14 +149,12 @@ class CoreEntity {
      *
      * @author          Can Berkol
      * @since           1.0.1
-     * @version         1.0.1
-     *
-     * @param           string          $timezone
+     * @version         1.0.2
      *
      * @return          object          $this
      */
     public function setDateAdded() {
-        $this->date_added = new \DateTime('now', new \DateTimeZone($this->timezone));
+        $this->date_added = $this->now;
         return $this;
     }
 
@@ -220,14 +218,12 @@ class CoreEntity {
      *
      * @author          Can Berkol
      * @since           1.0.1
-     * @version         1.0.1
-     *
-     * @param           string          $timezone
+     * @version         1.0.2
      *
      * @return          object          $this
      */
     public function setDateUpdated() {
-        $this->date_updated = new \DateTime('now', new \DateTimeZone($this->timezone));
+        $this->date_updated = $this->now;
         return $this;
     }
 
@@ -236,6 +232,12 @@ class CoreEntity {
 /**
  * **************************************
  * Change Log
+ * **************************************
+ * v1.0.2                      01.05.2015
+ * Can Berkol
+ * **************************************
+ * CR :: $now property added to handle to obtain a unique timestamp.
+ *
  * **************************************
  * v1.0.1                      Can Berkol
  * 16.12.2013

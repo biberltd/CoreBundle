@@ -1,21 +1,17 @@
 <?php
 
 /**
- * CoreModel Class
- *
- * This class provides core foundations for Biber Ltd. Model Services.
- *
  * @vendor      BiberLtd
- * @package        BiberLtd\Core
+ * @package     BiberLtd\Core
  * @name        CoreModel
  *
- * @author        Can Berkol
+ * @author      Can Berkol
  *              Said İmamoğlu
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.2.5
- * @date        17.02.2015
+ * @version     1.2.6
+ * @date        01.05.2015
  *
  */
 
@@ -23,60 +19,43 @@ namespace BiberLtd\Bundle\CoreBundle;
 
 /** Required for better & instant error handling for the support team */
 use \BiberLtd\Bundle\CoreBundle\Exceptions as CoreExceptions;
+use BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 
-class CoreModel
-{
-
-    /** @var $db_connection     string          Decides which DB connection to be used. Defaults to "default" */
-    protected $db_connection = 'default';
-
-    /** @var $orm               string          Decides which ORM to use. Defaults to "doctrine" */
+class CoreModel extends Core{
+    protected $dbConnection = 'default';
     protected $orm = 'doctrine';
-
-    /** @var $em                EntityManager */
     protected $em;
-
-    /** @var $entity            Stores entity names to be used. */
     protected $entity;
-
-    /** @var $kernel            Application Kernel */
     protected $kernel;
-
-    /** @var $response          Returned response */
-    protected $response = array();
-
-    /** @var $languages          Registered languages */
+    protected $response;
     protected $languages = array();
 
     /**
      * @name            __construct ()
-     *                  Constructor.
      *
      * @author          Can Berkol
      *
      * @since           1.0.0
-     * @version         1.0.0
+     * @version         1.2.6
      *
-     * @param           object $kernel
-     * @param           string $db_connection Database connection key as set in app/config.yml
-     * @param           string $orm ORM that is used.
+     * @param           object 		$kernel
+     * @param           string 		$dbConnection
+     * @param           string 		$orm
      */
-    public function __construct($kernel, $db_connection = 'default', $orm = 'doctrine')
-    {
-        $this->db_connection = $db_connection;
+    public function __construct($kernel, $dbConnection = 'default', $orm = 'doctrine'){
+        $this->dbConnection = $dbConnection;
         $this->orm = $orm;
         $this->kernel = $kernel;
-        $this->response['rowCount'] = 0;
+		$this->response = new ModelResponse();
         /**
          * Set the connection with the required database.
          */
-        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->db_connection);
+        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->$dbConnection);
         $this->resetResponse();
     }
 
     /**
      * @name            __destruct ()
-     *                  Destructor.
      *
      * @author          Can Berkol
      *
@@ -84,114 +63,30 @@ class CoreModel
      * @version         1.0.0
      *
      */
-    public function __destruct()
-    {
+    public function __destruct() {
         foreach ($this as $property => $value) {
             $this->$property = null;
         }
     }
 
     /**
-     * @name            debug ()
-     * prints provided content
-     *
-     * @author          Said İmamoğlu
-     *
-     * @param mixed $var Content of variable
-     * @param bool $exit true|false
-     * @since           1.0.0
-     * @version         1.1.9
-     *
-     */
-    public function debug($var, $exit = true)
-    {
-        echo '<pre>';
-        var_dump($var);
-        if ($exit) {
-            die;
-        }
-    }
-
-    /**
-     * @name            debugClass ()
-     * prints provided class methods
-     *
-     * @author          Said İmamoğlu
-     *
-     * @param mixed $class Class
-     * @param bool $exit true|false
-     * @since           1.2.1
-     * @version         1.2.1
-     *
-     */
-    public function debugClass($class, $exit = true)
-    {
-        if (is_object($class)) {
-            $reflectionClass = new \ReflectionClass($class);
-            $methods = $reflectionClass->getMethods();
-            foreach ($methods as $method) {
-                echo $method->class . '->' . $method->name . '()' . '<br>';
-            }
-        } else {
-            echo $class . ' is not a valid Class.';
-        }
-        if ($exit) {
-            die;
-        }
-    }
-
-    /**
-     * @name            resetResponse ()
-     *                  Resets response.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     * @return          bool
-     */
-    protected function resetResponse()
-    {
-        /**
-         * Reset response
-         */
-        $this->response = array(
-            'result' => array(
-                'set' => null,
-                'total_rows' => 0,
-                'last_insert_id' => null,
-            ),
-            'error' => true,
-            'code' => 'err.response.reset',
-            'rowCount' => 0
-        );
-        return true;
-    }
-
-    /**
      * @name            addLimit ()
-     *                  Adds limit instruction to query object.
      *
      * @author          Can Berkol
      *
      * @since           1.1.2
-     * @version         1.1.2
+     * @version         1.2.6
      *
-     * @param           object $query Query object.
-     * @param           array $limit
+     * @param           object 		$query
+     * @param           array 		$limit
      *
      * @return          object              $query
      */
-    public function addLimit($query, $limit = null)
-    {
-        /**
-         * Prepare LIMIT section of query
-         */
+    public function addLimit($query, $limit = null) {
         if ($limit != null) {
             if (isset($limit['start']) && isset($limit['count'])) {
                 if (isset($limit['pagination'])) {
-                    $this->response['rowCount'] = count($query->getResult());
+                    $this->response->result->count->set = count($query->getResult());
                 }
                 /** If limit is set */
                 $query->setFirstResult($limit['start']);
@@ -205,25 +100,21 @@ class CoreModel
 
     /**
      * @name            createException ()
-     *                  Handles exception creation in a centralized manner. The function updates response code and
-     *                  returns updated response object.
      *
      * @author          Can Berkol
      * @author          Said İmamoğlu
      *
      * @since           1.1.1
-     * @version         1.2.3
+     * @version         1.2.6
      *
-     * @param           string $exception Name of exception
-     * @param           string $msg Custom part of message
-     * @param           string $code error code
-     * @param           bool $isCore Defines if the exception belongs to Core Package.
+     * @param           string 		$exception
+     * @param           string 		$msg
+     * @param           string 		$code
+     * @param           bool 		$isCore 				Defines if the exception belongs to Core Package.
      *
-     * @return          array               $this->response
+     * @return          array       $this->response
      */
-    public function createException($exception, $msg, $code, $isCore = true)
-    {
-        $this->resetResponse();
+    public function createException($exception, $msg, $code, $isCore = true){
         if ($isCore) {
             if (!strpos($exception, 'Exception')) {
                 $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\' . $exception . 'Exception';
@@ -232,27 +123,27 @@ class CoreModel
             }
         }
         new $exception($this->kernel, $msg);
-        $this->response['error'] = true;
-        $this->response['code'] = $code;
+        $this->response->error->exist = true;
+        $this->response->error->code = $code;
+        $this->response->error->message = $msg;
+
         return $this->response;
     }
 
     /**
      * @name            getEntityDefinition ()
-     *                  Returns entity detail from entity property.
      *
      * @author          Can Berkol
      *
      * @since           1.1.7
      * @version         1.1.7
      *
-     * @param           string $entity
-     * @param           string $detail name, alias
+     * @param           string 		$entity
+     * @param           string 		$detail name, alias
      *
-     * @return          mixed               string|false
+     * @return          mixed       string|false
      */
-    public function getEntityDefinition($entity, $detail = 'name')
-    {
+    public function getEntityDefinition($entity, $detail = 'name'){
         if (isset($this->entity[$entity][$detail])) {
             return $this->entity[$entity][$detail];
         }
@@ -260,183 +151,91 @@ class CoreModel
     }
 
     /**
-     * @name            delete_entities ()
-     *                  Processes common delete functionalities and returns a sub response to instruct the calling
-     *                  DELETE method what to do next.
+     * @name            deleteEntities()
      *
      * @author          Can Berkol
      *
      * @since           1.2.0
-     * @version         1.2.0
+     * @version         1.2.6
      *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
+     * @param           array 		$collection
+     * @param           string 		$entity
      *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function deleteEntities($collection, $entity)
-    {
-        $sub_response = array('process' => 'stop');
+	 * @return          BiberLtd\Bundle\Core\Responses\ModelResponse            $subResponse
+	 *
+	 */
+    protected function deleteEntities($collection, $entity) {
+        $subResponse = new ModelResponse();
+		$subResponse->process->continue = false;
         /** Loop through items and collect values. */
-        $delete_count = 0;
+        $deleteCount = 0;
         foreach ($collection as $item) {
-            /** If the item is an entity we'll remove it from entity manager */
             if (!$item instanceof $entity) {
                 new CoreExceptions\InvalidEntityException($this->kernel, $entity);
-                $sub_response['process'] = 'continue';
-                $sub_response['entries']['invalid'][] = $item;
+				$subResponse->process->continue = true;
+				$subResponse->process->collection->invalid[] = $item;
             }
             /** Here we remove the entity from entity manager */
-            $sub_response['entries']['valid'][] = $item;
+			$subResponse->process->collection->valid[] = $item;
             $this->em->remove($item);
-            $delete_count++;
+            $deleteCount++;
         }
-        if ($delete_count > 0) {
+        if ($deleteCount > 0) {
             /** fluesh changes if there are items waiting to be deleted */
             $this->em->flush();
-            $sub_response['item_count'] = $delete_count;
-        } else {
-            new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
-            $this->response['code'] = 'err.invalid.parameter.collection';
+            $subResponse->result->count->set = $deleteCount;
         }
-
-        return $sub_response;
+		else {
+            new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
+            $this->response->error->code = 'E:X:002';
+            $this->response->error->message = 'A parameter is missing or it has wrong value.';
+        	return $this->response;
+		}
+        return $subResponse;
     }
 
     /**
-     * @name            delete_entities ()
-     *                  Processes common delete functionalities and returns a sub response to instruct the calling
-     *                  DELETE method what to do next.
+     * @name            insertEntities()
      *
      * @author          Can Berkol
      *
      * @since           1.1.0
-     * @version         1.2.0
+     * @version         1.2.6
      *
-     * @use             $this->deleteEntities()
-     * @deprecated      use deleteEntities() instead.
+     * @param           array 			$collection
+     * @param           string 			$entity
      *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
-     *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function delete_entities($collection, $entity)
-    {
-        return $this->deleteEntities($collection, $entity);
-    }
-
-    /**
-     * @name            insertEntities ()
-     *                  Processes common insert functionalities and returns a sub response to instruct the calling
-     *                  INSERT method what to do next.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
-     *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function insertEntities($collection, $entity)
-    {
-        $sub_response = array('process' => 'stop');
-        /** Loop through items and collect values. */
-        $insert_count = 0;
+	 * @return          BiberLtd\Bundle\Core\Responses\ModelResponse            $subResponse
+	 *
+	 */
+    protected function insertEntities($collection, $entity) {
+		$subResponse = new ModelResponse();
+		$subResponse->process->continue = false;
+        $insertCount = 0;
         foreach ($collection as $item) {
-            /** If the item is an entity we'll remove it from entity manager */
             if (!$item instanceof $entity) {
                 new CoreExceptions\InvalidEntityException($this->kernel, $entity);
-                $sub_response['process'] = 'continue';
-                $sub_response['entries']['invalid'][] = $item;
+				$subResponse->process->continue = true;
+				$subResponse->process->collection->invalid[] = $item;
             }
-            /** Here we remove the entity from entity manager */
-            $sub_response['entries']['valid'][] = $item;
-            // $this->em->persist($item);
-            $insert_count++;
+			$subResponse->process->collection->valid[] = $item;
+            $this->em->persist($item);
+			$insertCount++;
         }
 
-        if ($insert_count > 0) {
+        if ($insertCount > 0) {
             /** flush changes if there are items waiting to be deleted */
             $this->em->flush();
-            $sub_response['item_count'] = $insert_count;
-        } else {
-            new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
-            $this->response['code'] = 'err.invalid.parameter.collection';
+			$subResponse->result->count->set = $insertCount;
         }
-        return $sub_response;
+		else {
+			new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
+			$this->response->error->code = 'E:X:002';
+			$this->response->error->message = 'A parameter is missing or it has wrong value.';
+			return $this->response;
+        }
+        return $subResponse;
     }
-
-    /**
-     * @name            insert_entities ()
-     *                  Processes common insert functionalities and returns a sub response to instruct the calling
-     *                  INSERT method what to do next.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @use             $this->insertEntities()
-     * @deprecated
-     *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
-     *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function insert_entities($collection, $entity)
-    {
-        return $this->insertEntities($collection, $entity);
-    }
-
-    /**
-     * @name            prepare_condition ()
-     *                  Prepares CONDITION value for WHERE clauses. This function prepares the right side of the equation.
-     *                  id IN(3,4,5);
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @use             prepareCondition()
-     *
-     * @deprecated      Use $prepareCondition instead.
-     *
-     * @param           string $key starts, ends, contains, in, include, not_in, exclude
-     * @param           mixed $value array, string or integer
-     *
-     * @return          string
-     */
-    protected function prepare_condition($key, $value)
-    {
-        return $this->prepareCondition($key, $value);
-    }
-
     /**
      * @name            prepareCondition ()
      *                  Prepares CONDITION value for WHERE clauses. This function prepares the right side of the equation.
@@ -447,14 +246,13 @@ class CoreModel
      * @since           1.2.0
      * @version         1.2.4
      *
-     * @param           string $key starts, ends, contains, in, include, not_in, exclude
-     * @param           mixed $value array, string or integer
-     * @param           string $method Simple, one parameter methods only.
+     * @param           string 		$key 			starts, ends, contains, in, include, not_in, exclude
+     * @param           mixed 		$value 			array, string or integer
+     * @param           string 		$method 		Simple, one parameter methods only.
      *
      * @return          string
      */
-    protected function prepareCondition($key, $value, $method = '')
-    {
+    protected function prepareCondition($key, $value, $method = ''){
         if ($value instanceof \DateTime) {
             $value = $value->format('Y-m-d h:i:s');
         }
@@ -463,14 +261,16 @@ class CoreModel
             case 'starts':
                 if (empty($method)) {
                     $condition .= ' LIKE \'' . $value[0] . '%\' ';
-                } else {
+                }
+				else {
                     $condition .= ' LIKE ' . $method . '(\'' . $value[0] . '%\') ';
                 }
                 break;
             case 'ends':
                 if (empty($method)) {
                     $condition .= ' LIKE \'%' . $value[0] . '\' ';
-                } else {
+                }
+				else {
                     $condition .= ' LIKE ' . $method . '(\'%' . $value[0] . '\') ';
                 }
                 break;
@@ -478,13 +278,16 @@ class CoreModel
                 if (is_array($value)) {
                     if (empty($method)) {
                         $condition .= ' LIKE \'%' . $value[0] . '%\' ';
-                    } else {
+                    }
+					else {
                         $condition .= ' LIKE ' . $method . '(\'%' . $value[0] . '%\') ';
                     }
-                } else {
+                }
+				else {
                     if (empty($method)) {
                         $condition .= ' LIKE \'%' . $value . '%\' ';
-                    } else {
+                    }
+					else {
                         $condition .= ' LIKE ' . $method . '(\'%' . $value . '%\') ';
                     }
                 }
@@ -496,10 +299,12 @@ class CoreModel
                     if (is_string($item)) {
                         if (empty($method)) {
                             $in .= '\'' . $item . '\',';
-                        } else {
+                        }
+						else {
                             $in .= $method . '(\'' . $item . '\'),';
                         }
-                    } else {
+                    }
+					else {
                         if (empty($method)) {
                             $in .= $item . ',';
                         } else {
@@ -517,10 +322,12 @@ class CoreModel
                     if (is_string($item)) {
                         if (empty($method)) {
                             $not_in .= '\'' . $item . '\',';
-                        } else {
+                        }
+						else {
                             $not_in .= $method . '(\'' . $item . '\'),';
                         }
-                    } else {
+                    }
+					else {
                         if (empty($method)) {
                             $not_in .= $item . ',';
                         } else {
@@ -549,7 +356,8 @@ class CoreModel
                     case is_string($value):
                         if (empty($method)) {
                             $value = "'" . $value . "'";
-                        } else {
+                        }
+						else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -577,7 +385,8 @@ class CoreModel
                     case is_string($value):
                         if (empty($method)) {
                             $value = "'" . $value . "'";
-                        } else {
+                        }
+						else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -596,7 +405,8 @@ class CoreModel
                     case is_string($value):
                         if (empty($method)) {
                             $value = "'" . $value . "'";
-                        } else {
+                        }
+						else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -615,7 +425,8 @@ class CoreModel
                     case is_string($value):
                         if (empty($method)) {
                             $value = "'" . $value . "'";
-                        } else {
+                        }
+						else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -635,7 +446,8 @@ class CoreModel
                     case is_string($value):
                         if (empty($method)) {
                             $value = "'" . $value . "'";
-                        } else {
+                        }
+						else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -655,38 +467,13 @@ class CoreModel
         }
         return $condition;
     }
-
-    /**
-     * @name            prepare_delete ()
-     *                  Prepares DELETE query..
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @use             $this->prepareDelete()
-     * @deprecated      Use prepareDelete() instead
-     *
-     * @param           string $table table name.
-     * @param           string $column column name
-     * @param           mixed $values array of values.
-     *
-     * @return          string
-     */
-    protected function prepare_delete($table, $column, $values)
-    {
-        return $this->prepareDelete($table, $column, $values);
-    }
-
     /**
      * @name            prepareDelete ()
-     *                  Prepares DELETE query..
      *
      * @author          Can Berkol
      *
      * @since           1.2.0
-     * @version         1.2.0
+     * @version         1.2.6
      *
      * @param           string $table table name.
      * @param           string $column column name
@@ -694,8 +481,7 @@ class CoreModel
      *
      * @return          string
      */
-    protected function prepareDelete($table, $column, $values)
-    {
+    protected function prepareDelete($table, $column, $values){
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
@@ -705,67 +491,12 @@ class CoreModel
                 )
             )
         );
-        $condition = $this->prepare_where($filter);
-        $q_str = 'DELETE '
-            . ' FROM ' . $table
-            . ' WHERE ' . $condition;
+        $condition = $this->prepareWhere($filter);
+        $qStr = 'DELETE '
+            		.' FROM '.$table
+            		.' WHERE '.$condition;
 
-        return $q_str;
-    }
-
-    /**
-     * @name            prepare_where ()
-     *                  Prepares CONDITION statement.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @use             $this->prepareWhere()
-     * @deprecated      use prepareWhere() instead.
-     *
-     * @param           mixed               array           $filter             Multi-dimensional array
-     *
-     *                                  Example:
-     *                                  $filter = array(
-     *                                      'glue' => 'and',
-     *                                      'condition' => array(
-     *                                          0  => array(
-     *                                                  'glue' => 'and'
-     *                                                  'condition' => array(
-     *                                                      0 => array('id', 'in', array(1,2,3,4))
-     *                                                  ),
-     *                                          ),
-     *                                          1 => array(
-     *                                              'glue' => 'or',
-     *                                              'condition' => array(
-     *                                                  0 => array(
-     *                                                      'glue' => 'or',
-     *                                                      'condition' => array(
-     *                                                          0 => array('status', '=', 'a'),
-     *                                                          1 => array('price', '>', 255)
-     *                                                      ),
-     *                                                  ),
-     *                                                  1 => array(
-     *                                                      'glue => 'and',
-     *                                                      'condition => array(
-     *                                                          0 => array('name', 'contains', 'oto')
-     *                                                      )
-     *                                                  )
-     *                                              )
-     *                                          ),
-     *                                     )
-     *                                  );
-     *                                  Outputted WHERE is
-     *
-     *                                  ((p.id IN (1,2,3,4))) AND ((p.status = 'a' OR p.price > 255) OR (pl.name LIKE '%oto%'))
-     *
-     * @return          string
-     */
-    protected function prepare_where($filter)
-    {
-        return $this->prepareWhere($filter);
+        return $qStr;
     }
 
     /**
@@ -775,167 +506,97 @@ class CoreModel
      * @author          Can Berkol
      *
      * @since           1.2.0
-     * @version         1.2.5
+     * @version         1.2.6
      *
-     * @param           mixed $filter Multi-dimensional array
-     *
-     *                                  Example:
-     *                                  $filter = array(
-     *                                      'glue' => 'and',
-     *                                      'condition' => array(
-     *                                          0  => array(
-     *                                                  'glue' => 'and'
-     *                                                  'condition' => array(
-     *                                                      0 => array('id', 'in', array(1,2,3,4))
-     *                                                  ),
-     *                                          ),
-     *                                          1 => array(
-     *                                              'glue' => 'or',
-     *                                              'condition' => array(
-     *                                                  0 => array(
-     *                                                      'glue' => 'or',
-     *                                                      'condition' => array(
-     *                                                          0 => array('status', '=', 'a'),
-     *                                                          1 => array('price', '>', 255)
-     *                                                      ),
-     *                                                  ),
-     *                                                  1 => array(
-     *                                                      'glue => 'and',
-     *                                                      'condition => array(
-     *                                                          0 => array('name', 'contains', 'oto')
-     *                                                      )
-     *                                                  )
-     *                                              )
-     *                                          ),
-     *                                     )
-     *                                  );
-     *                                  Outputted WHERE is
-     *
-     *                                  ((p.id IN (1,2,3,4))) AND ((p.status = 'a' OR p.price > 255) OR (pl.name LIKE '%oto%'))
-     *
+     * @param           mixed 		$filter
+
      * @return          string
      */
-    protected function prepareWhere($filter)
-    {
-        $group_str = '';
+    protected function prepareWhere($filter){
+        $groupStr = '';
         foreach ($filter as $group) {
-            $group_str .= ' (';
-            $cond_str = '';
+			$groupStr .= ' (';
+            $condStr = '';
             $glue = ' AND ';
             if ($group['glue'] == 'or') {
                 $glue = ' OR ';
             }
             $condition = $group['condition'];
             if (!array_key_exists('column', $condition)) {
-                $cond_str .= $this->prepareWhere($condition);
+				$condStr .= $this->prepareWhere($condition);
             } else {
                 if (!isset($condition['method'])) {
                     $condition['method'] = '';
                 }
                 $prepared_str = $this->prepareCondition($condition['comparison'], $condition['value'], $condition['method']);
-                $cond_str .= ' ' . $condition['column'] . $prepared_str;
+				$condStr .= ' ' . $condition['column'] . $prepared_str;
             }
 
-            $group_str .= $cond_str . ')' . $glue;
+			$groupStr .= $condStr . ')' . $glue;
         }
-        $group_str = rtrim($group_str, $glue);
+		$groupStr = rtrim($groupStr, $glue);
 
-        return $group_str;
+        return $groupStr;
     }
 
     /**
      * @name            updateEntities ()
-     *                  Processes common update functionalities and returns a sub response to instruct the calling
-     *                  UPDATE method what to do next.
      *
      * @author          Can Berkol
      *
      * @since           1.2.0
-     * @version         1.2.0
+     * @version         1.2.6
      *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
+     * @param           array 			$collection
+     * @param           string 			$entity
      *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function updateEntities($collection, $entity)
-    {
-        $sub_response = array('process' => 'stop');
-        /** Loop through items and collect values. */
-        $update_count = 0;
+	 * @return          array           $sub_response
+	 *
+	 */
+    protected function updateEntities($collection, $entity)    {
+		$subResponse = new ModelResponse();
+		$subResponse->process->continue = false;
+		$updateCount = 0;
         foreach ($collection as $item) {
             /** If the item is an entity we'll remove it from entity manager */
             if (!$item instanceof $entity || !$item->isModified()) {
                 new CoreExceptions\InvalidEntityException($this->kernel, $entity);
-                $sub_response['process'] = 'continue';
-                $sub_response['entries']['invalid'][] = $item;
+				$subResponse->process->continue = true;
+				$subResponse->process->collection->invalid[] = $item;
             }
             /** Here we remove the entity from entity manager */
-            $sub_response['entries']['valid'][] = $item;
+			$subResponse->process->collection->valid[] = $item;
             $this->em->persist($item);
-            $update_count++;
+			$updateCount++;
         }
-        if ($update_count > 0) {
+        if ($updateCount > 0) {
             /** fluesh changes if there are items waiting to be deleted */
             $this->em->flush();
-            $sub_response['item_count'] = $update_count;
+			$subResponse->result->count->set = $updateCount;
         } else {
-            new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
-            $this->response['code'] = 'err.invalid.parameter.collection';
+			new CoreExceptions\InvalidParameterException($this->kernel, 'Array');
+			$this->response->error->code = 'E:X:002';
+			$this->response->error->message = 'A parameter is missing or it has wrong value.';
+			return $this->response;
         }
 
-        return $sub_response;
-    }
-
-    /**
-     * @name            update_entities ()
-     *                  Processes common update functionalities and returns a sub response to instruct the calling
-     *                  UPDATE method what to do next.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.0
-     *
-     * @use             $this->updateEntities
-     * @deprecated      use updateEntities instead.
-     *
-     * @param           array $collection
-     * @param           string $entity Name of entity including namespace.
-     *
-     * @return          array               $sub_response           Sub response that contains instructions.
-     *                                                              'process'       continue or stop
-     *                                                              'item_count'    count of items to be deleted including entry values
-     *                                                              'entries'       collection of entities
-     *                                                                    'invalid' entities that have not been processed
-     *                                                                    'valid'   entities that have been processed.
-     */
-    protected function update_entities($collection, $entity)
-    {
-        return $this->updateEntities($collection, $entity);
+        return $subResponse;
     }
 
     /**
      * @name            translateColumnName ()
-     *                  Change $column name from underscore to camelCase;
      *
      * @author          Said İmamoğlu
      *
      * @since           1.1.0
      * @version         1.1.0
      *
-     * @param           array $column
+     * @param           array 		$column
      *
-     * @return          string              $result
+     * @return          string      $result
      *
      */
-    protected function translateColumnName($column)
-    {
+    protected function translateColumnName($column){
         if (strpos($column, '_')) {
             $words = explode('_', $column);
             if (count($words) > 0) {
@@ -953,11 +614,19 @@ class CoreModel
             return ucfirst($column);
         }
     }
-
 }
 
 /**
  * Change Log
+ * **************************************
+ * v1.2.6                      01.05.2015
+ * Can Berkol
+ * **************************************
+ * CR :: New $response object does not require $this->resetResponse(). Deleted.
+ * CR :: __construct() content is converted to camelCase.
+ * CR :: Deprecated methods removed.
+ * CR :: Responses & SubResponses are converted to BiberLtd\Core\Responses\ModelResponse
+ *
  * **************************************
  * v1.2.5                      Can Berkol
  * 17.02.2014

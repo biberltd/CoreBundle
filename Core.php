@@ -1,20 +1,17 @@
 <?php
 /**
- * Core Class
- *
- * This class provides an abstract foundation to all Biber Ltd. Core files.
- *
  * @vendor      BiberLtd
  * @package		Core
  * @subpackage
  * @name	    Core
  *
  * @author		Can Berkol
+ * @author		Said İmamoğlu
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.1.0
- * @date        12.01.2014
+ * @version     1.1.1
+ * @date        30.04.2015
  *
  */
 namespace BiberLtd\Bundle\CoreBundle;
@@ -27,26 +24,63 @@ class Core{
     public function __construct($kernel){
         $this->kernel = $kernel;
     }
-    
-    /**
-     * @name            debug()
-     * prints provided content
-     *
-     * @author          Said İmamoğlu
-     *
-     * @param mixed $var Content of variable
-     * @since           1.0.0
-     * @version         1.0.0
-     *
-     */
-    public function debug($var) {
-        echo '<pre>';
-        var_dump($var);
-        die;
-    }
+
+	/**
+	 * @name            debug ()
+	 *
+	 * @author          Can Berkol
+	 * @author          Said İmamoğlu
+	 *
+	 * @param 			mixed 			$var
+	 * @param 			bool 			$exit
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 */
+	public function debug($var, $exit = true) {
+		echo '<pre>';
+		var_dump($var);
+		if ($exit) {
+			die;
+		}
+	}
+
+	/**
+	 * @name            debugClass ()
+	 *
+	 * @author          Said İmamoğlu
+	 *
+	 * @param 			mixed $class Class
+	 * @param 			bool $exit true|false
+	 *
+	 * @since           1.1.1
+	 * @version         1.1.1
+	 *
+	 */
+	public function debugClass($class, $exit = true){
+		if (is_object($class)) {
+			$reflectionClass = new \ReflectionClass($class);
+			$methods = $reflectionClass->getMethods();
+			foreach ($methods as $method) {
+				echo $method->class . '->' . $method->name . '()' . '<br>';
+			}
+		} else {
+			echo $class . ' is not a valid Class.';
+		}
+		if ($exit) {
+			die;
+		}
+	}
 }
 /**
  * Change Log
+ * **************************************
+ * v1.1.0                      Can Berkol
+ * 12.01.2014
+ * **************************************
+ * CR :: debug() method has been moved into the object.
+ * CR :: debugClass() method has been moved into the object.
+ *
  * **************************************
  * v1.1.0                      Can Berkol
  * 12.01.2014

@@ -16,6 +16,7 @@
  * @version     1.2.1
  * @date        10.08.2013
  *
+ * @deprecated 	This class will be replaced soon. Please do NOT use this class.
  */
 
 namespace BiberLtd\Bundle\CoreBundle\Services;

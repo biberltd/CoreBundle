@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Core Controller Class
  *
@@ -15,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.4
- * @date        24gi.04.2015
+ * @version     1.3.5
+ * @date        01.05.2015
  *
  */
 
@@ -28,7 +27,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CoreController extends Controller {
-
     protected $url;         /** Array Base urls.  */
     protected $session = null;     /** Session */
     protected $translator;  /** Translator */
@@ -215,28 +213,6 @@ class CoreController extends Controller {
         }
         return $defaults;
     }
-    /**
-     * @name            init_defaults()
-     *                  Initializes default values.
-     *
-     * @author          Can Berkol
-     * @since           1.0.0
-     * @version         1.1.1
-     *
-     * @use             $this->initDefaults()
-     *
-     * @param           array       $css
-     * @param           array       $js
-     * @param           array       $vars
-     * @param           string      $theme
-     *
-     * @deprecated      Will be deleted in v1.3.0. Use initDefaults instead.
-     *
-     * @return          mixed
-     */
-    public function init_defaults($css = null, $js = null, $vars = null, $theme = null) {
-        return $this->initDefaults($css, $js, $vars, $theme);
-    }
 
     /*******************************************************************
      * DEBUG FUNCTIONS
@@ -249,8 +225,8 @@ class CoreController extends Controller {
      * @author              Can Berkol
      * @author              Said İmamoğlu
      *
-     * @since           1.0.0
-     * @version         1.1.1
+     * @since           	1.0.0
+     * @version         	1.1.1
      *
      * @param               mixed       $var        Content of variable
      * @param               bool        $exit       true|false
@@ -277,12 +253,11 @@ class CoreController extends Controller {
     }
     /**
      * @name            debugClass()
-     * prints provided class methods
      *
      * @author          Said İmamoğlu
      *
-     * @param mixed $class Class
-     * @param bool $exit true|false
+     * @param 			mixed 		$class Class
+     * @param 			bool 		$exit true|false
      * @since           1.1.3
      * @version         1.1.3
      *
@@ -382,24 +357,6 @@ class CoreController extends Controller {
         }
         return $currentXssCode;
     }
-    /**
-     * @name            generateCSFR()
-     *
-     * @author          Can Berkol
-     * @since           1.0.6
-     * @version         1.2.5
-     *
-     * @param           Session         $session
-     *
-     * @return          array           string
-     *
-     * @deprecated      use $this->generateXssCode() instead !! Will be removed in version 1.3.0
-     */
-    public function generateCSFR($session) {
-        unset($session);
-        return $this->generateXssCode();
-    }
-
     /**
      * @name            generateUrlKey()
      *                  Generates url keys / slugs.
@@ -868,24 +825,6 @@ class CoreController extends Controller {
         return $url;
     }
     /**
-     * @name            prepare_url()
-     *                  Prepares URLs.
-     *
-     * @author          Can Berkol
-     * @since           1.0.0
-     * @version         1.1.1
-     *
-     * @deprecated      Will be deleted in v1.2.0. Use prepareUrl instead.
-     *
-     * @param           bool            $append_locale      If set to true appends current locale.
-     * @param           mixed           $parameters         Either a string or an array of strings.
-     *
-     * @return          string          $url
-     */
-    public function prepare_url($append_locale = true, $prepend_boot = false, $parameters = null) {
-        return $this->prepareUrl($append_locale, $prepend_boot, $parameters);
-    }
-    /**
      * @name            prepareCss()
      *                  Prepares css tags.
      *
@@ -950,23 +889,6 @@ class CoreController extends Controller {
         return $flash;
     }
     /**
-     * @name            prepare_flash()
-     *                  Prepares Flash messages.
-     *
-     * @author          Can Berkol
-     * @since           1.0.0
-     * @version         1.1.1
-     *
-     * @deprecated      Will be deleted in v1.2.0. Use prepareFlash instead.
-     *
-     * @param           Session         $session
-     *
-     * @return          array           $flash
-     */
-    public function prepare_flash($session) {
-        return $this->prepareFlash($session);
-    }
-    /**
      * @name            prepareJs()
      *                  Prepares js tags.
      *
@@ -979,168 +901,172 @@ class CoreController extends Controller {
      * @return          mixed
      */
     public function prepareJs($js = null) {
-        $js = array_unique($js);
-        $jsStr = '';
-        foreach ($js as $item) {
-            if(strpos($item, 'http') !== false){
-                $jsStr .= '<script type="text/javascript" src="'.$item.'"></script>'.PHP_EOL;
-            }
-            else{
-                $jsStr .= '<script type="text/javascript" src="'.$this->url['domain'].'/themes/'.$this->theme.$item.'"></script>'.PHP_EOL;
-            }
-        }
-        return $jsStr;
-    }
-    /**
-     * @name            prepareManagementSidebar()
-     *                  Prepares management sidebar.
-     *
-     * @author          Can Berkol
-     * @since           1.1.0
-     * @version         1.1.0
-     *
-     * @param           string          $parentNavUrlKey
-     * @deprecated     Will be removed şn v2.0.0
-     *
-     * @return          string
-     */
-    public function prepareManagementSidebar($parentNavUrlKey = null){
-        $cmsModel = $this->get('cms.model');
-        /**
-         * Get core render model and prepare core information
-         */
-        $coreRender = $this->get('corerender.model');
-        $core = array(
-            'locale' => $this->locale,
-            'theme' => $this->page['entity']->getLayout()->getTheme()->getFolder(),
-            'url' => $this->url,
-        );
-        /** Get project logo */
-        $siteSettings = json_decode($this->site->getSettings());
-        $projectLogoUrl = $this->url['cdn'].'/site/logo/'.$siteSettings->logo;
-        $dashboardSettings = array(
-            'link'  => $this->url['base_l'].'/manage/dashboard',
-            'title' => $this->translator->trans('dashboard.title', array(), 'admin'),
-        );
-        $renderedProjectLogo = $coreRender->renderProjectLogo($projectLogoUrl, $this->site->getTitle(), $core, $dashboardSettings);
-        unset($projectLogoUrl, $dashboardSettings);
-        $sidebar['projectLogo'] = $renderedProjectLogo;
-        /** Prepare sidebar separator */
-        $renderedSidebarSeparator = $coreRender->renderSidebarSeparator($core);
-        $sidebar['separator'] = $renderedSidebarSeparator;
-        /** Get sidebar navigation */
-        $response = $cmsModel->listItemsOfNavigation('cms_nav_main', 'top', array('sort_order' => 'asc'));
-        $sideNavItems = array();
-        if(!$response['error']){
-            $sideNavItems = $response['result']['set'];
-        }
-        unset($response);
-        $navCollection = array();
-        foreach($sideNavItems as $navItem){
-            $response = $cmsModel->listNavigationItemsOfParent($navItem, array('sort_order' => 'asc'));
-            $childItems = array();
-            $hasChildren = false;
-            $selectedParent = false;
-            if(!$response['error']){
-                $hasChildren = true;
-                foreach($response['result']['set'] as $childItem){
-                    $childNavSelected = false;
-                    if($childItem->getPage()->getId() == $this->page['entity']->getId()){
-                        $childNavSelected = true;
-                        $selectedParent = $childItem->getParent()->getId();
-                    }
-                    $childItems[] = array(
-                        'entity'  => $childItem,
-                        'selected'=> $childNavSelected,
-                    );
-                }
-            }
-            $navSelected = false;
-            if(is_null($parentNavUrlKey)){
-                if($navItem->getId() == $selectedParent){
-                    $navSelected = true;
-                }
-            }
-            else{
-                foreach($navItem->getLocalizations() as $localization){
-                    if($localization->getUrlKey() == $parentNavUrlKey){
-                        $navSelected = true;
-                        break;
-                    }
-                }
-            }
-            $navCollection[]  = array(
-                'children'      => $childItems,
-                'code'          => time(),
-                'entity'        => $navItem,
-                'hasChildren'   => $hasChildren,
-                'selected'      => $navSelected,
-            );
-            unset($response, $childItems);
-        }
-        unset($sideNavItems);
+		$js = array_unique($js);
+		$jsStr = '';
+		foreach ($js as $item) {
+			if (strpos($item, 'http') !== false) {
+				$jsStr .= '<script type="text/javascript" src="' . $item . '"></script>' . PHP_EOL;
+			}
+			else {
+				$jsStr .= '<script type="text/javascript" src="' . $this->url['domain'] . '/themes/' . $this->theme . $item . '"></script>' . PHP_EOL;
+			}
+		}
 
-        $renderedSidebarNavigation = $coreRender->renderSidebarNavigation($navCollection, $core);
-        $sidebar['navigation'] = $renderedSidebarNavigation;
-        return $sidebar;
-    }
-    /**
-     * @name            prepareManagementTopbar()
-     *                  Prepares management topbar.
-     *
-     * @author          Can Berkol
-     * @since           1.1.0
-     * @version         1.1.8
-     *
-     * @deprecated     Will be removed şn v2.0.0
-     *
-     * @return          string
-     */
-    public function prepareManagementTopbar(){
-        $cmsModel = $this->get('cms.model');
-        $mlsModel = $this->get('multilanguagesupport.model');
-        /**
-         * Get core render model and prepare core information
-         */
-        $coreRender = $this->get('corerender.model');
-        $core = array(
-            'locale' => $this->locale,
-            'theme' => $this->page['entity']->getLayout()->getTheme()->getFolder(),
-            'url' => $this->url,
-        );
-        /** Get top navigation */
-        $response = $cmsModel->listItemsOfNavigation('cms_nav_top', 'top', array('sort_order' => 'asc'));
-        $topNavItems = array();
-        if(!$response['error']){
-            $topNavItems = $response['result']['set'];
-        }
-        $topNavigation = $coreRender->renderQuickActionsNavigation($topNavItems, $core);
-        unset($topNavItems, $response);
-        $topbar['navigation'] = $topNavigation;
-        unset($topNavigation);
-        /** Create language dropdown */
-        $response = $mlsModel->listAllLanguages();
-        $otherLanguages = array();
-        $currentLanguage = null;
-        if(!$response['error']) {
-            $allLanguages = $response['result']['set'];
-            foreach($allLanguages as $language){
-                if($language->getIsoCode() == $this->locale){
-                    $currentLanguage = $language;
-                }
-                else{
-                    $otherLanguages[] = $language;
-                }
-            }
-            unset($allLanguages, $language);
-        }
-        $pathInfo = str_replace($this->locale.'/', '', $this->get('request')-> getPathInfo());
-        $langDropDown = $coreRender->renderLanguageDropdown($currentLanguage, $otherLanguages, $core, $pathInfo);
-        $topbar['navigationLang'] = $langDropDown;
-        unset($langDropDown);
+		return $jsStr;
+	}
 
-        return $topbar;
-    }
+// @todo		Delete the following comments in version >= 1.5.0
+//    /**
+//     * @name            prepareManagementSidebar()
+//     *                  Prepares management sidebar.
+//     *
+//     * @author          Can Berkol
+//     * @since           1.1.0
+//     * @version         1.1.0
+//     *
+//     * @param           string          $parentNavUrlKey
+//     * @deprecated     Will be removed şn v2.0.0
+//     *
+//     * @return          string
+//     */
+//    public function prepareManagementSidebar($parentNavUrlKey = null){
+//        $cmsModel = $this->get('cms.model');
+//        /**
+//         * Get core render model and prepare core information
+//         */
+//        $coreRender = $this->get('corerender.model');
+//        $core = array(
+//            'locale' => $this->locale,
+//            'theme' => $this->page['entity']->getLayout()->getTheme()->getFolder(),
+//            'url' => $this->url,
+//        );
+//        /** Get project logo */
+//        $siteSettings = json_decode($this->site->getSettings());
+//        $projectLogoUrl = $this->url['cdn'].'/site/logo/'.$siteSettings->logo;
+//        $dashboardSettings = array(
+//            'link'  => $this->url['base_l'].'/manage/dashboard',
+//            'title' => $this->translator->trans('dashboard.title', array(), 'admin'),
+//        );
+//        $renderedProjectLogo = $coreRender->renderProjectLogo($projectLogoUrl, $this->site->getTitle(), $core, $dashboardSettings);
+//        unset($projectLogoUrl, $dashboardSettings);
+//        $sidebar['projectLogo'] = $renderedProjectLogo;
+//        /** Prepare sidebar separator */
+//        $renderedSidebarSeparator = $coreRender->renderSidebarSeparator($core);
+//        $sidebar['separator'] = $renderedSidebarSeparator;
+//        /** Get sidebar navigation */
+//        $response = $cmsModel->listItemsOfNavigation('cms_nav_main', 'top', array('sort_order' => 'asc'));
+//        $sideNavItems = array();
+//        if(!$response['error']){
+//            $sideNavItems = $response['result']['set'];
+//        }
+//        unset($response);
+//        $navCollection = array();
+//        foreach($sideNavItems as $navItem){
+//            $response = $cmsModel->listNavigationItemsOfParent($navItem, array('sort_order' => 'asc'));
+//            $childItems = array();
+//            $hasChildren = false;
+//            $selectedParent = false;
+//            if(!$response['error']){
+//                $hasChildren = true;
+//                foreach($response['result']['set'] as $childItem){
+//                    $childNavSelected = false;
+//                    if($childItem->getPage()->getId() == $this->page['entity']->getId()){
+//                        $childNavSelected = true;
+//                        $selectedParent = $childItem->getParent()->getId();
+//                    }
+//                    $childItems[] = array(
+//                        'entity'  => $childItem,
+//                        'selected'=> $childNavSelected,
+//                    );
+//                }
+//            }
+//            $navSelected = false;
+//            if(is_null($parentNavUrlKey)){
+//                if($navItem->getId() == $selectedParent){
+//                    $navSelected = true;
+//                }
+//            }
+//            else{
+//                foreach($navItem->getLocalizations() as $localization){
+//                    if($localization->getUrlKey() == $parentNavUrlKey){
+//                        $navSelected = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            $navCollection[]  = array(
+//                'children'      => $childItems,
+//                'code'          => time(),
+//                'entity'        => $navItem,
+//                'hasChildren'   => $hasChildren,
+//                'selected'      => $navSelected,
+//            );
+//            unset($response, $childItems);
+//        }
+//        unset($sideNavItems);
+//
+//        $renderedSidebarNavigation = $coreRender->renderSidebarNavigation($navCollection, $core);
+//        $sidebar['navigation'] = $renderedSidebarNavigation;
+//        return $sidebar;
+//    }
+//    /**
+//     * @name            prepareManagementTopbar()
+//     *                  Prepares management topbar.
+//     *
+//     * @author          Can Berkol
+//     * @since           1.1.0
+//     * @version         1.1.8
+//     *
+//     * @deprecated     Will be removed şn v2.0.0
+//     *
+//     * @return          string
+//     */
+//    public function prepareManagementTopbar(){
+//        $cmsModel = $this->get('cms.model');
+//        $mlsModel = $this->get('multilanguagesupport.model');
+//        /**
+//         * Get core render model and prepare core information
+//         */
+//        $coreRender = $this->get('corerender.model');
+//        $core = array(
+//            'locale' => $this->locale,
+//            'theme' => $this->page['entity']->getLayout()->getTheme()->getFolder(),
+//            'url' => $this->url,
+//        );
+//        /** Get top navigation */
+//        $response = $cmsModel->listItemsOfNavigation('cms_nav_top', 'top', array('sort_order' => 'asc'));
+//        $topNavItems = array();
+//        if(!$response['error']){
+//            $topNavItems = $response['result']['set'];
+//        }
+//        $topNavigation = $coreRender->renderQuickActionsNavigation($topNavItems, $core);
+//        unset($topNavItems, $response);
+//        $topbar['navigation'] = $topNavigation;
+//        unset($topNavigation);
+//        /** Create language dropdown */
+//        $response = $mlsModel->listAllLanguages();
+//        $otherLanguages = array();
+//        $currentLanguage = null;
+//        if(!$response['error']) {
+//            $allLanguages = $response['result']['set'];
+//            foreach($allLanguages as $language){
+//                if($language->getIsoCode() == $this->locale){
+//                    $currentLanguage = $language;
+//                }
+//                else{
+//                    $otherLanguages[] = $language;
+//                }
+//            }
+//            unset($allLanguages, $language);
+//        }
+//        $pathInfo = str_replace($this->locale.'/', '', $this->get('request')-> getPathInfo());
+//        $langDropDown = $coreRender->renderLanguageDropdown($currentLanguage, $otherLanguages, $core, $pathInfo);
+//        $topbar['navigationLang'] = $langDropDown;
+//        unset($langDropDown);
+//
+//        return $topbar;
+//    }
+
     /**
      * @name            preparePagination()
      *                  Prepares pagination.
@@ -1154,7 +1080,7 @@ class CoreController extends Controller {
      * @param           integer         $page       Current page number
      * @param           integer         $total      Total number of items found in database / collection
      * @param           integer         $limit
-     * @param           integer         $maxPage
+     * @param           mixed           $maxPage
      *
      * @return          array           $pagination
      */
@@ -1217,26 +1143,6 @@ class CoreController extends Controller {
         return $pagination;
     }
     /**
-     * @name            prepare_pagination()
-     *                  Prepares pagination.
-     *
-     * @author          Can Berkol
-     *                  Mehmet Aydın Bahadır
-     * @since           1.0.3
-     * @version         1.1.1
-     *
-     * @deprecated      Will be deleted in v1.2.0. Use preparePagination instead.
-     *
-     * @param           integer         $page       Current page number
-     * @param           integer         $total      Total number of items found in database / collection
-     * @param           integer         $limit
-     *
-     * @return          array           $pagination
-     */
-    public function prepare_pagination($page, $total, $limit) {
-        return $this->preparePagination($page, $total, $limit);
-    }
-    /**
      * @name            redirect()
      *                  Redirects controller to a specific url.
      *
@@ -1282,7 +1188,7 @@ class CoreController extends Controller {
         return new RedirectResponse($url);
     }
     /**
-     * @name            redrectWithMessage()
+     * @name            redirectWithMessage()
      *                  Redirects controller to a specific url with flash message.
      *
      * @author          Can Berkol
@@ -1317,10 +1223,6 @@ class CoreController extends Controller {
      * @return          string
      */
     public function renderPage(){
-        if(func_num_args() > 1){
-            $args = func_get_args();
-            return $this->legacyRenderPage($args);
-        }
         if(!isset($this->vars['flash'])){
             $this->vars['flash'] = $this->flash;
         }
@@ -1459,189 +1361,6 @@ class CoreController extends Controller {
         return $this;
     }
     /**
-     * @name            legacyRenderPage()
-     *                  This is the legacy renderPage function for older versions of core.
-     *
-     * @author          Can Berkol
-     * @since           1.2.2
-     * @version         1.2.2
-     *
-     * @deprecated      Will be deleted in v1.2.0 - Use the new $this->renderPage() instead.
-     *
-     * @return          string
-     */
-    private function legacyRenderPage($args){
-        if(count($args) == 3){
-            $var = $args[0];
-            $css = $args[1];
-            $js = $args[2];
-        }
-        else if (count($args) == 4){
-            $var = $args[0];
-            $css = $args[1];
-            $js = $args[2];
-            $var['meta'] = $args[3];
-        }
-        $defaultVar['flash']   = $this->flash;
-        $defaultVar['page']    = array(
-            'blocks'        => $this->page['blocks'],
-            'entity'        => $this->page['entity'],
-        );
-
-        $defaultVar['page']['meta'] = array(
-            'description'   => $this->page['entity']->getLocalization($this->locale)->getMetaDescription(),
-            'keywords'      => $this->page['entity']->getLocalization($this->locale)->getMetaKeywords(),
-            'title'         => $this->page['entity']->getLocalization($this->locale)->getTitle(),
-        );
-
-        $defaultVar['style']   = array(
-            'body'          => array(
-                'classes'       => array(),
-            ),
-        );
-        $defaultVar['site']   = array(
-            'entity'            => $this->site,
-            'name'              => $this->site->getTitle(),
-        );
-        foreach($var as $key => $content){
-            switch($key){
-                case 'page':
-                    if(isset($var['page']['blocks'])){
-                        $defaultVar['page']['blocks'] = array_merge($defaultVar['page']['blocks'], $content['blocks']);
-                    }
-                    if(isset($var['page']['entity'])){
-                        $defaultVar['page']['entity'] = array_merge($defaultVar['page']['entity'], $content['entity']);
-                    }
-                    if(isset($var['page']['meta'])){
-                        $defaultVar['page']['meta'] = array_merge($defaultVar['page']['meta'], $content['meta']);
-                    }
-                    if(isset($var['page']['form'])){
-                        $defaultVar['page']['form'] = $content['form'];
-                    }
-                    break;
-                case 'style':
-                    $defaultVar['style'] = array_merge($defaultVar['style'], $content);
-                    break;
-                default:
-                    $defaultVar[$key] = $content;
-            }
-        }
-        if(isset($this->vars) && is_array($this->vars)){
-            $defaultVar = array_merge($defaultVar, $this->vars);
-        }
-
-        $tags = $this->initDefaults($css, $js, $defaultVar, $this->page['entity']->getLayout()->getTheme()->getFolder());
-        return $this->render($this->page['entity']->getBundleName().':'.$this->page['entity']->getLayout()->getTheme()->getFolder().'/Pages:'.$this->page['entity']->getCode().'.html.smarty', $tags);
-    }
-
-    /**
-     * @name        fileUpload()
-     *
-     * @author      Said İmamoğlu
-     * @since       1.2.0
-     * @version     1.2.0
-     *
-     * @param       $file
-     * @param       $folder
-     * @param       $db
-     * @param       $returnUrl
-     * @param       $fileTypes
-     *
-     * @return      string file name
-     *
-     * @deprecated  File upload handling is not the job of the CoreController. Will be deleted in v1.3.0 !!!
-     *
-     */
-    public function fileUpload($file,$folder,$db,$returnUrl , $fileTypes = array('jpg', 'jpeg', 'png', 'bmp')){
-        /** @var  string $rootDir gets Root Directory of project */
-        $rootDir = $this->get('kernel')->getRootDir();
-        /** @var object $FMM calls file management model*/
-        $FMM = $this->get('filemanagement.model');
-        /** If $folder is string then set $folderPath to $folder (Ex: /cdn/product_images ) */
-
-        if (is_string($folder)) {
-            $folderPath = $folder;
-        }
-        /**
-         * If folder is array then get folder from database
-         * $folder  = array('folder'=>1,'by'=>'id')
-         */
-        elseif(is_array($folder)){
-            $response = $FMM->getFileUploadFolder($folder['folder'], $folder['by']);
-            if ($response['error']) {
-                return $this->redirectWithMessage('danger', $this->translator->trans('msg.error.notfound.folder', array(), 'manage'), $returnUrl, true);
-            }
-            $folderEntity = $response['result']['set'];
-            $folderPath  = $folderEntity->getPathAbsolute();
-            unset($response);
-        }
-        /** @var string $destinationFolder Merge rootDir and folderPath */
-        $destinationFolder = rtrim($rootDir . '/../www' . $folderPath, "/");
-        if (!$file instanceof UploadedFile) {
-            return $this->redirectWithMessage('danger', $this->translator->trans('msg.error.fileObject', array(), 'manage'), $returnUrl, true);
-        }
-
-        $origName = $file->getClientOriginalName();
-        /** @var array $nameArray explode file name to get file type*/
-        $nameArray = explode('.', $origName);
-        $fileType = $nameArray[count($nameArray) - 1];
-        $fileName = strlen($nameArray[0])>32 ? substr($nameArray[0],0,30) : $nameArray[0].'_'.md5($origName . time());
-        $fileSize = $file->getSize();
-        $newFileFullName = $fileName . '.' . $fileType;
-        $mimeType = $file->getClientMimeType();
-        /** Check file types */
-        if (!in_array(strtolower($fileType), $fileTypes)) {
-            return $this->redirectWithMessage('danger', $this->translator->trans('msg.error.fileType', array(), 'manage'), $returnUrl, true);
-        }
-        /** Move file to destination folder */
-        $file->move($destinationFolder, $newFileFullName);
-        /**
-         * SAVING FILE INFO TO DB
-         */
-
-        if ($db === true) {
-            $fileEntity = new \stdClass();
-            $fileEntity->name = $newFileFullName;
-            $fileEntity->url_key = $fileName;
-            $fileEntity->source_original = $newFileFullName;
-            $fileEntity->source_preview = $newFileFullName;
-            $fileEntity->type = 'i';
-            $fileEntity->folder = $folderEntity>getId();
-            $fileEntity->site = 1;
-            $fileEntity->size = $fileSize;
-            $fileEntity->mime_type = $mimeType;
-            $response = $FMM->insertFile($fileEntity);
-            if ($response['error']) {
-                return $this->translator->trans('msg.error.failed.insert',array(),'manage');
-            }
-            $fileEntity = $response['result']['set'][0];
-        } else{
-            $fileEntity = new File();
-            $fileEntity->SetName($newFileFullName);
-            $fileEntity->SetUrlKey($fileName);
-            $fileEntity->SetSourceOriginal($newFileFullName);
-            $fileEntity->SetSourcePreview($newFileFullName);
-            $fileEntity->SetType('i');
-            $fileEntity->SetFolder($folderEntity->getId());
-            $fileEntity->SetSite(1);
-            $fileEntity->SetSize($fileSize);
-            $fileEntity->SetMimeType($mimeType);
-        }
-        /**
-         * Prepare & Return Response
-         */
-        return array(
-            'rowCount' =>1,
-            'result' => array(
-                'set' => $fileEntity,
-                'total_rows' => 1,
-                'last_insert_id' => null,
-            ),
-            'error' => false,
-            'code' => 'scc.db.delete.done',
-        );
-    }
-    /**
      * @name    persistFlashMessages()
      *          Persisting current data in Session\FlashBag
      *
@@ -1660,6 +1379,12 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.5                      01.05.2015
+ * Can Berkol
+ * **************************************
+ * CR :: All deprecated methods removed.
+ *
  * **************************************
  * v1.3.4                      Said İmamoğlu
  * 24.03.2015
