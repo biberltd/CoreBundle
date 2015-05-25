@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @vendor      BiberLtd
  * @package     BiberLtd\Core
@@ -10,8 +9,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.2.6
- * @date        01.05.2015
+ * @version     1.2.7
+ * @date        25.05.2015
  *
  */
 
@@ -36,7 +35,7 @@ class CoreModel extends Core{
      * @author          Can Berkol
      *
      * @since           1.0.0
-     * @version         1.2.6
+     * @version         1.2.7
      *
      * @param           object 		$kernel
      * @param           string 		$dbConnection
@@ -50,7 +49,7 @@ class CoreModel extends Core{
         /**
          * Set the connection with the required database.
          */
-        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->$dbConnection);
+        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->dbConnection);
         $this->resetResponse();
     }
 
@@ -618,6 +617,12 @@ class CoreModel extends Core{
 
 /**
  * Change Log
+ * **************************************
+ * v1.2.7                      25.05.2015
+ * Can Berkol
+ * **************************************
+ * BF :: $this->$dbConnection is fixed to $this->dbConnection
+ *
  * **************************************
  * v1.2.6                      01.05.2015
  * Can Berkol
