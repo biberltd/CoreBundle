@@ -50,7 +50,6 @@ class CoreModel extends Core{
          * Set the connection with the required database.
          */
         $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->dbConnection);
-        $this->resetResponse();
     }
 
     /**
@@ -622,6 +621,7 @@ class CoreModel extends Core{
  * Can Berkol
  * **************************************
  * BF :: $this->$dbConnection is fixed to $this->dbConnection
+ * BF :: Deprecated call $this->resetResponse() has been removed.
  *
  * **************************************
  * v1.2.6                      01.05.2015
