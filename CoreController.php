@@ -14,14 +14,13 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.5
- * @date        01.05.2015
+ * @version     1.3.6
+ * @date        26.05.2015
  *
  */
 
 namespace BiberLtd\Bundle\CoreBundle;
 
-use BiberLtd\Bundle\FileManagementBundle\Entity\File;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +30,6 @@ class CoreController extends Controller {
     protected $session = null;     /** Session */
     protected $translator;  /** Translator */
     protected $av;          /** Access validator */
-    protected $iv;          /** Input validator */
     protected $sm;          /** Session manager */
     protected $language;    /** Current locale's language entity. */
     protected $locale;      /** Current locale */
@@ -56,15 +54,19 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.3.0
+     * @version             1.3.6
      *
      * @param               integer         $siteId
      * @param               string          $pageCode
      * @param               string          $theme
      */
-    public function init($siteId, $pageCode = null, $theme = null){
+    public function init($siteId = null, $pageCode = null, $theme = null){
         $this->previousUrl = $this->get('session')->get('previousUrl');
         $this->setURLs($theme);
+		/**
+		 * @deprecated in v1.5.0
+		 *             body, head and others will be deprecated in favor for assetic.
+		 */
         $this->body = array(
             'analytics' => '',
             'js'        => array(),
@@ -74,6 +76,7 @@ class CoreController extends Controller {
             'css'   => array(),
             'js'    => array(),
         );
+		/** *** */
         $this->timezone = new \DateTimeZone($this->container->getParameter('app_timezone'));
         if(is_null($this->session)){
             $this->session = $this->get('session');
@@ -82,23 +85,26 @@ class CoreController extends Controller {
         $this->translator = $this->get('translator');
         $this->translator->setLocale($this->locale);
         $this->av = $this->get('access_validator');
-        $this->iv = $this->get('input_validator');
         $this->sm = $this->get('session_manager');
 
         /** Get current language */
         $mlsModel = $this->get('multilanguagesupport.model');
         $response = $mlsModel->getLanguage($this->locale, 'iso_code');
         $this->language = false;
-        if(!$response['error']){
-            $this->language = $response['result']['set'];
+        if(!$response->error->exist){
+            $this->language = $response->result->set;
         }
         unset($response);
         /** Get current site */
         $siteModel = $this->get('sitemanagement.model');
-        $response = $siteModel->getSite($siteId, 'id');
+		if(is_null($siteId)){
+			$siteId = $this->session->get('_currentSiteId');
+		}
+		$response = $siteModel->getSite($siteId, 'id');
+
         $this->site = false;
-        if(!$response['error']){
-            $this->site = $response['result']['set'];
+        if(!$response->error->exist){
+            $this->site = $response->result->set;
         }
         unset($response);
         if(!is_null($pageCode)){
@@ -106,18 +112,18 @@ class CoreController extends Controller {
             $cmsModel = $this->get('cms.model');
             $response = $cmsModel->getPage($pageCode, 'code');
             $this->page['entity'] = false;
-            if(!$response['error']) {
-                $this->page['entity'] = $response['result']['set'];
+            if(!$response->error->exist) {
+                $this->page['entity'] = $response->result->set;
                 $this->theme = $this->page['entity']->getLayout()->getTheme()->getFolder();
             }
             /** Get page blocks */
             $response = $cmsModel->listModulesOfPageLayoutsGroupedBySection($this->page['entity'], array('sort_order' => 'asc'));
-            if ($response['error']) {
+            if ($response->error->exist) {
                 /** Show error if no modules can be loaded */
-                echo $this->translator->trans('msg.error.modules', array(), 'manage');
+                echo $this->translator->trans('msg.error.modules', array(), 'systemMessages');
                 exit;
             }
-            $this->page['blocks'] = $response['result']['set'];
+            $this->page['blocks'] = $response->result->set;
             unset($response);
         }
         if (!is_null($theme)) {
@@ -139,7 +145,7 @@ class CoreController extends Controller {
      *
      * @author          Can Berkol
      * @since           1.1.1
-     * @version         1.1.9
+     * @version         1.3.6
      *
      * @param           array   $css
      * @param           array   $js
@@ -155,6 +161,10 @@ class CoreController extends Controller {
         /**
          * SET APPLICATION WIDE CONSTANTS
          */
+		/**
+		 * @deprecated in v1.5.0
+		 *             body, head and others will be deprecated in favor for assetic.
+		 */
         $default_css = array();
         $default_js = array();
         if (is_null($css)) {
@@ -180,13 +190,8 @@ class CoreController extends Controller {
         foreach ($js as $item) {
             $pre_conf_js .= '<script type="text/javascript" src="' . $this->url['themes'] . '/' . $theme . '/' . $item . '"></script>' . PHP_EOL;
         }
+		/** *** */
         $defaults = array(
-            /** @deprecated assets. */
-            'assets' => array(
-                'url' => array(
-                    'theme' => $this->url['domain'] . '/themes/' . $theme . '/',
-                ),
-            ),
             'doctype' => '<!DOCTYPE html>',
             'conditional_classes' => '',
             /** @deprecated css & js. */
@@ -301,7 +306,7 @@ class CoreController extends Controller {
     }
     /**
      * @name            generateXssCode()
-     *                  Generates a unique hash for cross site foregary attack prevention.
+     *                  Generates a unique hash for cross site forgery attack prevention.
      *
      * @author          Can Berkol
      * @since           1.2.5
@@ -359,11 +364,10 @@ class CoreController extends Controller {
     }
     /**
      * @name            generateUrlKey()
-     *                  Generates url keys / slugs.
      *
      * @author          Can Berkol
      * @since           1.0.7
-     * @version         1.0.7
+     * @version         1.3.6
      *
      * @param           string          $translate
      *
@@ -372,95 +376,40 @@ class CoreController extends Controller {
     public function generateUrlKey($translate) {
         $dictionaries = array(
             'upper' => array(
-                'Ç' => 'C',
-                'I' => 'I',
-                'İ' => 'I',
-                'Ö' => 'O',
-                'Ş' => 'S',
-                'Ü' => 'U',
-                'Ğ' => 'G',
-                '.' => '_',
-                ' ' => '_',
-                '/' => '_',
-                '\\' => '_',
-                '*' => '_',
-                '+' => '_',
-                '%' => '_',
-                '#' => '_',
-                '{' => '_',
-                '}' => '_',
-                ',' => '_',
-                ';' => '_',
-                '?' => '_',
-                '!' => '_',
-                ':' => '_',
-                '=' => '_',
-                '$' => '_',
-                '"' => '_',
-                "'" => '_',
-                '`' => '_',
-                '¨' => '_',
-                '(' => '_',
-                ')' => '_',
-                '[' => '_',
-                ']' => '_',
-                '*' => '_',
-                '|' => '_',
-                '<' => '_',
-                '>' => '_',
+				/** TURKISH */
+                'Ç' => 'C', 	'I' => 'I', 	'İ' => 'I', 	'Ö' => 'O', 	'Ş' => 'S',		'Ü' => 'U',
+				'Ğ' => 'G',
+				/** PUNCTUATION */
+                '.' => '_', 	' ' => '_', 	'/' => '_', 	'\\' => '_',  	'*' => '_', 	'+' => '_',
+				'%' => '_',		'#' => '_', 	'{' => '_', 	'}' => '_', 	',' => '_', 	';' => '_',
+				'?' => '_', 	'!' => '_', 	':' => '_', 	'=' => '_', 	'"' => '_', 	"'" => '_',
+				'`' => '_', 	'¨' => '_',		'(' => '_',		')' => '_',  	'[' => '_', 	']' => '_',
+				'*' => '_', 	'|' => '_', 	'<' => '_', 	'>' => '_',		'$' => '_',
+				/** EUROPEAN ACCENTS */
                 'é' => 'e',
-                'Б' => 'B',
-                'Г' => 'H',
-                'Ґ' => 'G', 'Д' => 'D', 'Є' => 'E', 'Ж' => 'ZH,', 'З' => 'Z', 'И' => 'Y',
-                'Ї' => 'YI', 'Й' => 'J', 'Л' => 'L', 'П' => 'P', 'У' => 'U', 'Ф' => 'F',
-                'Ц' => 'TS', 'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHCH', 'Ь' => '_', 'Ю' => 'yu',
-                'Я' => 'ya'
+				/** RUSSIAN */
+                'Б' => 'B', 	'Г' => 'H', 	'Ґ' => 'G', 	'Д' => 'D', 	'Є' => 'E', 	'Ж' => 'ZH,',
+				'З' => 'Z', 	'И' => 'Y', 	'Ї' => 'YI', 	'Й' => 'J', 	'Л' => 'L', 	'П' => 'P',
+				'У' => 'U', 	'Ф' => 'F',		'Ц' => 'TS', 	'Ч' => 'CH', 	'Ш' => 'SH', 	'Щ' => 'SHCH',
+				'Ь' => '_', 	'Ю' => 'yu', 	'Я' => 'ya'
             ),
             'lower' => array(
-                'ç' => 'c',
-                'ı' => 'i',
-                'i' => 'i',
-                'ö' => 'o',
-                'ş' => 's',
-                'ü' => 'u',
+				/** TURKISH */
+                'ç' => 'c',		'ı' => 'i',		'i' => 'i',		'ö' => 'o',		'ş' => 's',		'ü' => 'u',
                 'ğ' => 'g',
-                '.' => '_',
-                ' ' => '_',
-                '/' => '_',
-                '\\' => '_',
-                '*' => '_',
-                '+' => '_',
-                '%' => '_',
-                '#' => '_',
-                '{' => '_',
-                '}' => '_',
-                ',' => '_',
-                ';' => '_',
-                '?' => '_',
-                '!' => '_',
-                ':' => '_',
-                '=' => '_',
-                '$' => '_',
-                '"' => '_',
-                "'" => '_',
-                '`' => '_',
-                '¨' => '_',
-                '(' => '_',
-                ')' => '_',
-                '[' => '_',
-                ']' => '_',
-                '*' => '_',
-                '|' => '_',
-                '<' => '_',
-                '>' => '_',
+				/** PUNCTUATION */
+				'.' => '_',		' ' => '_',		'/' => '_',		'\\' => '_',	'*' => '_',
+                '+' => '_',		'%' => '_',		'#' => '_',		'{' => '_',		'}' => '_',		',' => '_',
+                ';' => '_',		'?' => '_',		'!' => '_',		':' => '_',		'=' => '_',		'$' => '_',
+                '"' => '_',		"'" => '_',		'`' => '_',		'¨' => '_',		'(' => '_',		')' => '_',
+                '[' => '_',		']' => '_',		'*' => '_',		'|' => '_',		'<' => '_',		'>' => '_',
+				/** EUROPEAN ACCENTS */
                 'é' => 'e',
-                'б' => 'b',
-                'в' => 'v',
-                'г' => 'h',
-                'ґ' => 'g','д' => 'd', 'є' => 'e', 'ж' => 'zh', 'з' => 'z', 'и' => 'y',
-                'ї' => 'yi', 'й' => 'j', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'п' => 'p',
-                'ф' => 'F', 'ц' => 'ts', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'shch', 'ь' => '_',
-                'ю' => 'yu', 'я' => 'ya',
+				/** RUSSIAN */
+				'б' => 'b',		'в' => 'v',		'г' => 'h',		'ґ' => 'g',		'д' => 'd', 	'є' => 'e',
+				'ж' => 'zh', 	'з' => 'z', 	'и' => 'y',		'ї' => 'yi', 	'й' => 'j', 	'л' => 'l',
+				'м' => 'm', 	'н' => 'n', 	'п' => 'p',		'ф' => 'F', 	'ц' => 'ts', 	'ч' => 'ch',
+				'ш' => 'sh', 	'щ' => 'shch', 	'ь' => '_',		'ю' => 'yu', 	'я' => 'ya',
             ),
         );
         $translated = strtr($translate, $dictionaries['lower']);
@@ -566,7 +515,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.2.6
+     * @version             1.3.6
      *
      * @param               mixed       $redirect   false | string containing route definition
      *
@@ -585,7 +534,7 @@ class CoreController extends Controller {
             'groups' => array('admin', 'support', 'manager', 'management'),
             'status' => array('a')
         );
-        if (!$this->av->has_access(null, $access_map) && !$this->av->isActionGranted('manage.access')) {
+        if (!$this->av->hasAccess(null, $access_map) && !$this->av->isActionGranted('manage.access')) {
             $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/manage/dashboard'));
             if(!$redirect){
                 return true;
@@ -602,7 +551,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.1.1
+     * @version             1.3.6
      *
      * @param               mixed       $redirect   false | string containing route definition
      *
@@ -621,7 +570,7 @@ class CoreController extends Controller {
             'groups' => array(),
             'status' => array('a')
         );
-        if (!$this->av->has_access(null, $access_map)) {
+        if (!$this->av->hasAccess(null, $access_map)) {
             $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/hesap/giris'));
             if(!$redirect){
                 return true;
@@ -956,8 +905,8 @@ class CoreController extends Controller {
 //        /** Get sidebar navigation */
 //        $response = $cmsModel->listItemsOfNavigation('cms_nav_main', 'top', array('sort_order' => 'asc'));
 //        $sideNavItems = array();
-//        if(!$response['error']){
-//            $sideNavItems = $response['result']['set'];
+//        if(!$response->error->exist){
+//            $sideNavItems = $response->result->set;
 //        }
 //        unset($response);
 //        $navCollection = array();
@@ -966,9 +915,9 @@ class CoreController extends Controller {
 //            $childItems = array();
 //            $hasChildren = false;
 //            $selectedParent = false;
-//            if(!$response['error']){
+//            if(!$response->error->exist){
 //                $hasChildren = true;
-//                foreach($response['result']['set'] as $childItem){
+//                foreach($response->result->set as $childItem){
 //                    $childNavSelected = false;
 //                    if($childItem->getPage()->getId() == $this->page['entity']->getId()){
 //                        $childNavSelected = true;
@@ -1036,8 +985,8 @@ class CoreController extends Controller {
 //        /** Get top navigation */
 //        $response = $cmsModel->listItemsOfNavigation('cms_nav_top', 'top', array('sort_order' => 'asc'));
 //        $topNavItems = array();
-//        if(!$response['error']){
-//            $topNavItems = $response['result']['set'];
+//        if(!$response->error->exist){
+//            $topNavItems = $response->result->set;
 //        }
 //        $topNavigation = $coreRender->renderQuickActionsNavigation($topNavItems, $core);
 //        unset($topNavItems, $response);
@@ -1047,8 +996,8 @@ class CoreController extends Controller {
 //        $response = $mlsModel->listAllLanguages();
 //        $otherLanguages = array();
 //        $currentLanguage = null;
-//        if(!$response['error']) {
-//            $allLanguages = $response['result']['set'];
+//        if(!$response->error->exist) {
+//            $allLanguages = $response->result->set;
 //            foreach($allLanguages as $language){
 //                if($language->getIsoCode() == $this->locale){
 //                    $currentLanguage = $language;
@@ -1261,11 +1210,15 @@ class CoreController extends Controller {
         if(!isset($this->vars['link'])){
             $this->vars['link'] = $this->url;
         }
+		if(!isset($this->vars['locale'])){
+			$this->vars['locale'] = $this->locale;
+		}
+
+		/**
+		 * @deprecated body and head will be removed in v1.5.0 in favor for assetic..
+		 */
         $this->vars['body'] = $this->body;
         $this->vars['head'] = $this->head;
-        if(!isset($this->vars['locale'])){
-            $this->vars['locale'] = $this->locale;
-        }
         if(!isset($this->head['css'])){
             $this->head['css'] = '/css/styles.min.css';
         }
@@ -1274,6 +1227,7 @@ class CoreController extends Controller {
         $this->vars['body']['js'] = $this->prepareJs($this->vars['body']['js']);
         $this->vars['head']['js'] = $this->prepareJs($this->vars['head']['js']);
         $this->vars['head']['css'] = $this->prepareCss($this->vars['head']['css']);
+		/** *** */
         return $this->render($this->page['entity']->getBundleName().':'.$this->page['entity']->getLayout()->getTheme()->getFolder().'/Pages:'.$this->page['entity']->getCode().'.html.smarty', $this->vars);
     }
     /**
@@ -1288,11 +1242,13 @@ class CoreController extends Controller {
      */
     public function resetRenderResponse() {
         $this->response['renderCode'] = '';
+		/** @deprecated		in !v1.6.0! body and head will be removed in favor of Assetic */
         $this->response['body']['js'] = array();
-        $this->response['html'] = '';
-        $this->response['head']['css'] = array();
-        $this->response['head']['js'] = array();
-        return $this;
+		$this->response['head']['css'] = array();
+		$this->response['head']['js'] = array();
+		/** *** */
+		$this->response['html'] = '';
+		return $this;
     }
 
     /**
@@ -1347,7 +1303,7 @@ class CoreController extends Controller {
             $url['https'] = $this->prepareUrl(false, true,null,true);
         } else {
             $url['base'] = $this->prepareUrl(false, false,$force_https);
-            $url['https'] = $this->prepareUrl(false, false,null,true);
+            $url['https'] = $this->prepareUrl(false, false, null,true);
         }
         unset($force_https);
 
@@ -1379,6 +1335,15 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.6                      26.05.2015
+ * Can Berkol
+ * **************************************
+ * CR :: Deprecation notices have been added.
+ * CR :: ModelResponse usage related fixes applied
+ * CR :: site parameter is now optional in init() method and if it is null the siteId automagically is read from session.
+ * CR :: Unnecessary use statements have been removed.
+ *
  * **************************************
  * v1.3.5                      01.05.2015
  * Can Berkol
