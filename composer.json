@@ -24,7 +24,7 @@
         "php": ">=5.3.3",
         "symfony/symfony": "2.6.*@dev",
         "sensio/framework-extra-bundle": "~3.0",
-        "beberlei/DoctrineExtensions": "dev-master",
+        "beberlei/DoctrineExtensions": "1.0.*@dev",
         "gedmo/doctrine-extensions": "~2.3",
         "noiselabs/smarty-bundle": "~1.2",
         "kriswallsmith/assetic": "*",
