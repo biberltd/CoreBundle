@@ -310,7 +310,7 @@ class CoreController extends Controller {
      *
      * @author          Can Berkol
      * @since           1.2.5
-     * @version         1.2.5
+     * @version         1.3.7
      *
      * @return          array           $flash
      */
@@ -321,23 +321,12 @@ class CoreController extends Controller {
         $currentXssCode = $this->session->get('_xss');
         $currentXssTime = $this->session->get('_xss_timestamp');
 
-        /** @deprecated use _xss in the future, will be removed in v1.3.0 */
-        if(is_null($currentXssCode) || $currentXssCode == ''){
-            $currentXssCode = $this->session->get('_csfr');
-        }
-        if(is_null($currentXssTime) || $currentXssTime == ''){
-            $currentXssTime = $this->session->get('_csfr_timestamp');
-        }
-
         $ip = $this->container->get('request')->getClientIp();
         $now = time();
         if (!$currentXssTime || !$currentXssCode) {
             $currentXssCode = md5($ip . $now);
             $this->session->set('_xss', $currentXssCode);
             $this->session->set('_xss_timestamp', $now);
-            /** @deprecated use _xss in the future, will be removed in v1.3.0 */
-            $this->session->set('_csfr', $currentXssCode);
-            $this->session->set('_csfr_timestamp', $now);
             return $currentXssCode;
         }
 
@@ -350,15 +339,10 @@ class CoreController extends Controller {
             $now = time();
             $this->session->set('_xss', md5($ip . $now));
             $this->session->set('_xss_timestamp', $now);
-            /** @deprecated use _xss in the future, will be removed in v1.3.0 */
-            $this->session->set('_csfr', md5($ip . $now));
-            $this->session->set('_csfr_timestamp', $now);
         }
         else{
             /** If the last request happenned earliear than 10 minutes just update timestamp and increase life span of hash code. */
             $this->session->set('_xss_timestamp', $now);
-            /** @deprecated use _xss in the future, will be removed in v1.3.0 */
-            $this->session->set('_csfr_timestamp', $now);
         }
         return $currentXssCode;
     }
@@ -428,14 +412,20 @@ class CoreController extends Controller {
      *
      * @param               action      Action code.
      * @param               mixed       $redirect   false | string containing route definition
+     * @param               string      $type
+     * @param               string      $msg
+     * @param               string      $route
+     * @param               array 		$params
+	 * @param				integer		$status
+	 * @param				bool		$https
      *
      * @return              mixed       bool|RedirectResponse
      *
      */
-    public function ifAccessNotGranted($action, $redirect = false){
+    public function ifAccessNotGranted($action, $redirect = false, $type = 'danger', $msg = '', $route = null, $params = array(), $status = 302, $https = false){
         if(!$this->av->isActionGranted($action)){
             if($redirect){
-                return $this->redirectWithMessage('danger', $this->translator->trans('msg.error.insufficient.rights', array(), 'core'), $redirect);
+                return $this->redirectWithMessage($type, $msg, $route, $params, $status, $https, null);
             }
         }
         return false;
@@ -450,11 +440,13 @@ class CoreController extends Controller {
      * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
+	 * @param               string      $route
+	 * @param               bool      	$https
      *
      * @return              mixed       bool|RedirectResponse
      *
      */
-    public function ifLoggedin($redirect = false){
+    public function ifLoggedin($redirect = false, $route = null, $https = false){
         $access_map = array(
             'unmanaged' => false,
             'guest' => false,
@@ -463,12 +455,12 @@ class CoreController extends Controller {
             'groups' => array(),
             'status' => array('a')
         );
-        if ($this->av->has_access(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/manage/account/login'));
+        if ($this->av->hasAccess(null, $access_map)) {
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
-            return $this->redirectAdvanced($redirect, true);
+			return $this->redirectAdvanced($route, array(), 302, $https);
         }
         return false;
     }
@@ -482,12 +474,14 @@ class CoreController extends Controller {
      * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
+	 * @param               string      $route
+	 * @param               bool      	$https
      * @param               array       $managers
      *
      * @return              mixed       bool|RedirectResponse
      *
      */
-    public function ifLoggedinManager($redirect = false, $managers = array()){
+    public function ifLoggedinManager($redirect = false, $route = null, $https = false, $managers = array()){
         if(count($managers) < 1){
             $managers = array('admin', 'support', 'manager', 'management');
         }
@@ -499,12 +493,12 @@ class CoreController extends Controller {
             'groups' => $managers,
             'status' => array('a')
         );
-        if ($this->av->has_access(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/manage/account/login'));
+        if ($this->av->hasAccess(null, $access_map)) {
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
-            return $this->redirectAdvanced($redirect, true);
+			return $this->redirectAdvanced($route, array(), 302, $https);
         }
         return false;
     }
@@ -518,11 +512,13 @@ class CoreController extends Controller {
      * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
+	 * @param               string      $route
+	 * @param               bool      	$https
      *
      * @return              mixed       bool|RedirectResponse
      *
      */
-    public function ifNotManager($redirect = false){
+    public function ifNotManager($redirect = false, $route = null, $https = false){
         /**
          * @todo bind it to database
          */
@@ -535,18 +531,17 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if (!$this->av->hasAccess(null, $access_map) && !$this->av->isActionGranted('manage.access')) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/manage/dashboard'));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
-            return $this->redirectAdvanced($redirect, true);
+			return $this->redirectAdvanced($route, array(), 302, $https);
         }
         return false;
     }
 
     /**
      * @name                ifNotMember()
-     *                      Wrapper to check if the user is a manager and has access rights to manage/ controllers.
      *
      * @author              Can Berkol
      *
@@ -554,11 +549,13 @@ class CoreController extends Controller {
      * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
+     * @param               string      $route
+     * @param               bool      	$https
      *
      * @return              mixed       bool|RedirectResponse
      *
      */
-    public function ifNotMember($redirect = false){
+    public function ifNotMember($redirect = false, $route = null, $https = false){
         /**
          * @todo bind it to database
          */
@@ -571,11 +568,11 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if (!$this->av->hasAccess(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => '/hesap/giris'));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
-            return $this->redirectAdvanced($redirect, false);
+            return $this->redirectAdvanced($route, array(), 302, $https);
         }
         return false;
     }
@@ -1127,13 +1124,15 @@ class CoreController extends Controller {
      * @param           string              $msgType
      * @param           string              $msgContent
      * @param           string              $to
-     * @param           bool                $backend
+     * @param           array               $params
+     * @param           integer             $status
+     * @param           bool                $https
      * @param           mixed               $optional
      *
      * @return          RedirectResponse
      */
-    public function redirectWithMessage($msgType, $msgContent, $to = '404', $backend = false, $optional = null) {
-        $response = $this->redirectAdvanced($to, $backend);
+    public function redirectWithMessage($msgType, $msgContent, $to = '404', $params = array(), $status = 302, $https = false, $optional = null) {
+        $response = $this->redirectAdvanced($to, $params, $status, $https);
         $this->session->getFlashBag()->add('msg.status', true);
         $this->session->getFlashBag()->add('msg.type', $msgType);
         /** $response[$code] must have a corresponding translation */
@@ -1320,6 +1319,8 @@ class CoreController extends Controller {
  * Can Berkol
  * **************************************
  * CR :: redirect() method is renamed to redirectAdvanced(). This way Symfony2 redirect() method is not overwritten.
+ * CR :: Deprecated key _csfr and related functionality has been removed from generateXssCode() method.
+ * BF :: Usage of several deprecated methods fixed.
  *
  * **************************************
  * v1.3.6                      26.05.2015
