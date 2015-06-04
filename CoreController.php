@@ -1101,40 +1101,20 @@ class CoreController extends Controller {
      * @since           1.3.7
      * @version         1.3.7
      *
-     * @param           string          $to         either a route definition or a specific shortcut key.
-     *                                              currently available keys are:
-     *                                              404
-     *                                              dashboard
-     *                                              login
-     * @param           bool            $backend    is set to true adds manage prefix to route
+     * @param           string          $routeName		Name of route
+     * @param           array           $parameters
+     * @param           integer			$status
+	 * @param			bool			$https			false|true
      *
      * @return          RedirectResponse
      */
-    public function redirectAdvanced($to = '404', $backend = false) {
+    public function redirectAdvanced($routeName, $parameters = array(), $status = 200, $https = false) {
         $route = '';
-        $url = $this->url['base_l'];
-        if($backend){
-            $url = $this->url['manage'];
-        }
-        switch($to){
-            case '404':
-                $route .= '/error/404';
-                break;
-            case 'dashboard':
-                $route .= '/dashboard';
-                break;
-            case 'login':
-                $route .= '/account/login';
-                break;
-            default:
-                $route .= $to;
-        }
-        $url .= $route;
-        if (strpos($to,'http://')!== FALSE || strpos($to,'https://')!== FALSE) {
-            echo 1;
-            $url = $route;
-        }
-        return new RedirectResponse($url);
+        $url = $this->generateUrl($routeName, $parameters);
+		if($https){
+			$url = str_replace('http://', 'https://', $url);
+		}
+        return new RedirectResponse($url, $status);
     }
     /**
      * @name            redirectWithMessage()
