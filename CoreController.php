@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.6
- * @date        26.05.2015
+ * @version     1.3.7
+ * @date        04.05.2015
  *
  */
 
@@ -447,7 +447,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.2.1
-     * @version             1.2.2
+     * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
      *
@@ -468,7 +468,7 @@ class CoreController extends Controller {
             if(!$redirect){
                 return true;
             }
-            return $this->redirect($redirect, true);
+            return $this->redirectAdvanced($redirect, true);
         }
         return false;
     }
@@ -479,7 +479,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.2.1
+     * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
      * @param               array       $managers
@@ -504,7 +504,7 @@ class CoreController extends Controller {
             if(!$redirect){
                 return true;
             }
-            return $this->redirect($redirect, true);
+            return $this->redirectAdvanced($redirect, true);
         }
         return false;
     }
@@ -515,7 +515,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.3.6
+     * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
      *
@@ -539,7 +539,7 @@ class CoreController extends Controller {
             if(!$redirect){
                 return true;
             }
-            return $this->redirect($redirect, true);
+            return $this->redirectAdvanced($redirect, true);
         }
         return false;
     }
@@ -551,7 +551,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.3.6
+     * @version             1.3.7
      *
      * @param               mixed       $redirect   false | string containing route definition
      *
@@ -575,7 +575,7 @@ class CoreController extends Controller {
             if(!$redirect){
                 return true;
             }
-            return $this->redirect($redirect, false);
+            return $this->redirectAdvanced($redirect, false);
         }
         return false;
     }
@@ -1092,14 +1092,14 @@ class CoreController extends Controller {
         return $pagination;
     }
     /**
-     * @name            redirect()
+     * @name            redirectAdvanced()
      *                  Redirects controller to a specific url.
      *
      * @author          Can Berkol
      * @author          Said İmamoğlu
      *
-     * @since           1.1.1
-     * @version         1.2.9
+     * @since           1.3.7
+     * @version         1.3.7
      *
      * @param           string          $to         either a route definition or a specific shortcut key.
      *                                              currently available keys are:
@@ -1110,7 +1110,7 @@ class CoreController extends Controller {
      *
      * @return          RedirectResponse
      */
-    public function redirect($to = '404', $backend = false) {
+    public function redirectAdvanced($to = '404', $backend = false) {
         $route = '';
         $url = $this->url['base_l'];
         if($backend){
@@ -1142,7 +1142,7 @@ class CoreController extends Controller {
      *
      * @author          Can Berkol
      * @since           1.1.7
-     * @version         1.1.7
+     * @version         1.3.7
      *
      * @param           string              $msgType
      * @param           string              $msgContent
@@ -1153,7 +1153,7 @@ class CoreController extends Controller {
      * @return          RedirectResponse
      */
     public function redirectWithMessage($msgType, $msgContent, $to = '404', $backend = false, $optional = null) {
-        $response = $this->redirect($to, $backend);
+        $response = $this->redirectAdvanced($to, $backend);
         $this->session->getFlashBag()->add('msg.status', true);
         $this->session->getFlashBag()->add('msg.type', $msgType);
         /** $response[$code] must have a corresponding translation */
@@ -1335,6 +1335,12 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.7                      04.06.2015
+ * Can Berkol
+ * **************************************
+ * CR :: redirect() method is renamed to redirectAdvanced(). This way Symfony2 redirect() method is not overwritten.
+ *
  * **************************************
  * v1.3.6                      26.05.2015
  * Can Berkol
