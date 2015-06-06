@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.7
- * @date        04.05.2015
+ * @version     1.3.8
+ * @date        06.06.2015
  *
  */
 
@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CoreController extends Controller {
+	protected $initialized = false;
     protected $url;         /** Array Base urls.  */
     protected $session = null;     /** Session */
     protected $translator;  /** Translator */
@@ -61,31 +62,7 @@ class CoreController extends Controller {
      * @param               string          $theme
      */
     public function init($siteId = null, $pageCode = null, $theme = null){
-        $this->previousUrl = $this->get('session')->get('previousUrl');
-        $this->setURLs($theme);
-		/**
-		 * @deprecated in v1.5.0
-		 *             body, head and others will be deprecated in favor for assetic.
-		 */
-        $this->body = array(
-            'analytics' => '',
-            'js'        => array(),
-            'classes'   => array(),
-        );
-        $this->head = array(
-            'css'   => array(),
-            'js'    => array(),
-        );
-		/** *** */
-        $this->timezone = new \DateTimeZone($this->container->getParameter('app_timezone'));
-        if(is_null($this->session)){
-            $this->session = $this->get('session');
-        }
-        $this->locale =  $this->session->get('_locale');
-        $this->translator = $this->get('translator');
-        $this->translator->setLocale($this->locale);
-        $this->av = $this->get('access_validator');
-        $this->sm = $this->get('session_manager');
+        $this->initCore($theme);
 
         /** Get current language */
         $mlsModel = $this->get('multilanguagesupport.model');
@@ -138,7 +115,40 @@ class CoreController extends Controller {
         if(!is_null($pageCode) && strpos($this->get('request')->getPathInfo(), '|-') === false){
             $this->get('session')->set('previousUrl', $this->get('request')->getPathInfo());
         }
+		$this->initialized = true;
     }
+	/**
+	 * @name            initCore()
+	 *
+	 * @author          Can Berkol
+	 * @since           1.1.1
+	 * @version         1.3.8
+	 *
+	 * @param           string  $theme
+	 */
+	public function initCore($theme = null){
+		$this->previousUrl = $this->get('session')->get('previousUrl');
+		$this->setURLs($theme);
+		$this->body = array(
+			'analytics' => '',
+			'js'        => array(),
+			'classes'   => array(),
+		);
+		$this->head = array(
+			'css'   => array(),
+			'js'    => array(),
+		);
+		/** *** */
+		$this->timezone = new \DateTimeZone($this->container->getParameter('app_timezone'));
+		if(is_null($this->session)){
+			$this->session = $this->get('session');
+		}
+		$this->locale =  $this->session->get('_locale');
+		$this->translator = $this->get('translator');
+		$this->translator->setLocale($this->locale);
+		$this->av = $this->get('access_validator');
+		$this->sm = $this->get('session_manager');
+	}
     /**
      * @name            initDefaults()
      *                  Initializes default values.
@@ -423,7 +433,10 @@ class CoreController extends Controller {
      *
      */
     public function ifAccessNotGranted($action, $redirect = false, $type = 'danger', $msg = '', $route = null, $params = array(), $status = 302, $https = false){
-        if(!$this->av->isActionGranted($action)){
+        if(!$this->initialized){
+			$this->initCore();
+		}
+		if(!$this->av->isActionGranted($action)){
             if($redirect){
                 return $this->redirectWithMessage($type, $msg, $route, $params, $status, $https, null);
             }
@@ -447,6 +460,9 @@ class CoreController extends Controller {
      *
      */
     public function ifLoggedin($redirect = false, $route = null, $https = false){
+		if(!$this->initialized){
+			$this->initCore();
+		}
         $access_map = array(
             'unmanaged' => false,
             'guest' => false,
@@ -482,6 +498,9 @@ class CoreController extends Controller {
      *
      */
     public function ifLoggedinManager($redirect = false, $route = null, $https = false, $managers = array()){
+		if(!$this->initialized){
+			$this->initCore();
+		}
         if(count($managers) < 1){
             $managers = array('admin', 'support', 'manager', 'management');
         }
@@ -519,6 +538,9 @@ class CoreController extends Controller {
      *
      */
     public function ifNotManager($redirect = false, $route = null, $https = false){
+		if(!$this->initialized){
+			$this->initCore();
+		}
         /**
          * @todo bind it to database
          */
@@ -556,6 +578,9 @@ class CoreController extends Controller {
      *
      */
     public function ifNotMember($redirect = false, $route = null, $https = false){
+		if(!$this->initialized){
+			$this->initCore();
+		}
         /**
          * @todo bind it to database
          */
@@ -592,6 +617,9 @@ class CoreController extends Controller {
      *
      */
     public function ifRevokedAction($actionCode, $route = ''){
+		if(!$this->initialized){
+			$this->initCore();
+		}
         if ($this->av->isActionRevoked($actionCode)) {
             $this->sm->logAction($actionCode, 1, array('route' => $route));
             $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $route));
