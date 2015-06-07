@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.2.2
- * @date        30.04.2014
+ * @version     1.2.3
+ * @date        07.06.2014
  *
  * @todo        Bind with exception class. See comment outed error log mechanisms.
  */
@@ -257,7 +257,7 @@ class Encryption extends Core{
      * @author          Can Berkol
      *
      * @since			1.2.0
-     * @version         1.2.0
+     * @version         1.2.3
      *
      * @param           string          $algorithm          Selected encryption algorithm.
      *
@@ -268,6 +268,7 @@ class Encryption extends Core{
         switch($algorithm){
             case 'enc_reversible_pkey':
             case 'enc_simple_replace':
+            case 'enc_shift_simple_replace':
             case 'enc_shift_simple_replace':
             case 'hash_md5':
             case 'hash_sha1':
@@ -480,7 +481,7 @@ class Encryption extends Core{
      * @author          Can Berkol
      *
      * @since			1.2.0
-     * @version         1.2.0
+     * @version         1.2.3
      *
      * @return			mixed           $this, false
      */
@@ -553,7 +554,7 @@ class Encryption extends Core{
         for($i; $i < strlen($input); $i++){
             $key = $this->input[$i];
             if(isset($replace_map[$key])){
-                $output .= $$replace_map[$key];
+                $output .= $replace_map[$key];
             }
             else{
                 $output .= '&';
@@ -582,10 +583,18 @@ class Encryption extends Core{
 /**
  * Change Log
  * **************************************
+ * v1.2.2                      07.06.2015
+ * Can Berkol
+ * **************************************
+ * BF :: Missing key enc_rot13_simple_replace added to encrypt() method.
+ * BF :: Extra $ sign removed from the beginning of variable.
+ *
+ * **************************************
  * v1.2.2                      Said İmamoğlu
  * 30.04.2014
  * **************************************
  * U set_input()
+ *
  * **************************************
  * v1.2.1                      Can Berkol
  * 12.01.2014
