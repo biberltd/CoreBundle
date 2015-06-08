@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.8
- * @date        06.06.2015
+ * @version     1.3.9
+ * @date        05.06.2015
  *
  */
 
@@ -55,7 +55,7 @@ class CoreController extends Controller {
      * @author              Can Berkol
      *
      * @since               1.1.1
-     * @version             1.3.6
+     * @version             1.3.8
      *
      * @param               integer         $siteId
      * @param               string          $pageCode
@@ -111,10 +111,9 @@ class CoreController extends Controller {
             }
         }
         $this->vars['xssCode'] = $this->generateXssCode();
-        $this->flash = $this->prepareFlash($this->session);
-        if(!is_null($pageCode) && strpos($this->get('request')->getPathInfo(), '|-') === false){
-            $this->get('session')->set('previousUrl', $this->get('request')->getPathInfo());
-        }
+		if(!is_null($pageCode) && strpos($this->get('request')->getPathInfo(), '|-') === false){
+			$this->get('session')->set('previousUrl', $this->get('request')->getPathInfo());
+		}
 		$this->initialized = true;
     }
 	/**
@@ -1174,11 +1173,12 @@ class CoreController extends Controller {
      *
      * @author          Can Berkol
      * @since           1.1.0
-     * @version         1.2.7
+     * @version         1.3.8
      *
      * @return          string
      */
     public function renderPage(){
+		$this->flash = $this->prepareFlash($this->session);
         if(!isset($this->vars['flash'])){
             $this->vars['flash'] = $this->flash;
         }
@@ -1342,6 +1342,12 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.3.8                      08.06.2015
+ * Can Berkol
+ * **************************************
+ * BF :: prepareFlashes() moved to renderPage() method to decrease the chances of flash messages being lost in redirections.
+ *
  * **************************************
  * v1.3.7                      04.06.2015
  * Can Berkol
