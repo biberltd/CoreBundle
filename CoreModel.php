@@ -50,8 +50,7 @@ class CoreModel extends Core{
         /**
          * Set the connection with the required database.
          */
-        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->$dbConnection);
-        $this->resetResponse();
+        $this->em = $this->kernel->getContainer()->get($this->orm)->getManager($this->dbConnection);
     }
 
     /**
