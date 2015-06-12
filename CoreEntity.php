@@ -13,8 +13,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.0.2
- * @date        01.05.2015
+ * @version     1.0.3
+ * @date        12.06.2015
  *
  */
 
@@ -154,6 +154,7 @@ class CoreEntity {
      * @return          object          $this
      */
     public function setDateAdded() {
+		$this->now = new \DateTime('now', new \DateTimeZone($this->timezone));
         $this->date_added = $this->now;
         return $this;
     }
@@ -223,6 +224,7 @@ class CoreEntity {
      * @return          object          $this
      */
     public function setDateUpdated() {
+		$this->now = new \DateTime('now', new \DateTimeZone($this->timezone));
         $this->date_updated = $this->now;
         return $this;
     }
@@ -230,8 +232,13 @@ class CoreEntity {
 }
 
 /**
- * **************************************
  * Change Log
+ * **************************************
+ * v1.0.3                      Can Berkol
+ * 12.06.2012
+ * **************************************
+ * BF :: setDateUpdated & setDateAdded was setting a null value. Fixed.
+ *
  * **************************************
  * v1.0.2                      01.05.2015
  * Can Berkol
