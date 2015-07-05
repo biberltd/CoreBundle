@@ -25,7 +25,7 @@
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "beberlei/DoctrineExtensions": "~1.0",
         "gedmo/doctrine-extensions": "~2.4",
-        "noiselabs/smarty-bundle": "1.2.*@dev",
+        "noiselabs/smarty-bundle": "~1.2@dev",
         "kriswallsmith/assetic": "~1.2",
         "swiftmailer/swiftmailer" : "~5.4"
 
