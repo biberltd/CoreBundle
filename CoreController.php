@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.3.9
- * @date        05.06.2015
+ * @version     1.4.0
+ * @date        03.07.2015
  *
  */
 
@@ -26,23 +26,23 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CoreController extends Controller {
-	protected $initialized = false;
-    protected $url;         /** Array Base urls.  */
+	public $initialized = false;
+    public $url;         /** Array Base urls.  */
     protected $session = null;     /** Session */
-    protected $translator;  /** Translator */
-    protected $av;          /** Access validator */
-    protected $sm;          /** Session manager */
-    protected $language;    /** Current locale's language entity. */
-    protected $locale;      /** Current locale */
-    protected $site;        /** Current site */
-    protected $page;        /** Array that contains current page details */
-    protected $flash;       /** Flash messages */
-    protected $renderResponse; /** Render response */
-    protected $vars;        /** vars to use in template */
-    protected $head;        /** Holds details of head: css, js */
-    protected $body;        /** Holds details of body: js, classes */
-    protected $timezone;    /** new \DateTimeZone identifies app time zone */
-    protected $previousUrl; /** stores previous url */
+	public $translator;  /** Translator */
+	public $av;          /** Access validator */
+	public $sm;          /** Session manager */
+	public $language;    /** Current locale's language entity. */
+	public $locale;      /** Current locale */
+	public $site;        /** Current site */
+	public $page;        /** Array that contains current page details */
+	public $flash;       /** Flash messages */
+	public $renderResponse; /** Render response */
+	public $vars;        /** vars to use in template */
+	public $head;        /** Holds details of head: css, js */
+	public $body;        /** Holds details of body: js, classes */
+	public $timezone;    /** new \DateTimeZone identifies app time zone */
+	public $previousUrl; /** stores previous url */
 
     /*******************************************************************
      * INITIALIZATION FUNCTIONS
@@ -1342,6 +1342,12 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.4.0                      03.07.2015
+ * Can Berkol
+ * **************************************
+ * CR :: properties are now public.
+ *
  * **************************************
  * v1.3.8                      08.06.2015
  * Can Berkol
