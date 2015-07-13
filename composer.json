@@ -21,16 +21,15 @@
     },
     "require" : {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.6.*",
-        "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
-        "beberlei/DoctrineExtensions": "~1.0",
-        "gedmo/doctrine-extensions": "~2.4",
-        "noiselabs/smarty-bundle": "~1.2@dev",
-        "kriswallsmith/assetic": "~1.2",
-        "swiftmailer/swiftmailer" : "~5.4"
+        "symfony/symfony": "~2.6@stable",
+        "sensio/framework-extra-bundle": "~3.0@stable",
+        "beberlei/DoctrineExtensions": "~1.0@stable",
+        "gedmo/doctrine-extensions": "~2.4@stable",
+        "biberltd/smarty-bundle": "~1.2",
+        "kriswallsmith/assetic": "~1.2@stable",
+        "swiftmailer/swiftmailer" : "~5.4@stable"
 
     },
-    "minimum-stability": "dev",
     "extra" : {
 	"branch-alias" : {
 		"dev-master" : "3.3-dev"
