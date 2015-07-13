@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CoreController extends Controller {
-	public $initialized = false;
+	public $initialized = false; 
     public $url;         /** Array Base urls.  */
     protected $session = null;     /** Session */
 	public $translator;  /** Translator */
