@@ -172,13 +172,13 @@
     {/if}
 
 </script>
-{* javascripts assets='@BiberLtdBundleCoreBundle/Resources/js/models/content.js,
-            @BiberLtdBundleCoreBundle/Resources/js/views/insert-content-view.js,
-            @BiberLtdBundleCoreBundle/Resources/js/views/content-view.js,
-            @BiberLtdBundleCoreBundle/Resources/js/views/image-view.js,
-            @BiberLtdBundleCoreBundle/Resources/js/views/text-view.js,
-            @BiberLtdBundleCoreBundle/Resources/js/views/editor-app-view.js,
-            @BiberLtdBundleCoreBundle/Resources/js/editor-app.js
+{* javascripts assets='@BiberLtdCoreBundle/Resources/js/models/content.js,
+            @BiberLtdCoreBundle/Resources/js/views/insert-content-view.js,
+            @BiberLtdCoreBundle/Resources/js/views/content-view.js,
+            @BiberLtdCoreBundle/Resources/js/views/image-view.js,
+            @BiberLtdCoreBundle/Resources/js/views/text-view.js,
+            @BiberLtdCoreBundle/Resources/js/views/editor-app-view.js,
+            @BiberLtdCoreBundle/Resources/js/editor-app.js
             ' output='js/compiled/all.js'
             }
 <script src="{$asset_url}"></script>
