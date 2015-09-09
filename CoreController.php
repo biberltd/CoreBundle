@@ -14,8 +14,8 @@
  *
  * @copyright   Biber Ltd. (www.biberltd.com)
  *
- * @version     1.4.0
- * @date        03.07.2015
+ * @version     1.4.1
+ * @date        09.09.2015
  *
  */
 
@@ -26,24 +26,27 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CoreController extends Controller {
-	public $initialized = false;
-    public $url;         /** Array Base urls.  */
-    protected $session = null;     /** Session */
-	public $translator;  /** Translator */
 	public $av;          /** Access validator */
-	public $sm;          /** Session manager */
+	public $body;        /** Holds details of body: js, classes */
+	public $flash;       /** Flash messages */
+	public $head;        /** Holds details of head: css, js */
+	public $initialized = false;
 	public $language;    /** Current locale's language entity. */
 	public $locale;      /** Current locale */
-	public $site;        /** Current site */
 	public $page;        /** Array that contains current page details */
-	public $flash;       /** Flash messages */
-	public $renderResponse; /** Render response */
-	public $vars;        /** vars to use in template */
-	public $head;        /** Holds details of head: css, js */
-	public $body;        /** Holds details of body: js, classes */
-	public $timezone;    /** new \DateTimeZone identifies app time zone */
 	public $previousUrl; /** stores previous url */
-
+	public $renderResponse; /** Render response */
+	public $site;        /** Current site */
+	public $sm;          /** Session manager */
+	public $timezone;    /** new \DateTimeZone identifies app time zone */
+	public $translator;  /** Translator */
+    public $url;         /** Array Base urls.  */
+    /** @var    array       $vars   vars to use in template */
+	public $vars;
+    /** @var    object      $session */
+    protected $session = null;
+    /** @var    array       Holds admin arrays. Set with setAdminPs() method.  */
+    private $adminIps = [];
     /*******************************************************************
      * INITIALIZATION FUNCTIONS
      *******************************************************************/
@@ -240,7 +243,7 @@ class CoreController extends Controller {
      * @author              Said İmamoğlu
      *
      * @since           	1.0.0
-     * @version         	1.1.1
+     * @version         	1.4.1
      *
      * @param               mixed       $var        Content of variable
      * @param               bool        $exit       true|false
@@ -248,6 +251,15 @@ class CoreController extends Controller {
      *
      */
     public function debug($var, $exit = true, $type = 'dump') {
+        $showOutput = true;
+        if(count($this->adminIps) > 0){
+            if(!in_array($_SERVER['REMOTE_ADDR'], $this->adminIps)){
+                $showOutput = false;
+            }
+        }
+        if(!$showOutput){
+            return;
+        }
         echo '<pre>';
         switch($type){
             case 'dump':
@@ -268,15 +280,25 @@ class CoreController extends Controller {
     /**
      * @name            debugClass()
      *
+     * @author          Can Berkol
      * @author          Said İmamoğlu
      *
      * @param 			mixed 		$class Class
      * @param 			bool 		$exit true|false
      * @since           1.1.3
-     * @version         1.1.3
+     * @version         1.4.1
      *
      */
     public function debugClass($class, $exit = true) {
+        $showOutput = true;
+        if(count($this->adminIps) > 0){
+            if(!in_array($_SERVER['REMOTE_ADDR'], $this->adminIps)){
+                $showOutput = false;
+            }
+        }
+        if(!$showOutput){
+            return;
+        }
         if (is_object($class)) {
             $reflectionClass = new \ReflectionClass($class);
             $methods = $reflectionClass->getMethods();
@@ -1257,7 +1279,22 @@ class CoreController extends Controller {
 		$this->response['html'] = '';
 		return $this;
     }
+    /**
+     * @name            setAdminIps()
+     *                  Sets the flash message to flashBag..
+     *
+     * @author          Can Berkol
+     * @since           1.4.1
+     * @version         1.4.1
+     *
+     * @param           array       $ips        a list of ip addresses.
+     * @return          mixed
+     */
+    public function setAdminIps(array $ips){
+        $this->adminIps = $ips;
 
+        return $this->session;
+    }
     /**
      * @name            setFlashMessage()
      *                  Sets the flash message to flashBag..
@@ -1298,20 +1335,21 @@ class CoreController extends Controller {
         if ($this->get('request')->isSecure()) {
             $force_https = true;
         }
-        if ($this->get('kernel')->getEnvironment() == 'dev') {
-            $url['base_l'] = $this->prepareUrl(true, true,null,$force_https);
-            $url['https_l'] = $this->prepareUrl(true, true,null,true);
-        } else {
-            $url['base_l'] = $this->prepareUrl(true, false,null,$force_https);
-            $url['https_l'] = $this->prepareUrl(true, false,null,true);
-        }
-        if ($this->get('kernel')->getEnvironment() == 'dev') {
-            $url['base'] = $this->prepareUrl(false, true,null,$force_https);
-            $url['https'] = $this->prepareUrl(false, true,null,true);
-        } else {
-            $url['base'] = $this->prepareUrl(false, false,$force_https);
-            $url['https'] = $this->prepareUrl(false, false, null,true);
-        }
+	    if ($this->get('kernel')->getEnvironment() == 'dev') {
+		    $url['base_l'] = $this->prepareUrl(true, true, null, $force_https);
+		    $url['https_l'] = $this->prepareUrl(true, true, null,true);
+	    } else {
+		    $url['base_l'] = $this->prepareUrl(true, false, null, $force_https);
+		    $url['https_l'] = $this->prepareUrl(true, false, null,true);
+	    }
+	    if ($this->get('kernel')->getEnvironment() == 'dev') {
+		    $url['base'] = $this->prepareUrl(false, true, null, $force_https);
+		    $url['https'] = $this->prepareUrl(false, true, null,true);
+		    $this->debug($url);
+	    } else {
+		    $url['base'] = $this->prepareUrl(false, false, null, $force_https);
+		    $url['https'] = $this->prepareUrl(false, false, null, true);
+	    }
         unset($force_https);
 
         $url['domain'] = str_replace('/app_dev.php', '', $url['base']);
@@ -1342,6 +1380,13 @@ class CoreController extends Controller {
 }
 /**
  * Change Log
+ * **************************************
+ * v1.4.1                      09.09.2015
+ * Can Berkol
+ * **************************************
+ * CR :: 3926353 :: debug method now supports admin ip filter.
+ * FR :: 3926353 :: setAdminIPs() method implemented.
+ *
  * **************************************
  * v1.4.0                      03.07.2015
  * Can Berkol
