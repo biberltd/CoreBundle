@@ -1345,7 +1345,6 @@ class CoreController extends Controller {
 	    if ($this->get('kernel')->getEnvironment() == 'dev') {
 		    $url['base'] = $this->prepareUrl(false, true, null, $force_https);
 		    $url['https'] = $this->prepareUrl(false, true, null,true);
-		    $this->debug($url);
 	    } else {
 		    $url['base'] = $this->prepareUrl(false, false, null, $force_https);
 		    $url['https'] = $this->prepareUrl(false, false, null, true);
