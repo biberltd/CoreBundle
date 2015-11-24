@@ -493,7 +493,7 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if ($this->av->hasAccess(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, $route == null ? '' : array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
@@ -534,7 +534,7 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if ($this->av->hasAccess(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, $route == null ? '' : array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
@@ -574,7 +574,7 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if (!$this->av->hasAccess(null, $access_map) && !$this->av->isActionGranted('manage.access')) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, $route == null ? '' : array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
@@ -614,7 +614,7 @@ class CoreController extends Controller {
             'status' => array('a')
         );
         if (!$this->av->hasAccess(null, $access_map)) {
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $this->generateUrl($route)));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, $route == null ? '' : array('route' => $this->generateUrl($route)));
             if(!$redirect){
                 return true;
             }
@@ -643,7 +643,7 @@ class CoreController extends Controller {
 		}
         if ($this->av->isActionRevoked($actionCode)) {
             $this->sm->logAction($actionCode, 1, array('route' => $route));
-            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, array('route' => $route));
+            $this->sm->logAction('page.visit.fail.insufficient.rights', 1, $route == null ? '' : array('route' => $route));
             return true;
         }
         return false;
