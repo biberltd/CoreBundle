@@ -1,17 +1,11 @@
 <?php
 /**
- * @name        InvalidLimitException
- * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
- *
  * @author		Can Berkol
- * @version     1.0.1
- * @date        01.01.2015
  *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @description Throws when the provided parameter value is not a valid limit.
- *
+ * @date        10.12.2015
  */
 namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
@@ -26,18 +20,3 @@ class InvalidLimitException extends Services\ExceptionAdapter {
             $previous);
     }
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.0                      01.05.2015
- * Can Berkol
- * **************************************
- * CR :: Exception message updated.
- *
- * **************************************
- * v1.0.0                      Can Berkol
- * 01.08.2013
- * **************************************
- * A __construct()
- *
- */

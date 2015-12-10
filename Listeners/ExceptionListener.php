@@ -1,23 +1,12 @@
 <?php
 /**
- * ExceptionListener Class
- *
- * This class aims to handle 404 and other HTTP error responses in a customized manner.
- *
- * @vendor      BiberLtd
- * @package		Core
- * @subpackage	Listeners
- * @name	    ExceptionListener
- *
  * @author		Can Berkol
  *
- * @copyright   Biber Ltd. (www.biberltd.com)
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @version     1.0.0
- * @date        26.02.2014
- *
+ * @date        10.12.2015
  */
-
 namespace BiberLtd\Bundle\CoreBundle\Listeners;
 use BiberLtd\Bundle\CoreBundle\Core as Core;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,56 +15,35 @@ use Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Event;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-/**
- * Requires MultiLanguageSupportBundle
- */
+
 use BiberLtd\Bundle\MultiLanguageSupportBundle\Services as MLSServices;
 
 class ExceptionListener extends Core{
     /** @var $container             Service container */
     private     $container;
-    /** @var $languages             Available languages. */
+    /** @var  array */
     private     $languages;
+
     /**
-     * @name            __construct()
-     *                  Constructor.
+     * ExceptionListener constructor.
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.1
-     * @version         1.3.0
-     *
-     * @param           object		$kernel
+     * @param $kernel
      */
     public function __construct($kernel){
         parent::__construct($kernel);
     }
+
     /**
-     * @name            __destruct()
-     *                  Destructor.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.3.0
-     *
+     * Destructor
      */
     public function __destruct(){
         foreach($this as $property => $value) {
             $this->$property = null;
         }
     }
+
     /**
-     * @name 			onKernelException()
-     *  				Called onKernelController event and handles browser language detection.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.0.0
-     * @version         1.0.0
-     *
-     * @param 			GetResponseForExceptionEvent 	        $e
-     *
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $e
      */
     public function onKernelException(GetResponseForExceptionEvent  $e){
         $exception = $e->getException();
@@ -100,13 +68,3 @@ class ExceptionListener extends Core{
         }
     }
 }
-/**
- * Change Log
- * **************************************
- * v1.0.0                      Can Berkol
- * 26.02.2014
- * **************************************
- * A __construct()
- * A __destruct()
- * A onKernelRequest()
- */

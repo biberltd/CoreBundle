@@ -1,17 +1,11 @@
 <?php
 /**
- * @name        InvalidEntityException
- * @package		BiberLtd\Bundle\MultiLanguageSupportBundle
- *
  * @author		Can Berkol
- * @version     1.0.0
- * @date        05.08.2013
  *
- * @copyright   Biber Ltd. (http://www.biberltd.com)
- * @license     GPL v3.0
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @description Exception to handle wrong entity types.
- *
+ * @date        10.12.2015
  */
 namespace BiberLtd\Bundle\CoreBundle\Exceptions;
 
@@ -26,12 +20,3 @@ class InvalidEntityException extends Services\ExceptionAdapter {
             $previous);
     }
 }
-/**
- * Change Log:
- * **************************************
- * v1.0.0                      Can Berkol
- * 01.08.2013
- * **************************************
- * A __construct()
- *
- */

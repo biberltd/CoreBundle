@@ -1,25 +1,13 @@
 <?php
 /**
- * Encryption Class
- *
- * This class provides encryption related mechanisms.
- *
- * @vendor      BiberLtd
- * @package		Core
- * @subpackage	Services
- * @name	    Encryption
- *
  * @author		Can Berkol
  * @author		Said İmamoğlu
  *
- * @copyright   Biber Ltd. (www.biberltd.com)
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @version     1.2.3
- * @date        07.06.2014
- *
- * @todo        Bind with exception class. See comment outed error log mechanisms.
+ * @date        10.12.2015
  */
-
 namespace BiberLtd\Bundle\CoreBundle\Services;
 use BiberLtd\Bundle\CoreBundle\Core as Core;
 
@@ -34,36 +22,15 @@ class Encryption extends Core{
     private   $input;
 
     /**
-     * @name            __construct()
-     *                  Constructor.
+     * Encryption constructor.
      *
-     * @author          Can Berkol
-     *
-     * @see             Core::issue_error()
-     *
-     * @since           1.0.1
-     * @version         1.2.0
-     *
-     * @param           string      $timezone
-     * @param           array       $params         'key', 'input', 'output'
+     * @param string $timezone
+     * @param array  $params
      */
     public function __construct($timezone = 'Europe/Istanbul', $params = array()){
         $this->timezone = $timezone;
-        /** Define required parameters to initialize object */
-        $rqrd_params = array('key', 'input');
+
         if(count($params) > 0){
-            foreach($rqrd_params as $key){
-                if(!isset($params[$key])){
-//                    /** START :: issue_error */
-//                    $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                    $hint = 'Key, and input must be provided to initialize Encryption object.';
-//                    $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::missing:params::'.$key, $date, $hint);
-//                    /** END :: issue_error */
-                }
-            }
-            /**
-             * Set only allowed parameters
-             */
             foreach($params as $key => $value){
                 switch($key){
                     case 'key':
@@ -71,19 +38,11 @@ class Encryption extends Core{
                         $this->$key = $value;
                         break;
                     default:
-//                        /** START :: issue_error */
-//                        $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                        $hint = 'Only key and input can be initialized.';
-//                        $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::missing:params::'.$key, $date, $hint);
-//                        /** END :: issue_error */
                         break;
                 }
             }
         }
         else{
-            /**
-             * set default value
-             */
             $this->input = '';
             $this->key = md5('bbr@encryption');
         }
@@ -96,112 +55,59 @@ class Encryption extends Core{
         );
         $this->output = null;
     }
+
     /**
-     * @name            __destruct()
-     *                  Destructor.
-     *
-     * @author          Can Berkol
-     *
-     * @see             Core::issue_error()
-     *
-     * @since           1.0.0
-     * @version         1.2.0
-     *
-     *
+     * Destructor
      */
     public function __destruct(){
-        /**
-         * First process errors and then destroy
-         */
         foreach($this as $key => $element) {
             $this->$key = null;
         }
     }
+    
     /**
-     * @name 			set_key()
-     *  				Sets the value of the key property.
+     * @param $key
      *
-     * @author          Can Berkol
-     *
-     * @since			1.0.0
-     * @version         1.2.0
-     *
-     * @param 			string 	        $key
-     *
-     * @return			mixed           $this, false
+     * @return $this|bool
      */
-    private function set_key($key){
+    private function setKey($key){
         if(!is_string($key)){
-//            /** START :: issue_error */
-//            $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//            $hint = 'Key must be a string value.';
-//            $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::invalid::key::', $date, $hint);
-//            /** END :: issue_error */
             return false;
         }
         $this->key = md5($key);
         return $this;
     }
+    
     /**
-     * @name 			get_key()
-     *  				Gets the value of the key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.0.0
-     * @version         1.2.0
-     *
-     * @return			string          $this->key
+     * @return string
      */
-    private function get_key(){
+    private function getKey(){
         return $this->key;
     }
+    
     /**
-     * @name 			key()
-     *  				Accepts 0 or 1 arguments. If there is argument provided, the function returns the value of the
-     *                  key property. If there is one argument provided, the function sets the value of the key property.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed          $this, $this->key, false
+     * @return $this|\BiberLtd\Bundle\CoreBundle\Services\Encryption|bool
      */
     public function key(){
-        /** Get arguments passed */
         $count_args = func_num_args();
         $args = func_get_args();
 
         switch($count_args){
             case 0:
-                return $this->get_key();
+                return $this->getKey();
             case 1:
-                return $this->set_key($args[0]);
+                return $this->setKey($args[0]);
             default:
-//                /** START :: issue_error */
-//                $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                $hint = 'Method accepts only 0 or 1 argument(s).';
-//                $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::invalid::count::'.$count_args, $date, $hint);
-//                /** END :: issue_error */
                 break;
         }
     }
+    
     /**
-     * @name 			set_input()
-     *  				Sets the value of the input property.
+     * @param $input
      *
-     * @author          Can Berkol
-     * @author		    Said İmamoğlu
-     *
-     * @since			1.0.0
-     * @version         1.2.2
-     *
-     * @param 			string 	        $input
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
-    private function set_input($input){
+    private function setInput($input){
         $this->input = $input;
         return $this;
     }
@@ -240,13 +146,8 @@ class Encryption extends Core{
             case 0:
                 return $this->get_input();
             case 1:
-                return $this->set_input($args[0]);
+                return $this->setInput($args[0]);
             default:
-//                /** START :: issue_error */
-//                $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                $hint = 'Method accepts only 0 or 1 argument(s).';
-//                $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::invalid::count::'.$count_args, $date, $hint);
-//                /** END :: issue_error */
                 break;
         }
     }
@@ -275,27 +176,15 @@ class Encryption extends Core{
                 $func .= 'encrypt_via_'.$algorithm;
                 break;
             default:
-//                /** START :: issue_error */
-//                $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                $hint = 'Acceptable algorithms are the following: '.implode(',', $this->algorithms);
-//                $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::invalid::algorithm::'.$algorithm, $date, $hint);
-//                /** END :: issue_error */
                 return false;
         }
         return $this->$func();
     }
+
     /**
-     * @name 			decrypt()
-     *  				If supported, decrypts the given input based on the provided algorithm.
+     * @param string $algorithm
      *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @param           string          $algorithm          Selected encryption algorithm.
-     *
-     * @return			mixed           $this, false
+     * @return bool
      */
     public function decrypt($algorithm = 'enc_reversible_pkey'){
         $func = '';
@@ -308,25 +197,13 @@ class Encryption extends Core{
             case 'hash_md5':
             case 'hash_sha1':
             default:
-//                /** START :: issue_error */
-//                $date = new \DateTime('now', new \DateTimeZone($this->timezone));
-//                $hint = 'You have provided an invalid algorithm or an algorithm that cannot be decryptable. Acceptable algorithms are the following: '.implode(',', $this->algorithms);
-//                $this->error[] = $this->issue_error(__CLASS__, __METHOD__, 'iv::invalid::algorithm::'.$algorithm, $date, $hint);
-//                /** END :: issue_error */
                 return false;
         }
         return $this->$func();
     }
+
     /**
-     * @name 			encrypt_via_enc_reversible_pkey()
-     *  				Encrypts the given via enc_reversible_pkey algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
     private function encrypt_via_enc_reversible_pkey(){
         $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
@@ -336,16 +213,9 @@ class Encryption extends Core{
         $this->output = $cryptText;
         return $this;
     }
+
     /**
-     * @name 			decrypt_via_enc_reversible_pkey()
-     *  				Decrypts the given via enc_reversible_pkey algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
     private function decrypt_via_enc_reversible_pkey(){
         $encryptedText = base64_decode($this->input());
@@ -355,46 +225,25 @@ class Encryption extends Core{
         $this->output = $deCryptText;
         return $this;
     }
+
     /**
-     * @name 			encrypt_via_hash_md5()
-     *  				Encrypts the given via hash_md5 algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			object           $this
+     * @return $this
      */
     private function encrypt_via_hash_md5(){
         $this->output = md5($this->input().$this->key());
         return $this;
     }
+
     /**
-     * @name 			encrypt_via_hash_sha1()
-     *  				Encrypts the given via hash_sha1 algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
     private function encrypt_via_hash_sha1(){
         $this->output = sha1($this->input().$this->key());
         return $this;
     }
+
     /**
-     * @name 			encrypt_via_enc_simple_replace()
-     *  				Encrypts the given via enc_simple_replace algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
     private function encrypt_via_enc_simple_replace(){
         $replace_map = array(
@@ -474,16 +323,9 @@ class Encryption extends Core{
         $this->output = md5($output);
         return $this;
     }
+
     /**
-     * @name 			encrypt_via_enc_shift_simple_replace()
-     *  				Encrypts the given via enc_rot13_simple_replace algorithm.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.3
-     *
-     * @return			mixed           $this, false
+     * @return $this
      */
     private function encrypt_via_enc_rot13_simple_replace(){
         $input = str_rot13($this->input);
@@ -565,86 +407,10 @@ class Encryption extends Core{
         return $this;
     }
     /**
-     * @name 			output()
-     *  				Outputs the encrypted/decrypted input.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			string          $this->output
+     * @return string
      */
     public function output(){
         /** trimmed because encrypt/decrypt add whitespaces */
         return trim($this->output);
     }
 }
-/**
- * Change Log
- * **************************************
- * v1.2.2                      07.06.2015
- * Can Berkol
- * **************************************
- * BF :: Missing key enc_rot13_simple_replace added to encrypt() method.
- * BF :: Extra $ sign removed from the beginning of variable.
- *
- * **************************************
- * v1.2.2                      Said İmamoğlu
- * 30.04.2014
- * **************************************
- * U set_input()
- *
- * **************************************
- * v1.2.1                      Can Berkol
- * 12.01.2014
- * **************************************
- * A decrypt_via_enc_reversible_pkey()
- *
- * **************************************
- * v1.2.0                      Can Berkol
- * 27.05.2013
- * **************************************
- * A decrypt_via_enc_reversible_pkey()
- * A encrypt_via_enc_reversible_pkey()
- * A get_input().
- * A input().
- * A key().
- * A output().
- * D get_output().
- * M Reworked to match Symfony2
- * U decrypt() supports multiple algorithms.
- * U encrypt() supports multiple algorithms.
- * U get_key() is now private.
- * U set_input() is now private.
- * U set_key() is now private.
- *
- * **************************************
- * v1.1.2                      Can Berkol
- * 14.08.2012
- * **************************************
- * A BBR prefix.
- *
- * **************************************
- * v1.1.2                      Can Berkol
- * 10.08.2012
- * **************************************
- * U Error mechanism updated.
- *
- * **************************************
- * v1.1.1                      Can Berkol
- * 09.08.2012
- * **************************************
- * U Extends BBR_Library
- *
- * **************************************
- * v1.1.0                      Can Berkol
- * **************************************
- * B Encrypt/decrypt whitespace problem solved
- *
- * **************************************
- * v1.0.0                      Can Berkol
- * **************************************
- * - Main release
- *
- */

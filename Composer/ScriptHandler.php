@@ -1,6 +1,15 @@
 <?php
-
+/**
+ * @author		Said İmamoğlu
+ *
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
+ *
+ * @date        10.12.2015
+ */
 /*
+ * Modified from source of Symfont 2:
+ *
  * This file is part of the Symfony package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
@@ -62,8 +71,6 @@ class ScriptHandler
                 $repo2 = $client->open($folder);
                 $repo2->run('checkout -b ' . $branch);
                 $event->getIO()->write("biberltd/$item bundle installed successfully");
-                /** APP KERNEL*/
-//                $ref = '$bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();';
                 $ref = 'return $bundles;';
                 $bundleDeclaration = "\$bundles[] = new BiberLtd\\Bundle\\$name\\BiberLtd$name();";
                 $content = file_get_contents($kernelFile);
@@ -93,34 +100,7 @@ class ScriptHandler
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['prefix'] = 'BiberLtd\\Bundle\\' . $name . '\\Entity';
                 $configs['doctrine']['orm']['entity_managers']['default']['mappings'][$name]['dir'] = "%kernel.root_dir%/../vendor/biberltd/$item/BiberLtd/Bundle/$name/Entity";
             }
-//            unset($configs['doctrine']['orm']['auto_mapping']);
-//            if (!in_array('smarty',$configs['framework']['templating']['engines'])) {
-//                $configs['framework']['templating']['engines'] = array('twig','smarty');
-//            }
-//            if (!isset($configs['doctrine']['dbal']['connections']['default'])) {
-//                $configs['doctrine']['dbal'] = array();
-//                $configs['doctrine']['dbal']['default_connection'] = 'default';
-//                $configs['doctrine']['dbal']['connections']['default'] = array();
-//                $configs['doctrine']['dbal']['connections']['default']['driver'] = "%database_driver%";
-//                $configs['doctrine']['dbal']['connections']['default']['host'] = "%database_host%";
-//                $configs['doctrine']['dbal']['connections']['default']['port'] = "%database_port%";
-//                $configs['doctrine']['dbal']['connections']['default']['dbname'] = "%database_name%";
-//                $configs['doctrine']['dbal']['connections']['default']['user'] = "%database_user%";
-//                $configs['doctrine']['dbal']['connections']['default']['password'] = "%database_password%";
-//                $configs['doctrine']['dbal']['connections']['default']['charset'] = 'UTF8';
-//
-//            }
-//            if (!isset($configs['doctrine']['orm']['default_entity_manager'])) {
-//                $configs['doctrine']['orm']['default_entity_manager'] = 'default';
-//            }
-//            if (!isset($configs['nelmio_api_doc'])) {
-//                #$configs['nelmio_api_doc'] = '~';
-//            }
-//            if (!isset($configs['smarty']['globals'])) {
-//                $configs['smarty']['globals']['doctype'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
-//                $configs['smarty']['globals']['ga_tracking'] = 'UA-xxxxx-x';
-//                $configs['smarty']['options']['autload_filters']['output'] = array('trimWhiteSpace');
-//            }
+
             file_put_contents($configFile, Yaml::dump($configs, 10));
         }
     }

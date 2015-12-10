@@ -1,18 +1,13 @@
 <?php
 /**
- * @vendor      BiberLtd
- * @package		Core
- * @subpackage	Responses
- * @name	    ModelResponse
- *
  * @author		Can Berkol
+ * @author		Said İmamoğlu
  *
- * @copyright   Biber Ltd. (www.biberltd.com)
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @version     1.0.0
- * @date        30.04.2015
+ * @date        10.12.2015
  */
-
 namespace BiberLtd\Bundle\CoreBundle\Responses;
 use BiberLtd\Bundle\CoreBundle\Core as Core;
 
@@ -23,22 +18,17 @@ class ModelResponse extends Core{
 	public $process;
 
 	/**
-	 * @name            __construct()
-	 *                  Constructor.
+	 * ModelResponse constructor.
 	 *
-	 * @author          Can Berkol
-	 *
-	 * @since           1.0.0
-	 * @version         1.0.0
-	 *
-	 * @param           mixed		$resultSet
-	 * @param			integer		$setCount
-	 * @param			integer		$totalCount
-	 * @param			integer		$totalCount
-	 * @param			mixed		$lastInsertId
-	 * @param			bool		$errorExist
-	 * @param			string		$errorCode
-	 * @param			string		$errorMessage
+	 * @param null      $resultSet
+	 * @param int       $setCount
+	 * @param int       $totalCount
+	 * @param null      $lastInsertId
+	 * @param bool|true $errorExist
+	 * @param string    $errorCode
+	 * @param string    $errorMessage
+	 * @param int       $executionStart
+	 * @param int       $executionEnd
 	 */
 	public function __construct($resultSet = null, $setCount = 0, $totalCount = 0, $lastInsertId = null, $errorExist = true, $errorCode = 'E:X:001', $errorMessage = 'Unknown error.', $executionStart = 0, $executionEnd = 0){
 		$this->result = new \stdClass();
@@ -66,12 +56,3 @@ class ModelResponse extends Core{
 		$this->process->collection->valid = array();
 	}
 }
-/**
- * Change Log
- * **************************************
- * v1.0.0					   30.04.2015
- * Can Berkol
- * **************************************
- * - Main release
- *
- */

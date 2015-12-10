@@ -3,7 +3,3 @@ parameters:
   # actionname: id
   # Make sure that keys are unique.
   actions:
-      login_admin_success:                  45
-      login_admin_fail:                     46
-      csfr_attempt:                         47
-      login_to_wrong_site:                  48

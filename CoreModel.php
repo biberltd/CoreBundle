@@ -1,47 +1,57 @@
 <?php
 /**
- * @vendor      BiberLtd
- * @package     BiberLtd\Core
- * @name        CoreModel
+ * @author		Can Berkol
+ * @author		Said İmamoğlu
  *
- * @author      Can Berkol
- *              Said İmamoğlu
+ * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
+ * @license     GPLv3
  *
- * @copyright   Biber Ltd. (www.biberltd.com)
- *
- * @version     1.2.7
- * @date        25.05.2015
- *
+ * @date        10.12.2015
  */
-
 namespace BiberLtd\Bundle\CoreBundle;
 
 /** Required for better & instant error handling for the support team */
 use \BiberLtd\Bundle\CoreBundle\Exceptions as CoreExceptions;
-use BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
+use \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 
 class CoreModel extends Core{
+    /**
+     * @var \string
+     */
     protected $dbConnection = 'default';
+    /**
+     * @var \string
+     */
     protected $orm = 'doctrine';
+    /**
+     * @var \object
+     */
     protected $em;
+    /**
+     * @var \object
+     */
     protected $entity;
+    /**
+     * @var \object
+     */
     protected $kernel;
+    /**
+     * @var \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+     */
     protected $response;
+    /**
+     * @var array
+     */
     protected $languages = array();
 
     /**
-     * @name            __construct ()
+     * CoreModel constructor.
      *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.2.7
-     *
-     * @param           object 		$kernel
-     * @param           string 		$dbConnection
-     * @param           string 		$orm
+     * @param object $kernel
+     * @param string $dbConnection
+     * @param string $orm
      */
-    public function __construct($kernel, $dbConnection = 'default', $orm = 'doctrine'){
+    public function __construct(\object $kernel, $dbConnection = 'default', $orm = 'doctrine'){
         $this->dbConnection = $dbConnection;
         $this->orm = $orm;
         $this->kernel = $kernel;
@@ -53,13 +63,7 @@ class CoreModel extends Core{
     }
 
     /**
-     * @name            __destruct ()
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.0.0
-     * @version         1.0.0
-     *
+     * Destructor.
      */
     public function __destruct() {
         foreach ($this as $property => $value) {
@@ -67,20 +71,13 @@ class CoreModel extends Core{
         }
     }
 
-    /**
-     * @name            addLimit ()
+    /***
+     * @param object $query
+     * @param null   $limit
      *
-     * @author          Can Berkol
-     *
-     * @since           1.1.2
-     * @version         1.2.6
-     *
-     * @param           object 		$query
-     * @param           array 		$limit
-     *
-     * @return          object              $query
+     * @return object
      */
-    public function addLimit($query, $limit = null) {
+    public function addLimit(\object $query, $limit = null) {
         if ($limit != null) {
             if (isset($limit['start']) && isset($limit['count'])) {
                 if (isset($limit['pagination'])) {
@@ -97,22 +94,14 @@ class CoreModel extends Core{
     }
 
     /**
-     * @name            createException ()
+     * @param string    $exception
+     * @param string    $msg
+     * @param string    $code
+     * @param bool|true $isCore
      *
-     * @author          Can Berkol
-     * @author          Said İmamoğlu
-     *
-     * @since           1.1.1
-     * @version         1.2.6
-     *
-     * @param           string 		$exception
-     * @param           string 		$msg
-     * @param           string 		$code
-     * @param           bool 		$isCore 				Defines if the exception belongs to Core Package.
-     *
-     * @return          array       $this->response
+     * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
      */
-    public function createException($exception, $msg, $code, $isCore = true){
+    public function createException(\string $exception, \string $msg, \string $code, \bool $isCore = true){
         if ($isCore) {
             if (!strpos($exception, 'Exception')) {
                 $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\' . $exception . 'Exception';
@@ -129,17 +118,10 @@ class CoreModel extends Core{
     }
 
     /**
-     * @name            getEntityDefinition ()
+     * @param        $entity
+     * @param string $detail
      *
-     * @author          Can Berkol
-     *
-     * @since           1.1.7
-     * @version         1.1.7
-     *
-     * @param           string 		$entity
-     * @param           string 		$detail name, alias
-     *
-     * @return          mixed       string|false
+     * @return bool
      */
     public function getEntityDefinition($entity, $detail = 'name'){
         if (isset($this->entity[$entity][$detail])) {
@@ -149,20 +131,12 @@ class CoreModel extends Core{
     }
 
     /**
-     * @name            deleteEntities()
+     * @param array $collection
+     * @param       $entity
      *
-     * @author          Can Berkol
-     *
-     * @since           1.2.0
-     * @version         1.2.6
-     *
-     * @param           array 		$collection
-     * @param           string 		$entity
-     *
-	 * @return          BiberLtd\Bundle\Core\Responses\ModelResponse            $subResponse
-	 *
-	 */
-    protected function deleteEntities($collection, $entity) {
+     * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+     */
+    protected function deleteEntities(array $collection, $entity) {
         $subResponse = new ModelResponse();
 		$subResponse->process->continue = false;
         /** Loop through items and collect values. */
@@ -193,20 +167,12 @@ class CoreModel extends Core{
     }
 
     /**
-     * @name            insertEntities()
+     * @param array $collection
+     * @param       $entity
      *
-     * @author          Can Berkol
-     *
-     * @since           1.1.0
-     * @version         1.2.6
-     *
-     * @param           array 			$collection
-     * @param           string 			$entity
-     *
-	 * @return          BiberLtd\Bundle\Core\Responses\ModelResponse            $subResponse
-	 *
-	 */
-    protected function insertEntities($collection, $entity) {
+     * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+     */
+    protected function insertEntities(array $collection, $entity) {
 		$subResponse = new ModelResponse();
 		$subResponse->process->continue = false;
         $insertCount = 0;
@@ -234,23 +200,17 @@ class CoreModel extends Core{
         }
         return $subResponse;
     }
-    /**
-     * @name            prepareCondition ()
-     *                  Prepares CONDITION value for WHERE clauses. This function prepares the right side of the equation.
-     *                  id IN(3,4,5);
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.2.0
-     * @version         1.2.4
-     *
-     * @param           string 		$key 			starts, ends, contains, in, include, not_in, exclude
-     * @param           mixed 		$value 			array, string or integer
-     * @param           string 		$method 		Simple, one parameter methods only.
-     *
-     * @return          string
-     */
-    protected function prepareCondition($key, $value, $method = ''){
+
+	/**
+	 * @param string $key
+	 * @param mixed $value
+	 * @param string $method
+	 *
+	 * @return string
+	 *
+	 * Prepares CONDITION value for WHERE clauses. This function prepares the right side of the equation.
+	 */
+    protected function prepareCondition(\string $key, $value, \string $method = ''){
         if ($value instanceof \DateTime) {
             $value = $value->format('Y-m-d h:i:s');
         }
@@ -465,21 +425,15 @@ class CoreModel extends Core{
         }
         return $condition;
     }
-    /**
-     * @name            prepareDelete ()
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.2.0
-     * @version         1.2.6
-     *
-     * @param           string $table table name.
-     * @param           string $column column name
-     * @param           mixed $values array of values.
-     *
-     * @return          string
-     */
-    protected function prepareDelete($table, $column, $values){
+
+	/**
+	 * @param string $table
+	 * @param string $column
+	 * @param array  $values
+	 *
+	 * @return string
+	 */
+	protected function prepareDelete(\string $table, \string $column, array $values){
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
@@ -497,20 +451,12 @@ class CoreModel extends Core{
         return $qStr;
     }
 
-    /**
-     * @name            prepareWhere ()
-     *                  Prepares CONDITION statement.
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.2.0
-     * @version         1.2.6
-     *
-     * @param           mixed 		$filter
-
-     * @return          string
-     */
-    protected function prepareWhere($filter){
+	/**
+	 * @param array $filter
+	 *
+	 * @return string
+	 */
+    protected function prepareWhere(array $filter){
         $groupStr = '';
         foreach ($filter as $group) {
 			$groupStr .= ' (';
@@ -537,21 +483,13 @@ class CoreModel extends Core{
         return $groupStr;
     }
 
-    /**
-     * @name            updateEntities ()
-     *
-     * @author          Can Berkol
-     *
-     * @since           1.2.0
-     * @version         1.2.6
-     *
-     * @param           array 			$collection
-     * @param           string 			$entity
-     *
-	 * @return          array           $sub_response
+	/**
+	 * @param array  $collection
+	 * @param string $entity
 	 *
+	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-    protected function updateEntities($collection, $entity)    {
+    protected function updateEntities(array $collection, \string $entity)    {
 		$subResponse = new ModelResponse();
 		$subResponse->process->continue = false;
 		$updateCount = 0;
@@ -581,20 +519,12 @@ class CoreModel extends Core{
         return $subResponse;
     }
 
-    /**
-     * @name            translateColumnName ()
-     *
-     * @author          Said İmamoğlu
-     *
-     * @since           1.1.0
-     * @version         1.1.0
-     *
-     * @param           array 		$column
-     *
-     * @return          string      $result
-     *
-     */
-    protected function translateColumnName($column){
+	/**
+	 * @param array $column
+	 *
+	 * @return string
+	 */
+    protected function translateColumnName(array $column){
         if (strpos($column, '_')) {
             $words = explode('_', $column);
             if (count($words) > 0) {
@@ -613,149 +543,3 @@ class CoreModel extends Core{
         }
     }
 }
-
-/**
- * Change Log
- * **************************************
- * v1.2.7                      25.05.2015
- * Can Berkol
- * **************************************
- * BF :: $this->$dbConnection is fixed to $this->dbConnection
- * BF :: Deprecated call $this->resetResponse() has been removed.
- *
- * **************************************
- * v1.2.6                      01.05.2015
- * Can Berkol
- * **************************************
- * CR :: New $response object does not require $this->resetResponse(). Deleted.
- * CR :: __construct() content is converted to camelCase.
- * CR :: Deprecated methods removed.
- * CR :: Responses & SubResponses are converted to BiberLtd\Core\Responses\ModelResponse
- *
- * **************************************
- * v1.2.5                      Can Berkol
- * 17.02.2014
- * **************************************
- * U prepareCondition()
- * U prepareWhere()
- *
- * **************************************
- * v1.2.4                      Can Berkol
- * 16.02.2014
- * **************************************
- * U prepareCondition()
- *
- * **************************************
- * v1.2.3                      Can Berkol
- * 17.06.2014
- * **************************************
- * U createException()
- *
- * **************************************
- * v1.2.2                   Said İmamoğlu
- * 02.04.2014
- * **************************************
- * U prepareCondition()
- *
- * **************************************
- * v1.2.1                   Said İmamoğlu
- * 05.03.2014
- * **************************************
- * A debugClass()
- *
- * **************************************
- * v1.2.0                      Can Berkol
- * 24.02.2014
- * **************************************
- * A deleteEntities()
- * A insertEntities()
- * A prepareCondition()
- * A prepareDelete()
- * A prepareWhere()
- * A updateEntities()
- * R delete_entities()
- * R insert_entities()
- * R prepare_delete()
- * R prepare_where()
- * R update_entities()
- * U createException()
- *
- * **************************************
- * v 1.1.9                  Said İmamoğlu
- * 19.02.2014
- * **************************************
- * U debug()
- *
- * **************************************
- * v1.1.8                      Can Berkol
- * 05.02.2014
- * **************************************
- * U prepare_conditions()
- *
- * **************************************
- * v1.1.7                      Can Berkol
- * 10.01.2014
- * **************************************
- * A getEntityDefinition()
- *
- * **************************************
- * v1.1.6                      Can Berkol
- * 10.01.2014
- * **************************************
- * B update_entities()
- *
- * **************************************
- * v1.1.5                      Can Berkol
- * 01.01.2014
- * **************************************
- * B prepare_condition()
- *
- * **************************************
- * v1.1.4                    Said İmamoğlu
- * 18.12.2013
- * **************************************
- * A translateColumnName()
- *
- * **************************************
- * v1.1.4                      Can Berkol
- * 25.11.2013
- * **************************************
- * U createException()  $isCore parameter added.
- *
- * **************************************
- * v1.1.3                      Can Berkol
- * 14.11.2013
- * **************************************
- * U prepare_condition()
- *
- * **************************************
- * v1.1.2                      Can Berkol
- * 13.11.2013
- * **************************************
- * U prepare_condition()
- *
- * **************************************
- * v1.1.1                   Said İmamoğlu
- * 07.11.2013
- * **************************************
- * A addLimit()
- * A createException()
- *
- * **************************************
- * v1.1.0                      Can Berkol
- * 14.10.2013
- * **************************************
- * A delete_entities()
- * A prepare_condition()
- * A prepare_delete()
- * A prepare_where()
- * A update_entities()
- *
- * **************************************
- * v1.0.0                      Can Berkol
- * 08.09.2013
- * **************************************
- * A __construct()
- * A __destruct()
- * A resetResponse()
- */
