@@ -27,7 +27,6 @@
         "beberlei/DoctrineExtensions": "~1.0@stable",
         "gedmo/doctrine-extensions": "~2.4@stable",
         "swiftmailer/swiftmailer" : "~5.4@stable"
-
     },
     "extra" : {
 	"branch-alias" : {
