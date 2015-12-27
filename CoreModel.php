@@ -118,7 +118,7 @@ class CoreModel extends Core{
     }
 
     /**
-     * @param        $entity
+     * @param mixed $entity
      * @param string $detail
      *
      * @return bool
@@ -419,7 +419,7 @@ class CoreModel extends Core{
                 break;
             case 'between':
                 if (is_array($value) && count($value) == 2) {
-                    $condition .= 'between ' . $value[0] . ' and ' . $value[1];
+                    $condition .= 'between ' . $value[0]->format('Y-m-d H:i:s') . ' and ' . $value[1]->format('Y-m-d H:i:s');
                 }
                 break;
         }
