@@ -35,7 +35,7 @@ class CoreLocalizableEntity extends CoreEntity{
      * @return bool
      * @throws \BiberLtd\Bundle\CoreBundle\Exceptions\LocalizationNotFoundException
      */
-    public function getLocalization(\string $lang, \bool $internal = false){
+    public function getLocalization(string $lang, bool $internal = false){
         $localizations = $this->getLocalizations();
         $found = false;
         foreach($localizations as $localization){

@@ -26,19 +26,19 @@ class CoreEntity {
      */
     public $date_removed;
     /**
-     * @var \bool
+     * @var bool
      */
     protected $new = false; //  Marks the object as new.
     /**
-     * @var \bool
+     * @var bool
      */
     protected $modified = false; //  Marks the object as modified or not modified.
     /**
-     * @var \bool
+     * @var bool
      */
     protected $localized = false; // bool Marks the object as localizable.
     /**
-     * @var \string
+     * @var string
      */
     protected $timezone = 'Europe/Istanbul';
     /**

@@ -16,11 +16,11 @@ use \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse;
 
 class CoreModel extends Core{
     /**
-     * @var \string
+     * @var string
      */
     protected $dbConnection = 'default';
     /**
-     * @var \string
+     * @var string
      */
     protected $orm = 'doctrine';
     /**
@@ -101,7 +101,7 @@ class CoreModel extends Core{
      *
      * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
      */
-    public function createException(\string $exception, \string $msg, \string $code, \bool $isCore = true){
+    public function createException(string $exception, string $msg, string $code, bool $isCore = true){
         if ($isCore) {
             if (!strpos($exception, 'Exception')) {
                 $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\' . $exception . 'Exception';
@@ -210,7 +210,7 @@ class CoreModel extends Core{
 	 *
 	 * Prepares CONDITION value for WHERE clauses. This function prepares the right side of the equation.
 	 */
-    protected function prepareCondition(\string $key, $value, \string $method = ''){
+    protected function prepareCondition(string $key, $value, string $method = ''){
         if ($value instanceof \DateTime) {
             $value = $value->format('Y-m-d h:i:s');
         }
@@ -433,7 +433,7 @@ class CoreModel extends Core{
 	 *
 	 * @return string
 	 */
-	protected function prepareDelete(\string $table, \string $column, array $values){
+	protected function prepareDelete(string $table, string $column, array $values){
         $filter[] = array(
             'glue' => 'and',
             'condition' => array(
@@ -489,7 +489,7 @@ class CoreModel extends Core{
 	 *
 	 * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
 	 */
-    protected function updateEntities(array $collection, \string $entity)    {
+    protected function updateEntities(array $collection, string $entity)    {
 		$subResponse = new ModelResponse();
 		$subResponse->process->continue = false;
 		$updateCount = 0;
