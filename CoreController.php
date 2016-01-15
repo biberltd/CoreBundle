@@ -258,7 +258,7 @@ class CoreController extends Controller {
 	 */
 	public function generateUid(string $prefix = null){
 		$prefix = $prefix ?? 'uid-';
-		return $prefix.substr(time(), -5);
+		return $prefix.substr(microtime(), -5);
 	}
 
 	/**
@@ -274,7 +274,7 @@ class CoreController extends Controller {
 		$currentXssTime = $this->session->get('_xss_timestamp');
 
 		$ip = $this->container->get('request')->getClientIp();
-		$now = time();
+		$now = microtime();
 		if (!$currentXssTime || !$currentXssCode) {
 			$currentXssCode = md5($ip . $now);
 			$this->session->set('_xss', $currentXssCode);
@@ -288,7 +288,7 @@ class CoreController extends Controller {
 		 */
 		if ($timeDifference > 600) {
 			/** If time difference since last request is more than 10 minutes change security code alongside with timestamp. */
-			$now = time();
+			$now = microtime();
 			$this->session->set('_xss', md5($ip . $now));
 			$this->session->set('_xss_timestamp', $now);
 		}

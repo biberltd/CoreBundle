@@ -47,11 +47,11 @@ class CoreModel extends Core{
     /**
      * CoreModel constructor.
      *
-     * @param object      $kernel
+     * @param             $kernel
      * @param string|null $dbConnection
      * @param string|null $orm
      */
-    public function __construct(\object $kernel, string $dbConnection = null, string $orm = null){
+    public function __construct($kernel, string $dbConnection = null, string $orm = null){
         $dbConnection = $dbConnection ?? 'default';
         $orm = $orm ?? 'doctrine';
         $this->dbConnection = $dbConnection;

@@ -50,8 +50,8 @@ class ModelResponse extends Core{
 		$this->error->message = $errorMessage ?? 'Unknown error.';
 
 		$this->stats->execution = new \stdClass();
-		$this->stats->execution->start = $executionStart == 0 ? time() : $executionStart;
-		$this->stats->execution->end = $executionEnd == 0 ? time() : $executionEnd;
+		$this->stats->execution->start = $executionStart == 0 ? microtime() : $executionStart;
+		$this->stats->execution->end = $executionEnd == 0 ? microtime() : $executionEnd;
 
 		$this->process->continue = false;
 		$this->process->collection = new \stdClass();

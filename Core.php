@@ -13,7 +13,7 @@ namespace BiberLtd\Bundle\CoreBundle;
 use BiberLtd\Bundle\CoreBundle\CoreTraits\DebugTrait;
 
 class Core{
-    protected $error        = array();
+    protected $error        = [];
     public $timezone        = 'Europe/Istanbul';
     protected $kernel;
 
