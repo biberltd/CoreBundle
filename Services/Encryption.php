@@ -6,29 +6,37 @@
  * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
  * @license     GPLv3
  *
- * @date        10.12.2015
+ * @date        15.01.2016
  */
 namespace BiberLtd\Bundle\CoreBundle\Services;
 use BiberLtd\Bundle\CoreBundle\Core as Core;
 
 class Encryption extends Core{
-    /** @var $key           Encryption key. This is set from configuration files. */
+    /**
+     * @var string
+     */
     private     $key;
-    /** @var $output        Holds the string to be outputted. */
+    /**
+     * @var null
+     */
     protected   $output;
-    /** @var    $algorithms  Holds the list of available algorithms. */
+    /**
+     * @var array
+     */
     private   $algorithms;
-    /** @var    $input      Holds the input string. */
+    /**
+     * @var string
+     */
     private   $input;
 
     /**
      * Encryption constructor.
      *
-     * @param string $timezone
-     * @param array  $params
+     * @param string|null $timezone
+     * @param array       $params
      */
-    public function __construct($timezone = 'Europe/Istanbul', $params = array()){
-        $this->timezone = $timezone;
+    public function __construct(string $timezone = null, array $params = []){
+        $this->timezone = $timezone ?? 'Europe/Istanbul';
 
         if(count($params) > 0){
             foreach($params as $key => $value){
@@ -46,13 +54,13 @@ class Encryption extends Core{
             $this->input = '';
             $this->key = md5('bbr@encryption');
         }
-        $this->algorithms = array(
+        $this->algorithms = [
             'enc_reversible_pkey',
             'enc_simple_replace',
             'enc_rot13_simple_replace',
             'hash_md5',
             'hash_sha1'
-        );
+        ];
         $this->output = null;
     }
 
@@ -66,14 +74,11 @@ class Encryption extends Core{
     }
     
     /**
-     * @param $key
+     * @param string $key
      *
-     * @return $this|bool
+     * @return $this
      */
-    private function setKey($key){
-        if(!is_string($key)){
-            return false;
-        }
+    private function setKey(string $key){
         $this->key = md5($key);
         return $this;
     }
@@ -86,7 +91,7 @@ class Encryption extends Core{
     }
     
     /**
-     * @return $this|\BiberLtd\Bundle\CoreBundle\Services\Encryption|bool
+     * @return \BiberLtd\Bundle\CoreBundle\Services\Encryption|string
      */
     public function key(){
         $count_args = func_num_args();
@@ -103,40 +108,24 @@ class Encryption extends Core{
     }
     
     /**
-     * @param $input
+     * @param string $input
      *
      * @return $this
      */
-    private function setInput($input){
+    private function setInput(string $input){
         $this->input = $input;
         return $this;
     }
+
     /**
-     * @name 			get_input()
-     *  				Gets the value of the input property.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.0.0
-     * @version         1.2.0
-     *
-     * @return			string          $this->input
+     * @return string
      */
     private function get_input(){
         return $this->input;
     }
+
     /**
-     * @name 			input()
-     *  				Accepts 0 or 1 arguments. If there is argument provided, the function returns the value of the
-     *                  input property. If there is one argument provided, the function sets the value of the input
-     *                  property.
-     *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.0
-     *
-     * @return			mixed          $this, $this->key, false
+     * @return \BiberLtd\Bundle\CoreBundle\Services\Encryption|string
      */
     public function input(){
         /** Get arguments passed */
@@ -151,20 +140,14 @@ class Encryption extends Core{
                 break;
         }
     }
+
     /**
-     * @name 			encrypt()
-     *  				Encrypts the given input based on the provided algorithm.
+     * @param string|null $algorithm
      *
-     * @author          Can Berkol
-     *
-     * @since			1.2.0
-     * @version         1.2.3
-     *
-     * @param           string          $algorithm          Selected encryption algorithm.
-     *
-     * @return			mixed           $this, false
+     * @return bool
      */
-    public function encrypt($algorithm = 'enc_reversible_pkey'){
+    public function encrypt(string $algorithm = null){
+        $algorithm = $algorithm ?? 'enc_reversible_pkey';
         $func = '';
         switch($algorithm){
             case 'enc_reversible_pkey':
@@ -186,7 +169,8 @@ class Encryption extends Core{
      *
      * @return bool
      */
-    public function decrypt($algorithm = 'enc_reversible_pkey'){
+    public function decrypt(string $algorithm = null){
+        $algorithm = $algorithm ?? 'enc_reversible_pkey';
         $func = '';
         switch($algorithm){
             case 'enc_reversible_pkey':
@@ -246,7 +230,7 @@ class Encryption extends Core{
      * @return $this
      */
     private function encrypt_via_enc_simple_replace(){
-        $replace_map = array(
+        $replace_map = [
             'a'     => '@',
             'A'     => '!@',
             'b'     => 'bi',
@@ -307,7 +291,7 @@ class Encryption extends Core{
             '7'     => '/-',
             '8'     => '%',
             '9'     => 'q',
-        );
+        ];
         $output = '';
         $i = 0;
         for($i; $i < strlen($this->input); $i++){
@@ -329,7 +313,7 @@ class Encryption extends Core{
      */
     private function encrypt_via_enc_rot13_simple_replace(){
         $input = str_rot13($this->input);
-        $replace_map = array(
+        $replace_map = [
             'a'     => '@',
             'A'     => '!@',
             'b'     => 'bi',
@@ -390,7 +374,7 @@ class Encryption extends Core{
             '7'     => '/-',
             '8'     => '%',
             '9'     => 'q',
-        );
+        ];
         $output = '';
         $i = 0;
         for($i; $i < strlen($input); $i++){

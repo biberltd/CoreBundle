@@ -6,7 +6,7 @@
  * @copyright   Biber Ltd. (http://www.biberltd.com) (C) 2015
  * @license     GPLv3
  *
- * @date        10.12.2015
+ * @date        15.01.2015
  */
 
 namespace BiberLtd\Bundle\CoreBundle;
@@ -379,7 +379,7 @@ class CoreController extends Controller {
 			'authenticated' => true,
 			'members' => [],
 			'groups' => $group,
-			'status' => array('a')
+			'status' => ['a']
 		);
 		if ($this->av->hasAccess(null, $accessMap)) {
 			if(!$redirect){

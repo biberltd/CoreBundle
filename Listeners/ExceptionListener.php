@@ -45,7 +45,7 @@ class ExceptionListener extends Core{
     /**
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $e
      */
-    public function onKernelException(GetResponseForExceptionEvent  $e){
+    public function onKernelException(GetResponseForExceptionEvent $e){
         $exception = $e->getException();
         $request = $e->getRequest();
         $baseUrl = 'http://'.$request->getHttpHost().$request->getBaseUrl();

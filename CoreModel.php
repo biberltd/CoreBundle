@@ -42,16 +42,18 @@ class CoreModel extends Core{
     /**
      * @var array
      */
-    protected $languages = array();
+    protected $languages = [];
 
     /**
      * CoreModel constructor.
      *
-     * @param object $kernel
-     * @param string $dbConnection
-     * @param string $orm
+     * @param object      $kernel
+     * @param string|null $dbConnection
+     * @param string|null $orm
      */
-    public function __construct(\object $kernel, $dbConnection = 'default', $orm = 'doctrine'){
+    public function __construct(\object $kernel, string $dbConnection = null, string $orm = null){
+        $dbConnection = $dbConnection ?? 'default';
+        $orm = $orm ?? 'doctrine';
         $this->dbConnection = $dbConnection;
         $this->orm = $orm;
         $this->kernel = $kernel;
@@ -71,13 +73,13 @@ class CoreModel extends Core{
         }
     }
 
-    /***
-     * @param object $query
-     * @param null   $limit
+    /**
+     * @param object     $query
+     * @param array|null $limit
      *
      * @return object
      */
-    public function addLimit(\object $query, $limit = null) {
+    public function addLimit(\object $query, array $limit = null) {
         if ($limit != null) {
             if (isset($limit['start']) && isset($limit['count'])) {
                 if (isset($limit['pagination'])) {
@@ -97,11 +99,12 @@ class CoreModel extends Core{
      * @param string    $exception
      * @param string    $msg
      * @param string    $code
-     * @param bool|true $isCore
+     * @param bool|null $isCore
      *
      * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
      */
-    public function createException(string $exception, string $msg, string $code, bool $isCore = true){
+    public function createException(string $exception, string $msg, string $code, bool $isCore = null){
+        $isCore = $isCore ?? true;
         if ($isCore) {
             if (!strpos($exception, 'Exception')) {
                 $exception = '\\BiberLtd\\Bundle\\CoreBundle\\Exceptions\\' . $exception . 'Exception';
@@ -118,12 +121,13 @@ class CoreModel extends Core{
     }
 
     /**
-     * @param mixed $entity
-     * @param string $detail
+     * @param string      $entity
+     * @param string|null $detail
      *
      * @return bool
      */
-    public function getEntityDefinition($entity, $detail = 'name'){
+    public function getEntityDefinition(string $entity, string $detail = null){
+        $detail = $detail ?? 'name';
         if (isset($this->entity[$entity][$detail])) {
             return $this->entity[$entity][$detail];
         }

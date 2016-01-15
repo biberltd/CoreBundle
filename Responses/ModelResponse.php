@@ -20,17 +20,20 @@ class ModelResponse extends Core{
 	/**
 	 * ModelResponse constructor.
 	 *
-	 * @param null      $resultSet
-	 * @param int       $setCount
-	 * @param int       $totalCount
-	 * @param null      $lastInsertId
-	 * @param bool|true $errorExist
-	 * @param string    $errorCode
-	 * @param string    $errorMessage
-	 * @param int       $executionStart
-	 * @param int       $executionEnd
+	 * @param null        $resultSet
+	 * @param int|null    $setCount
+	 * @param int         $totalCount
+	 * @param int|null    $lastInsertId
+	 * @param bool|null   $errorExist
+	 * @param string|null $errorCode
+	 * @param string|null $errorMessage
+	 * @param int|null    $executionStart
+	 * @param int|null    $executionEnd
 	 */
-	public function __construct($resultSet = null, $setCount = 0, $totalCount = 0, $lastInsertId = null, $errorExist = true, $errorCode = 'E:X:001', $errorMessage = 'Unknown error.', $executionStart = 0, $executionEnd = 0){
+	public function __construct($resultSet = null, int $setCount = null, int $totalCount = 0, int $lastInsertId = null, bool $errorExist = null, string $errorCode = null, string $errorMessage = null, int $executionStart = null, int $executionEnd = null){
+		$executionStart = $executionStart ?? 0;
+		$executionEnd = $executionEnd ?? 0;
+
 		$this->result = new \stdClass();
 		$this->error = new \stdClass();
 		$this->stats = new \stdClass();
@@ -38,13 +41,13 @@ class ModelResponse extends Core{
 
 		$this->result->set = $resultSet;
 		$this->result->count = new \stdClass();
-		$this->result->count->set = $setCount;
-		$this->result->count->total = $totalCount;
+		$this->result->count->set = $setCount ?? 0;
+		$this->result->count->total = $totalCount ?? 0;
 		$this->result->lastInsertId = $lastInsertId;
 
-		$this->error->exist = $errorExist;
-		$this->error->code = $errorCode;
-		$this->error->message = $errorMessage;
+		$this->error->exist = $errorExist ?? true;
+		$this->error->code = $errorCode ?? 'E:X:001';
+		$this->error->message = $errorMessage ?? 'Unknown error.';
 
 		$this->stats->execution = new \stdClass();
 		$this->stats->execution->start = $executionStart == 0 ? time() : $executionStart;
@@ -52,7 +55,7 @@ class ModelResponse extends Core{
 
 		$this->process->continue = false;
 		$this->process->collection = new \stdClass();
-		$this->process->collection->invalid = array();
-		$this->process->collection->valid = array();
+		$this->process->collection->invalid = [];
+		$this->process->collection->valid = [];
 	}
 }

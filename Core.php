@@ -19,6 +19,11 @@ class Core{
 
 	use DebugTrait;
 
+    /**
+     * Core constructor.
+     *
+     * @param $kernel
+     */
     public function __construct($kernel){
         $this->kernel = $kernel;
     }

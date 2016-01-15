@@ -49,9 +49,10 @@ class CoreEntity {
     /**
      * CoreEntity constructor.
      *
-     * @param string $timezone
+     * @param string|null $timezone
      */
-    public function __construct($timezone = 'Europe/Istanbul') {
+    public function __construct(string $timezone = null) {
+        $timezone = $timezone ?? 'Europe/Istanbul';
         $new = true;
         foreach ($this as $key => $value) {
             if ($this->date_added !== NULL ) {
@@ -91,12 +92,12 @@ class CoreEntity {
     }
 
     /**
-     * @param $property
-     * @param $value
+     * @param string $property
+     * @param mixed $value
      *
      * @return $this
      */
-    public function setModified($property, $value) {
+    public function setModified(string $property, $value) {
         $explodedProp = explode('_', $property);
         $ucFirstProp = '';
         foreach ($explodedProp as $prop) {
@@ -127,11 +128,11 @@ class CoreEntity {
     }
 
     /**
-     * @param $date_removed
+     * @param \DateTime $date_removed
      *
      * @return $this
      */
-    public function setDateRemoved($date_removed) {
+    public function setDateRemoved(\DateTime $date_removed) {
         if(!$this->setModified('date_removed', $date_removed)->isModified()){
             return $this;
         }
