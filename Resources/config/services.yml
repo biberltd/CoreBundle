@@ -3,4 +3,4 @@ parameters:
 services:
     encryption:
         class:        BiberLtd\Bundle\CoreBundle\Services\Encryption
-        arguments:    ["@kernel"]
+        arguments:    []

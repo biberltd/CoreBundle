@@ -32,11 +32,9 @@ class Encryption extends Core{
     /**
      * Encryption constructor.
      *
-     * @param string|null $timezone
      * @param array       $params
      */
-    public function __construct(string $timezone = null, array $params = []){
-        $this->timezone = $timezone ?? 'Europe/Istanbul';
+    public function __construct(array $params = []){
 
         if(count($params) > 0){
             foreach($params as $key => $value){
