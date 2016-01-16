@@ -74,12 +74,12 @@ class CoreModel extends Core{
     }
 
     /**
-     * @param object     $query
-     * @param array|null $limit
+     * @param \Doctrine\ORM\QuerY $query
+     * @param array|null          $limit
      *
-     * @return object
+     * @return \Doctrine\ORM\QuerY
      */
-    public function addLimit(\object $query, array $limit = null) {
+    public function addLimit(\Doctrine\ORM\Query $query, array $limit = null) {
         if ($limit != null) {
             if (isset($limit['start']) && isset($limit['count'])) {
                 if (isset($limit['pagination'])) {
@@ -102,6 +102,8 @@ class CoreModel extends Core{
      * @param bool|null $isCore
      *
      * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
+     *
+     * @deprecated Will be removed in Q2 of 2016
      */
     public function createException(string $exception, string $msg, string $code, bool $isCore = null){
         $isCore = $isCore ?? true;
