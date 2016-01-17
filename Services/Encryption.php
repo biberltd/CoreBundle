@@ -35,7 +35,6 @@ class Encryption extends Core{
      * @param array       $params
      */
     public function __construct(array $params = []){
-
         if(count($params) > 0){
             foreach($params as $key => $value){
                 switch($key){

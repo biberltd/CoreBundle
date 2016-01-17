@@ -92,7 +92,10 @@ class CoreController extends Controller {
 	 * @var string
 	 */
 	public $theme = '';
-
+	/**
+	 * @var Request
+	 */
+	public $httpRequest = null;
 	use DebugTrait,
 		LocalizationTrait;
 
@@ -103,11 +106,11 @@ class CoreController extends Controller {
 	 */
 	public function init(int $siteId = null, string $pageCode = null, string $theme = null, Request $request = null){
 		$this->model = new \stdClass();
+		$this->httpRequest = $request;
 		$this->initCore($theme, $request);
 
 		$this->model->mls = $this->get('multilanguagesupport.model');
 		$this->model->site = $this->get('sitemanagement.model');
-
 		$response = $this->model->mls ->getLanguage($this->locale);
 		$this->language = false;
 		if(!$response->error->exist){
@@ -118,7 +121,7 @@ class CoreController extends Controller {
 		if(is_null($siteId)){
 			$siteId = $this->session->get('_currentSiteId');
 		}
-		$response = $this->model->getSite($siteId);
+		$response = $this->model->site->getSite($siteId);
 
 		$this->site = false;
 		if(!$response->error->exist){
@@ -161,7 +164,8 @@ class CoreController extends Controller {
 	}
 
 	/**
-	 * @param string|null $theme
+	 * @param string|null                               $theme
+	 * @param \Symfony\Component\HttpFoundation\Request $request
 	 */
 	public function initCore(string $theme = null, Request $request){
 		$this->previousUrl = $this->get('session')->get('previousUrl');
@@ -258,7 +262,7 @@ class CoreController extends Controller {
 	 */
 	public function generateUid(string $prefix = null){
 		$prefix = $prefix ?? 'uid-';
-		return $prefix.substr(microtime(), -5);
+		return $prefix.substr(microtime(true), -5);
 	}
 
 	/**
@@ -273,8 +277,8 @@ class CoreController extends Controller {
 		$currentXssCode = $this->session->get('_xss');
 		$currentXssTime = $this->session->get('_xss_timestamp');
 
-		$ip = $this->container->get('request')->getClientIp();
-		$now = microtime();
+		$ip = $this->httpRequest->getClientIp();
+		$now = microtime(true);
 		if (!$currentXssTime || !$currentXssCode) {
 			$currentXssCode = md5($ip . $now);
 			$this->session->set('_xss', $currentXssCode);
@@ -288,7 +292,7 @@ class CoreController extends Controller {
 		 */
 		if ($timeDifference > 600) {
 			/** If time difference since last request is more than 10 minutes change security code alongside with timestamp. */
-			$now = microtime();
+			$now = microtime(true);
 			$this->session->set('_xss', md5($ip . $now));
 			$this->session->set('_xss_timestamp', $now);
 		}
@@ -884,6 +888,7 @@ class CoreController extends Controller {
 		$url['icons'] = $url['current_theme'].'/img/icons';
 		$url['manage'] = $url['base_l'].'/'.$backend;
 		$this->url = $url;
+
 		return $this;
 	}
 

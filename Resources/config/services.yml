@@ -4,3 +4,7 @@ services:
     encryption:
         class:        BiberLtd\Bundle\CoreBundle\Services\Encryption
         arguments:    []
+    exeption.listener:
+        class:        BiberLtd\Bundle\CoreBundle\Listeners\ExceptionListener
+        tags:         [{name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 1}]
+        arguments:    ["kernel"]

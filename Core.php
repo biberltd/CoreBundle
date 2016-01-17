@@ -27,6 +27,4 @@ class Core{
     public function __construct($kernel){
         $this->kernel = $kernel;
     }
-
-
 }

@@ -9,9 +9,8 @@
  * @date        10.12.2015
  */
 namespace BiberLtd\Bundle\CoreBundle\Responses;
-use BiberLtd\Bundle\CoreBundle\Core as Core;
 
-class ModelResponse extends Core{
+class ModelResponse{
 	public $result;
 	public $error;
 	public $stats;
@@ -22,18 +21,17 @@ class ModelResponse extends Core{
 	 *
 	 * @param null        $resultSet
 	 * @param int|null    $setCount
-	 * @param int         $totalCount
+	 * @param int|null    $totalCount
 	 * @param int|null    $lastInsertId
 	 * @param bool|null   $errorExist
 	 * @param string|null $errorCode
 	 * @param string|null $errorMessage
-	 * @param int|null    $executionStart
-	 * @param int|null    $executionEnd
+	 * @param float|null  $executionStart
+	 * @param float|null  $executionEnd
 	 */
-	public function __construct($resultSet = null, int $setCount = null, int $totalCount = 0, int $lastInsertId = null, bool $errorExist = null, string $errorCode = null, string $errorMessage = null, int $executionStart = null, int $executionEnd = null){
-		$executionStart = $executionStart ?? 0;
-		$executionEnd = $executionEnd ?? 0;
-
+	public function __construct($resultSet = null, int $setCount = null, int $totalCount = null, int $lastInsertId = null, bool $errorExist = null, string $errorCode = null, string $errorMessage = null, float $executionStart = null, float $executionEnd = null){
+		$executionStart = $executionStart ?? 0.00;
+		$executionEnd = $executionEnd ?? 0.00;
 		$this->result = new \stdClass();
 		$this->error = new \stdClass();
 		$this->stats = new \stdClass();
@@ -50,8 +48,8 @@ class ModelResponse extends Core{
 		$this->error->message = $errorMessage ?? 'Unknown error.';
 
 		$this->stats->execution = new \stdClass();
-		$this->stats->execution->start = $executionStart == 0 ? microtime() : $executionStart;
-		$this->stats->execution->end = $executionEnd == 0 ? microtime() : $executionEnd;
+		$this->stats->execution->start = $executionStart == 0 ? microtime(true) : $executionStart;
+		$this->stats->execution->end = $executionEnd == 0 ? microtime(true) : $executionEnd;
 
 		$this->process->continue = false;
 		$this->process->collection = new \stdClass();

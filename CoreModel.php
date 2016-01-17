@@ -52,12 +52,10 @@ class CoreModel extends Core{
      * @param string|null $orm
      */
     public function __construct($kernel, string $dbConnection = null, string $orm = null){
-        $dbConnection = $dbConnection ?? 'default';
-        $orm = $orm ?? 'doctrine';
-        $this->dbConnection = $dbConnection;
-        $this->orm = $orm;
+        $this->dbConnection = $dbConnection ?? 'default';
+        $this->orm =  $orm ?? 'doctrine';
         $this->kernel = $kernel;
-		$this->response = new ModelResponse();
+        unset($kernel);
         /**
          * Set the connection with the required database.
          */
@@ -74,10 +72,10 @@ class CoreModel extends Core{
     }
 
     /**
-     * @param \Doctrine\ORM\QuerY $query
+     * @param \Doctrine\ORM\Query $query
      * @param array|null          $limit
      *
-     * @return \Doctrine\ORM\QuerY
+     * @return \Doctrine\ORM\Query
      */
     public function addLimit(\Doctrine\ORM\Query $query, array $limit = null) {
         if ($limit != null) {
@@ -102,8 +100,6 @@ class CoreModel extends Core{
      * @param bool|null $isCore
      *
      * @return \BiberLtd\Bundle\CoreBundle\Responses\ModelResponse
-     *
-     * @deprecated Will be removed in Q2 of 2016
      */
     public function createException(string $exception, string $msg, string $code, bool $isCore = null){
         $isCore = $isCore ?? true;
