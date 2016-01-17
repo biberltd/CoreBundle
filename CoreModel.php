@@ -522,11 +522,11 @@ class CoreModel extends Core{
     }
 
 	/**
-	 * @param array $column
+	 * @param string $column
 	 *
 	 * @return string
 	 */
-    protected function translateColumnName(array $column){
+    protected function translateColumnName(string $column){
         if (strpos($column, '_')) {
             $words = explode('_', $column);
             if (count($words) > 0) {
