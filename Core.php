@@ -11,20 +11,24 @@
 namespace BiberLtd\Bundle\CoreBundle;
 
 use BiberLtd\Bundle\CoreBundle\CoreTraits\DebugTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class Core{
     protected $error        = [];
     public $timezone        = 'Europe/Istanbul';
     protected $kernel;
+    protected $requestStack;
 
 	use DebugTrait;
 
     /**
      * Core constructor.
      *
-     * @param $kernel
+     * @param                                                     $kernel
+     * @param \Symfony\Component\HttpFoundation\RequestStack|null $requestStack
      */
-    public function __construct($kernel){
+    public function __construct($kernel, RequestStack $requestStack = null){
         $this->kernel = $kernel;
+        $this->requestStack = $requestStack;
     }
 }
