@@ -164,10 +164,10 @@ class CoreController extends Controller {
 	}
 
 	/**
-	 * @param string|null                               $theme
-	 * @param \Symfony\Component\HttpFoundation\Request $request
+	 * @param string|null                                    $theme
+	 * @param \Symfony\Component\HttpFoundation\Request|null $request
 	 */
-	public function initCore(string $theme = null, Request $request){
+	public function initCore(string $theme = null, Request $request = null){
 		$this->previousUrl = $this->get('session')->get('previousUrl');
 		$this->setURLs($theme, null, $request);
 		$this->body = array(
