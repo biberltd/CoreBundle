@@ -157,8 +157,8 @@ class CoreController extends Controller {
 			}
 		}
 		$this->vars['xssCode'] = $this->generateXssCode();
-		if(!is_null($pageCode) && strpos($this->get('request')->getPathInfo(), '|-') === false){
-			$this->get('session')->set('previousUrl', $this->get('request')->getPathInfo());
+		if(!is_null($pageCode) && $request instanceof  Request && strpos($request->getPathInfo(), '|-') === false){
+			$this->get('session')->set('previousUrl', $request->getPathInfo());
 		}
 		$this->initialized = true;
 	}
@@ -277,7 +277,7 @@ class CoreController extends Controller {
 		$currentXssCode = $this->session->get('_xss');
 		$currentXssTime = $this->session->get('_xss_timestamp');
 
-		$ip = $this->httpRequest->getClientIp();
+		$ip = $this->httpRequest === null ? '127.0.0.1' : $this->httpRequest->getClientIp();
 		$now = microtime(true);
 		if (!$currentXssTime || !$currentXssCode) {
 			$currentXssCode = md5($ip . $now);
