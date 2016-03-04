@@ -809,7 +809,26 @@ class CoreController extends Controller {
 		$this->vars['head']['js'] = $this->prepareJs($this->vars['head']['js']);
 		$this->vars['head']['css'] = $this->prepareCss($this->vars['head']['css']);
 		/** *** */
-		return $this->render($this->page['entity']->getBundleName().':'.$this->page['entity']->getLayout()->getTheme()->getFolder().'/Pages:'.$this->page['entity']->getCode().'.html.smarty', $this->vars);
+
+		/**
+		 * Container
+		 */
+		$pagePath = $this->page['entity']->getBundleName().':'.$this->page['entity']->getLayout()->getTheme()->getFolder().'/Pages:'.$this->page['entity']->getCode().'.html';
+
+		/**
+		 * @var Container $container
+		 */
+		switch($this->container->getParameter('templating.engines')[0]){
+			case 'twig':
+				$pagePath .= '.twig';
+				break;
+			case 'smarty':
+				$pagePath .= '.smarty';
+				break;
+
+		}
+		/** *** */
+		return $this->render($pagePath, $this->vars);
 	}
 
 	/**
