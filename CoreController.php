@@ -555,7 +555,6 @@ class CoreController extends Controller {
 				$url .= '/app.php';
 			}
 		}
-		$request = null;
 		if ($appendLocale) {
 			$url .= '/' . (!is_null($request) ? $request->getLocale() : '');
 		}
