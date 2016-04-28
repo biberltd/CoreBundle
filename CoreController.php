@@ -315,7 +315,7 @@ class CoreController extends Controller {
 	 *
 	 * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function ifAccessNotGranted(string $action, bool $redirect = null, string $type = null, string $msg = null, string $route = null, array $params = [], integer $status = null, bool $https){
+	public function ifAccessNotGranted(string $action, bool $redirect = null, string $type = null, string $msg = null, string $route = null, array $params = [], int $status = null, bool $https){
 		$redirect = $redirect ?? false;
 		$type = $type ?? 'danger';
 		$msg = $msg ?? '';
@@ -648,7 +648,7 @@ class CoreController extends Controller {
 	 *
 	 * @return array
 	 */
-	public function preparePagination(integer $page, integer $total, integer $limit, integer $maxPage = null) {
+	public function preparePagination(int $page, int $total, int $limit, int $maxPage = null) {
 		$maxPage = $maxPage ?? 10;
 		/**
 		 * Calculate number of pages.
@@ -716,7 +716,7 @@ class CoreController extends Controller {
 	 *
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function redirectAdvanced(string $routeName, array $parameters = [], integer $status = null, bool $https = null) {
+	public function redirectAdvanced(string $routeName, array $parameters = [], int $status = null, bool $https = null) {
 		$status = $status ?? 200;
 		$https = $https ?? false;
 		$url = $this->generateUrl($routeName, $parameters);
@@ -737,7 +737,7 @@ class CoreController extends Controller {
 	 *
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function redirectWithMessage(string $msgType, string $msgContent, string $to = null, array $params = [], integer $status = null, bool $https = null, $optional = null) {
+	public function redirectWithMessage(string $msgType, string $msgContent, string $to = null, array $params = [], int $status = null, bool $https = null, $optional = null) {
 		$to = $to ?? '404';
 		$status = $status ?? 302;
 		$https = $https ?? false;
