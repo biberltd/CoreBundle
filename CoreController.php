@@ -401,7 +401,7 @@ class CoreController extends Controller {
 	 *
 	 * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
 	 */
-	public function ifNotMember(bool $redirect = false, string $route = null, bool $https = false){
+	public function ifNotMember(bool $redirect = null, string $route = null, bool $https = null){
 		$https = $https ?? null;
 		$redirect = $redirect ?? null;
 		if(!$this->initialized){
