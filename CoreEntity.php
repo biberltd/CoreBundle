@@ -128,15 +128,14 @@ class CoreEntity {
     }
 
     /**
-     * @param \DateTime $date_removed
-     *
+     * @param \DateTime|null $dateRemoved
      * @return $this
      */
-    public function setDateRemoved(\DateTime $date_removed) {
-        if(!$this->setModified('date_removed', $date_removed)->isModified()){
+    public function setDateRemoved(\DateTime $dateRemoved = null) {
+        if(!$this->setModified('date_removed', $dateRemoved)->isModified()){
             return $this;
         }
-        $this->date_removed = $date_removed;
+        $this->date_removed = $dateRemoved;
         return $this;
     }
 
