@@ -690,7 +690,6 @@ class CoreController extends Controller {
 			$reverseCounter = $middle - 1;
 			$forwardCounter = $middle;
 			for($reverseCounter; $reverseCounter > 0; $reverseCounter--){
-				echo $reverseCounter;
 				array_unshift($items, ($page - $count));
 				$count++;
 			}
@@ -706,6 +705,11 @@ class CoreController extends Controller {
 			}
 		} else if (!$pagination['firstFarWay'] && $pagination['lastFarAway']) {
 			for ($i = 1; $i <= $maxPage; $i++) {
+				$pagination['items'][] = $i;
+			}
+		}
+		else{
+			for($i = 1; $i <= $numberOfPages; $i++){
 				$pagination['items'][] = $i;
 			}
 		}
