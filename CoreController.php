@@ -660,12 +660,7 @@ class CoreController extends Controller {
 			$numberOfPages = ceil($total / $limit);
 		}
 		$numberOfPages = $numberOfPages < 1 ? 1 : $numberOfPages;
-		/**
-		 * Sets how many page numbers to be shown.
-		 */
-		if ($maxPage && $numberOfPages > $maxPage) {
-			$numberOfPages = $maxPage;
-		}
+
 		/**
 		 * Build pagination
 		 */
@@ -673,38 +668,49 @@ class CoreController extends Controller {
 
 		$pagination['currentPage'] = $page;
 		$pagination['numberOfPages'] = $numberOfPages;
+		$pagination['visiblePages'] = $maxPage;
+		$middle = ceil($maxPage / 2);
 		/**
 		 * Decide where to place the dots
 		 */
-		if ($page > 4) {
+		if ($page > $middle) {
 			$pagination['firstFarWay'] = true;
 		} else {
 			$pagination['firstFarWay'] = false;
 		}
-		if ($page < $numberOfPages - 3) {
+		if ($page <= ($numberOfPages - $middle)) {
 			$pagination['lastFarAway'] = true;
 		} else {
 			$pagination['lastFarAway'] = false;
 		}
-
 		if ($pagination['firstFarWay'] && $pagination['lastFarAway']) {
-			$pagination['items'] = array($page - 2, $page - 1, $page, $page + 1, $page + 2);
+			$items = [];
+			$items[] = $page;
+			$count = 1;
+			$reverseCounter = $middle - 1;
+			$forwardCounter = $middle;
+			for($reverseCounter; $reverseCounter > 0; $reverseCounter--){
+				echo $reverseCounter;
+				array_unshift($items, ($page - $count));
+				$count++;
+			}
+			$count = 1;
+			for($forwardCounter; $forwardCounter < $maxPage; $forwardCounter++){
+				$items[] = ($page + $count);
+				$count++;
+			}
+			$pagination['items'] = $items;
 		} else if ($pagination['firstFarWay'] && !$pagination['lastFarAway']) {
-			for ($i = $page - 2; $i <= $numberOfPages; $i++) {
+			for ($i = ($numberOfPages - $maxPage + 1); $i <= $numberOfPages; $i++) {
 				$pagination['items'][] = $i;
 			}
 		} else if (!$pagination['firstFarWay'] && $pagination['lastFarAway']) {
-			for ($i = 1; $i <= $page + 2; $i++) {
-				$pagination['items'][] = $i;
-			}
-		} else {
-			for ($i = 1; $i <= $numberOfPages; $i++) {
+			for ($i = 1; $i <= $maxPage; $i++) {
 				$pagination['items'][] = $i;
 			}
 		}
 		$pagination['prev'] = $page-1 <=0 ? 1 : $page-1;
-		$pagination['next'] = $page + 1 > $numberOfPages ? $numberOfPages : $page +1 ;
-
+		$pagination['next'] = $page + 1 > $numberOfPages ? $numberOfPages : $page + 1;
 		return $pagination;
 	}
 
