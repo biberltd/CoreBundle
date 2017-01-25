@@ -648,75 +648,85 @@ class CoreController extends Controller {
 	 *
 	 * @return array
 	 */
-	public function preparePagination(int $page, int $total, int $limit, int $maxPage = null) {
-		$maxPage = $maxPage ?? 10;
-		/**
-		 * Calculate number of pages.
-		 */
-		$numberOfPages = 0;
-		if ($total % $limit > 0) {
-			$numberOfPages = ceil($total / $limit);
-		} else {
-			$numberOfPages = ceil($total / $limit);
-		}
-		$numberOfPages = $numberOfPages < 1 ? 1 : $numberOfPages;
+    public function preparePagination(int $page, int $total, int $limit, int $maxPage = null) {
+        $maxPage = $maxPage ?? 10;
+        /**
+         * Calculate number of pages.
+         */
+        $numberOfPages = 0;
+        if ($total % $limit > 0) {
+            $numberOfPages = ceil($total / $limit);
+        } else {
+            $numberOfPages = ceil($total / $limit);
+        }
+        $numberOfPages = $numberOfPages < 1 ? 1 : $numberOfPages;
 
-		/**
-		 * Build pagination
-		 */
-		$pagination = [];
+        /**
+         * Build pagination
+         */
+        $pagination = [];
 
-		$pagination['currentPage'] = $page;
-		$pagination['numberOfPages'] = $numberOfPages;
-		$pagination['visiblePages'] = $maxPage;
-		$middle = ceil($maxPage / 2);
-		/**
-		 * Decide where to place the dots
-		 */
-		if ($page > $middle) {
-			$pagination['firstFarWay'] = true;
-		} else {
-			$pagination['firstFarWay'] = false;
-		}
-		if ($page <= ($numberOfPages - $middle)) {
-			$pagination['lastFarAway'] = true;
-		} else {
-			$pagination['lastFarAway'] = false;
-		}
-		if ($pagination['firstFarWay'] && $pagination['lastFarAway']) {
-			$items = [];
-			$items[] = $page;
-			$count = 1;
-			$reverseCounter = $middle - 1;
-			$forwardCounter = $middle;
-			for($reverseCounter; $reverseCounter > 0; $reverseCounter--){
-				array_unshift($items, ($page - $count));
-				$count++;
-			}
-			$count = 1;
-			for($forwardCounter; $forwardCounter < $maxPage; $forwardCounter++){
-				$items[] = ($page + $count);
-				$count++;
-			}
-			$pagination['items'] = $items;
-		} else if ($pagination['firstFarWay'] && !$pagination['lastFarAway']) {
-			for ($i = ($numberOfPages - $maxPage + 1); $i <= $numberOfPages; $i++) {
-				$pagination['items'][] = $i;
-			}
-		} else if (!$pagination['firstFarWay'] && $pagination['lastFarAway']) {
-			for ($i = 1; $i <= $maxPage; $i++) {
-				$pagination['items'][] = $i;
-			}
-		}
-		else{
-			for($i = 1; $i <= $numberOfPages; $i++){
-				$pagination['items'][] = $i;
-			}
-		}
-		$pagination['prev'] = $page-1 <=0 ? 1 : $page-1;
-		$pagination['next'] = $page + 1 > $numberOfPages ? $numberOfPages : $page + 1;
-		return $pagination;
-	}
+        $pagination['currentPage'] = $page;
+        $pagination['numberOfPages'] = $numberOfPages;
+        $pagination['visiblePages'] = $maxPage;
+        $middle = ceil($maxPage / 2);
+        /**
+         * Decide where to place the dots
+         */
+        if ($page > $middle) {
+            $pagination['firstFarWay'] = true;
+        } else {
+            $pagination['firstFarWay'] = false;
+        }
+        if ($page <= ($numberOfPages - $middle)) {
+            $pagination['lastFarAway'] = true;
+        } else {
+            $pagination['lastFarAway'] = false;
+        }
+
+        if ($pagination['firstFarWay'] && $pagination['lastFarAway']) {
+            $items = [];
+            $items[] = $page;
+            $count = 1;
+            $reverseCounter = $middle - 1;
+            $forwardCounter = $middle;
+            for($reverseCounter; $reverseCounter > 0; $reverseCounter--){
+                array_unshift($items, ($page - $count));
+                $count++;
+            }
+            $count = 1;
+            for($forwardCounter; $forwardCounter < $maxPage; $forwardCounter++){
+                $items[] = ($page + $count);
+                $count++;
+            }
+            $pagination['items'] = $items;
+        } else if ($pagination['firstFarWay'] && !$pagination['lastFarAway']) {
+            $startWith = 1;
+            if($numberOfPages > $maxPage){
+                $startWith = $numberOfPages > $maxPage;
+            }
+            for ($i = $startWith; $i <= $numberOfPages; $i++) {
+                $pagination['items'][] = $i;
+            }
+        } else if (!$pagination['firstFarWay'] && $pagination['lastFarAway']) {
+            $endWith = $maxPage;
+            if($numberOfPages < $maxPage){
+                $endWith = $numberOfPages;
+            }
+            for ($i = 1; $i <= $endWith; $i++) {
+                $pagination['items'][] = $i;
+            }
+        }
+        else{
+            for($i = 1; $i <= $numberOfPages; $i++){
+                $pagination['items'][] = $i;
+            }
+        }
+        $pagination['prev'] = $page-1 <=0 ? 1 : $page-1;
+        $pagination['next'] = $page + 1 > $numberOfPages ? $numberOfPages : $page + 1;
+
+        return $pagination;
+    }
 
 	/**
 	 * @param string    $routeName
