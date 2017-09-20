@@ -20,14 +20,14 @@
 
     },
     "require" : {
-        "php": ">=5.3.3",
-        "symfony/symfony": "~2.6@stable",
-        "sensio/framework-extra-bundle": "~3.0@stable",
-        "beberlei/DoctrineExtensions": "~1.0@stable",
-        "gedmo/doctrine-extensions": "~2.4@stable",
+        "php": ">=5.5.9",
+        "symfony/symfony": "3.3.*",
+        "sensio/framework-extra-bundle": "^3.0.2",
+        "beberlei/DoctrineExtensions": "~1.0.17",
+        "gedmo/doctrine-extensions": "~2.4.30",
         "biberltd/smarty-bundle": "~1.2",
-        "kriswallsmith/assetic": "~1.2@stable",
-        "swiftmailer/swiftmailer" : "~5.4@stable"
+        "kriswallsmith/assetic": "~1.4.0",
+        "swiftmailer/swiftmailer" : "~5.4.8"
 
     },
     "extra" : {
