@@ -21,12 +21,12 @@
     },
     "require" : {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.4.*",
-        "sensio/framework-extra-bundle": "^3.0.2",
+        "symfony/symfony": "~3.4",
+        "sensio/framework-extra-bundle": "^5.0",
         "beberlei/DoctrineExtensions": "~1.0.17",
         "gedmo/doctrine-extensions": "~2.4.30",
         "biberltd/smarty-bundle": "~1.2",
-        "kriswallsmith/assetic": "~1.4.0",
+        "kriswallsmith/assetic": "~1.4",
         "swiftmailer/swiftmailer" : "~5.4.8"
 
     },
