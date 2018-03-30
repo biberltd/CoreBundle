@@ -9,28 +9,28 @@ services:
         arguments:    ['@kernel']
     buttonrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\ButtonRenderController
-            arguments:    ['@templating']
+            arguments:    ['@templating.engine.delegating']
     corerender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\RenderController
-            arguments:    ['@templating']
+            arguments:    ['@templating.engine.delegating']
     emailrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\EmailRenderController
-            arguments:    ['@templating', '@kernel']
+            arguments:    ['@templating.engine.delegating', '@kernel']
     formrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\FormRenderController
-            arguments:    ['@templating']
+            arguments:    ['@templating.engine.delegating']
     htmlrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\HTMLRenderController
-            arguments:    ['@templating']
+            arguments:    ['@templating.engine.delegating']
     tablerender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\TableRenderController
-            arguments:    ['@templating', '@kernel']
+            arguments:    ['@templating.engine.delegating', '@kernel']
     textarearender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\FormRenderController
-            arguments:    ['@templating', '@kernel']
+            arguments:    ['@templating.engine.delegating', '@kernel']
     typographyrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\TypographyRenderController
-            arguments:    ['@templating']
+            arguments:    ['@templating.engine.delegating']
     widgetrender.model:
             class:        BiberLtd\Bundle\CoreBundle\Controller\WidgetRenderController
-            arguments:    ['@templating', '@kernel']
+            arguments:    ['@templating.engine.delegating', '@kernel']
