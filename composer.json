@@ -10,7 +10,7 @@
             "name": "Can Berkol",
             "email": "can.berkol@biberltd.com"
         },
-		{
+		    {
             "name": "Said İmamoğlu",
             "email": "said.imamoglu@biberltd.com"
         }
@@ -21,7 +21,7 @@
     },
     "require" : {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.3.*",
+        "symfony/symfony": "3.4.*",
         "sensio/framework-extra-bundle": "^3.0.2",
         "beberlei/DoctrineExtensions": "~1.0.17",
         "gedmo/doctrine-extensions": "~2.4.30",
