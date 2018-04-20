@@ -222,7 +222,7 @@ class CoreModel extends Core{
                 if (empty($method)) {
                     $condition .= ' LIKE \'' . $value[0] . '%\' ';
                 }
-				else {
+                else {
                     $condition .= ' LIKE ' . $method . '(\'' . $value[0] . '%\') ';
                 }
                 break;
@@ -230,7 +230,7 @@ class CoreModel extends Core{
                 if (empty($method)) {
                     $condition .= ' LIKE \'%' . $value[0] . '\' ';
                 }
-				else {
+                else {
                     $condition .= ' LIKE ' . $method . '(\'%' . $value[0] . '\') ';
                 }
                 break;
@@ -239,15 +239,15 @@ class CoreModel extends Core{
                     if (empty($method)) {
                         $condition .= ' LIKE \'%' . $value[0] . '%\' ';
                     }
-					else {
+                    else {
                         $condition .= ' LIKE ' . $method . '(\'%' . $value[0] . '%\') ';
                     }
                 }
-				else {
+                else {
                     if (empty($method)) {
                         $condition .= ' LIKE \'%' . $value . '%\' ';
                     }
-					else {
+                    else {
                         $condition .= ' LIKE ' . $method . '(\'%' . $value . '%\') ';
                     }
                 }
@@ -260,11 +260,11 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $in .= '\'' . $item . '\',';
                         }
-						else {
+                        else {
                             $in .= $method . '(\'' . $item . '\'),';
                         }
                     }
-					else {
+                    else {
                         if (empty($method)) {
                             $in .= $item . ',';
                         } else {
@@ -283,11 +283,11 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $not_in .= '\'' . $item . '\',';
                         }
-						else {
+                        else {
                             $not_in .= $method . '(\'' . $item . '\'),';
                         }
                     }
-					else {
+                    else {
                         if (empty($method)) {
                             $not_in .= $item . ',';
                         } else {
@@ -317,7 +317,7 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $value = "'" . $value . "'";
                         }
-						else {
+                        else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -346,7 +346,7 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $value = "'" . $value . "'";
                         }
-						else {
+                        else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -366,7 +366,7 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $value = "'" . $value . "'";
                         }
-						else {
+                        else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -386,7 +386,7 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $value = "'" . $value . "'";
                         }
-						else {
+                        else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -407,7 +407,7 @@ class CoreModel extends Core{
                         if (empty($method)) {
                             $value = "'" . $value . "'";
                         }
-						else {
+                        else {
                             $value = $method . "('" . $value . "')";
                         }
                         break;
@@ -421,14 +421,23 @@ class CoreModel extends Core{
                 break;
             case 'between':
                 if (is_array($value) && count($value) == 2) {
-                    $condition .= 'between ' . $value[0]->format('Y-m-d H:i:s') . ' and ' . $value[1]->format('Y-m-d H:i:s');
+                    $data = [];
+
+                    foreach ($value as $item){
+                        if(is_numeric($item)){
+                            $data[] = $item;
+                        }else{
+                            $data[] = $item->format('Y-m-d H:i:s');
+                        }
+                    };
+                    $condition .= ' between \'' . $data[0]. '\' and \'' .$data[1].'\'';
                 }
                 break;
         }
         return $condition;
     }
 
-	/**
+    /**
 	 * @param string $table
 	 * @param string $column
 	 * @param array  $values
