@@ -807,9 +807,6 @@ class CoreController extends Controller {
                 $url .= '/app.php';
             }
         }
-        if ($append_locale) {
-            $url .= '/' . $this->container->get('request')->getLocale();
-        }
         if (!is_null($parameters)) {
             if (is_array($parameters)) {
                 $url = $url . implode('/', $parameters);
