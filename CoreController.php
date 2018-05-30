@@ -899,9 +899,9 @@ class CoreController extends Controller {
 	public function setURLs(string $theme = null, string $backend = null, Request $request = null) {
 		$theme = $theme ?? '';
 		$backend = $backend ?? 'manage';
-		$forceHttps = false;
+		$forceHttps = true;
 		if ($request instanceof Request && $request->isSecure()) {
-			$force_https = true;
+            $forceHttps = true;
 		}
 		if ($this->get('kernel')->getEnvironment() == 'dev') {
 			$url['base_l'] = $this->prepareUrl(true, true, null, $forceHttps, $request);
