@@ -899,7 +899,7 @@ class CoreController extends Controller {
 	public function setURLs(string $theme = null, string $backend = null, Request $request = null) {
 		$theme = $theme ?? '';
 		$backend = $backend ?? 'manage';
-		$forceHttps = false;
+		$forceHttps = true;
 		if ($request instanceof Request && $request->isSecure()) {
             $forceHttps = true;
 		}
