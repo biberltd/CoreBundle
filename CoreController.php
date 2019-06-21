@@ -703,7 +703,7 @@ class CoreController extends Controller {
         } else if ($pagination['firstFarWay'] && !$pagination['lastFarAway']) {
             $startWith = 1;
             if($numberOfPages > $maxPage){
-                $startWith = $numberOfPages > $maxPage;
+                $startWith = $numberOfPages - $maxPage + 1;
             }
             for ($i = $startWith; $i <= $numberOfPages; $i++) {
                 $pagination['items'][] = $i;
